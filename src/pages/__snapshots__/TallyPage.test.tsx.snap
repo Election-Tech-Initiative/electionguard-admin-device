@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders TallyPage 1`] = `
+<main
+  class="sc-htpNat eUEnuv"
+>
+  <div
+    class="sc-bxivhb fEFIwD"
+  >
+    <div
+      class="sc-ifAKCX cObZIz"
+    >
+      <h1>
+        Tally Votes
+      </h1>
+    </div>
+  </div>
+</main>
+`;

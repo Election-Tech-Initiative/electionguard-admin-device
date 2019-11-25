@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Main with child 1`] = `
+<main
+  class="sc-bdVaJa kAfsva"
+>
+  <div
+    class="sc-bwzfXH dxmKnD"
+  >
+    foo
+  </div>
+</main>
+`;
+
+exports[`renders centered content 1`] = `
+<main
+  class="sc-bdVaJa kAfsva"
+>
+  <div
+    class="sc-bwzfXH duCbvi"
+  >
+    foo
+  </div>
+</main>
+`;
+
+exports[`renders not centered content 1`] = `
+<main
+  class="sc-bdVaJa kAfsva"
+>
+  <div
+    class="sc-bwzfXH dxmKnD"
+  >
+    foo
+  </div>
+</main>
+`;

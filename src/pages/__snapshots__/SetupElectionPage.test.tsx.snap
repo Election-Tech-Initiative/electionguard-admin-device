@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders SetupElectionPage 1`] = `
+<main
+  class="sc-htpNat eUEnuv"
+>
+  <div
+    class="sc-bxivhb fEFIwD"
+  >
+    <div
+      class="sc-ifAKCX cObZIz"
+    >
+      <h1>
+        Setup Election
+      </h1>
+      <br />
+      <p>
+        <b>
+          How many trustees available? 
+        </b>
+      </p>
+      <p>
+         
+        1
+         trustee(s) 
+      </p>
+      <div
+        class="sc-gZMcBi hdAbku"
+      >
+        <button
+          aria-hidden="true"
+          class="sc-bwzfXH kDubbO"
+          data-testid="decrease-trustees-button"
+          disabled=""
+          type="button"
+          value="-1"
+        >
+          -
+        </button>
+        <input
+          class="sc-htoDjs fyNavg"
+          id="numberOfTrustees"
+          max="5"
+          min="1"
+          step="1"
+          type="range"
+          value="1"
+        />
+        <button
+          aria-hidden="true"
+          class="sc-bwzfXH kHZqpR"
+          data-testid="increase-trustees-button"
+          type="button"
+          value="1"
+        >
+          +
+        </button>
+      </div>
+      <p>
+        <b>
+          How many trustees required to decrypt?
+        </b>
+      </p>
+      <p>
+         
+        1
+         trustee(s) 
+      </p>
+      <div
+        class="sc-gZMcBi hdAbku"
+      >
+        <button
+          aria-hidden="true"
+          class="sc-bwzfXH kDubbO"
+          data-testid="decrease-threshold-button"
+          disabled=""
+          type="button"
+          value="-1"
+        >
+          -
+        </button>
+        <input
+          class="sc-htoDjs fyNavg"
+          id="threshold"
+          max="5"
+          min="1"
+          step="1"
+          type="range"
+          value="1"
+        />
+        <button
+          aria-hidden="true"
+          class="sc-bwzfXH kDubbO"
+          data-testid="increase-threshold-button"
+          disabled=""
+          type="button"
+          value="1"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+`;

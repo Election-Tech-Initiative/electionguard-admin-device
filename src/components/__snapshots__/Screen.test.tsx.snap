@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Screen 1`] = `
+<div
+  class="sc-jTzLTM inzcys"
+  tabindex="-1"
+>
+  foo
+</div>
+`;
