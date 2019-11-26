@@ -78,5 +78,7 @@ module.exports = {
       },
     ],
     strict: 0,
+    '@typescript-eslint/explicit-function-return-type': 'off', // Want to use it, but it requires return types for all built-in React lifecycle methods.
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
 }

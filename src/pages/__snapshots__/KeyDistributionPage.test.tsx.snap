@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders KeyDistributionPage 1`] = `
+<main
+  class="sc-htpNat eUEnuv"
+>
+  <div
+    class="sc-bxivhb fEFIwD"
+  >
+    <div
+      class="sc-ifAKCX cObZIz"
+    >
+      <h1>
+        Distribute Keys
+      </h1>
+      <div
+        class="sc-VigVT ftZsxU"
+      >
+        <div
+          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
+        >
+          <button
+            class="sc-bwzfXH kHZqpR"
+            id="button-1"
+            type="button"
+          >
+            Claim
+          </button>
+        </div>
+        <div
+          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
+        >
+          <button
+            class="sc-bwzfXH kHZqpR"
+            id="button-2"
+            type="button"
+          >
+            Claim
+          </button>
+        </div>
+        <div
+          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
+        >
+          <button
+            class="sc-bwzfXH kHZqpR"
+            id="button-3"
+            type="button"
+          >
+            Claim
+          </button>
+        </div>
+        <div
+          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
+        >
+          <button
+            class="sc-bwzfXH kHZqpR"
+            id="button-4"
+            type="button"
+          >
+            Claim
+          </button>
+        </div>
+        <div
+          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
+        >
+          <button
+            class="sc-bwzfXH kHZqpR"
+            id="button-5"
+            type="button"
+          >
+            Claim
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+`;

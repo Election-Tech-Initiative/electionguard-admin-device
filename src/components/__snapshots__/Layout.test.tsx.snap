@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can renders Layout 1`] = `
+<main
+  class="sc-htpNat eUEnuv"
+>
+  <div
+    class="sc-bxivhb fEFIwD"
+  >
+    <div
+      class="sc-ifAKCX cObZIz"
+    >
+      <h1
+        aria-label="2020 General Election."
+      >
+        2020 General Election
+      </h1>
+      <p
+        aria-hidden="true"
+      >
+        Tuesday, November 3, 2020
+        <br />
+        Franklin County
+        , 
+        State of Hamilton
+        <br />
+      </p>
+      <div
+        class="sc-gzVnrw cnvPtD"
+      >
+        <button
+          aria-label="Select Setup to Setup Election"
+          class="sc-bwzfXH URjIp"
+          id="setup"
+          role="option"
+          type="button"
+        >
+          Setup Election
+        </button>
+        <button
+          aria-label="Select Tally to Tally Votes"
+          class="sc-bwzfXH kDubbO"
+          disabled=""
+          id="tally"
+          role="option"
+          type="button"
+        >
+          Tally Votes
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+`;

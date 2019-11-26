@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`navigates back 1`] = `
+<button
+  class="sc-bwzfXH kHZqpR"
+  role="option"
+  type="button"
+>
+  Go Back
+</button>
+`;
+
+exports[`navigates to page 1`] = `
+<button
+  class="sc-bwzfXH kHZqpR"
+  role="option"
+  type="button"
+>
+  Go Home
+</button>
+`;
+
+exports[`renders LinkButton with onClick and disabled props 1`] = `
+<button
+  class="sc-bwzfXH kDubbO"
+  disabled=""
+  role="option"
+  type="button"
+>
+  Push Me
+</button>
+`;
+
+exports[`renders LinkButton with onClick prop 1`] = `
+<button
+  class="sc-bwzfXH kHZqpR"
+  role="option"
+  type="button"
+>
+  Push Me
+</button>
+`;
