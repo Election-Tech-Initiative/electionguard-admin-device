@@ -5,7 +5,7 @@ import { render } from '../../test/testUtils'
 
 import SetupElectionPage from './SetupElectionPage'
 
-it(`renders SetupElectionPage`, async () => {
+it('renders SetupElectionPage', async () => {
   const { container } = render(
     <Route path="/" component={SetupElectionPage} />,
     {

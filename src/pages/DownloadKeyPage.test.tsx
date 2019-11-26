@@ -5,7 +5,7 @@ import { render } from '../../test/testUtils'
 
 import DownloadKeyPage from './DownloadKeyPage'
 
-it(`renders DownloadKeyPage`, async () => {
+it('renders DownloadKeyPage', async () => {
   const { container } = render(<Route path="/" component={DownloadKeyPage} />, {
     route: '/',
   })
