@@ -13,6 +13,6 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: Test
-        run: yarn test --watchAll
+        run: yarn test --ci --watchAll
       - name: Build
         run: yarn build
