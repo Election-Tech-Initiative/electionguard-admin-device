@@ -1,24 +1,26 @@
-import styled, { css } from 'styled-components'
+import React, { MouseEventHandler, useState } from 'react'
+import styled, { css, StyledComponent } from 'styled-components'
 
 interface Attrs extends HTMLButtonElement {
   readonly type: string
 }
 
 export interface ButtonInterface {
-  readonly danger?: boolean
-  readonly primary?: boolean
-  readonly fullWidth?: boolean
-  readonly small?: boolean
   readonly big?: boolean
+  readonly danger?: boolean
+  readonly fullWidth?: boolean
+  readonly primary?: boolean
+  readonly small?: boolean
 }
 
-interface Props
+interface StyledButtonProps
   extends ButtonInterface,
     React.PropsWithoutRef<JSX.IntrinsicElements['button']> {}
 
-const buttonStyles = css<Props>`
+const buttonStyles = css<StyledButtonProps>`
   border: none;
   border-radius: 0.25rem;
+  box-shadow: 0 0 0 0 rgba(71, 167, 75, 1);
   box-sizing: border-box;
   background: ${({ danger = false, primary = false }) =>
     (danger && 'red') ||
@@ -36,16 +38,80 @@ const buttonStyles = css<Props>`
     (primary && '#FFFFFF') ||
     'black'};
   font-size: ${({ big = false }) => (big ? '1.25rem' : undefined)};
+  touch-action: manipulation;
 `
 
 export const DecoyButton = styled.div`
   ${buttonStyles} /* stylelint-disable-line value-keyword-case */
 `
-
-const Button = styled('button').attrs((props: Attrs) => ({
+const StyledButton = styled('button').attrs((props: Attrs) => ({
   type: props.type || 'button',
 }))`
   ${buttonStyles} /* stylelint-disable-line value-keyword-case */
+`
+
+export interface Props extends StyledButtonProps {
+  component?: StyledComponent<'button', never, StyledButtonProps, never>
+  onPress: MouseEventHandler
+}
+
+const Button = ({
+  component: Component = StyledButton,
+  onPress,
+  ...rest
+}: Props) => {
+  const [startCoordinates, setStartCoordinates] = useState([0, 0])
+
+  const onTouchStart = (event: React.TouchEvent) => {
+    const { clientX, clientY } = event.touches[0]
+    setStartCoordinates([clientX, clientY])
+  }
+
+  const onTouchEnd = (event: React.TouchEvent) => {
+    const maxMove = 30
+    const { clientX, clientY } = event.changedTouches[0]
+    if (
+      Math.abs(startCoordinates[0] - clientX) < maxMove &&
+      Math.abs(startCoordinates[1] - clientY) < maxMove
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onPress(event as any)
+      event.preventDefault()
+    }
+  }
+
+  return (
+    <Component
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...rest}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onClick={onPress}
+    />
+  )
+}
+
+export const SegmentedButton = styled.span`
+  display: inline-flex;
+  white-space: nowrap;
+  & > button {
+    box-shadow: inset 1px 0 0 rgb(190, 190, 190);
+  }
+  & > button:first-child {
+    box-shadow: none;
+  }
+  & > button:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  & > button:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  & > button:disabled {
+    background: #028099;
+    color: #ffffff;
+  }
 `
 
 export default Button

@@ -31,6 +31,10 @@ legend {
   display: block;
 }
 
+img {
+  display: block;
+}
+
 :link,
 :visited {
   color: rgb(0, 0, 238);
@@ -45,8 +49,8 @@ html,
 body,
 #root {
   height: 100%;
-
-  /* overflow: hidden; Verify if this needs to be removed */
+  overflow: hidden;
+  touch-action: none;
 }
 @media print {
   html,
@@ -104,4 +108,23 @@ html {
   .no-print {
     display: none;
   }
+}
+
+@media print {
+  /* Chrome on Linux prints scrollbars */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+html body .cvox_indicator_container {
+  /* Extra specificity/!important ensure this rule is followed. */
+  display: none !important; /* stylelint-disable-line declaration-no-important */
+}
+
+/* Adjust printed ballot paper settings */
+@page {
+  margin: 0.375in;
+  size: letter portrait;
 }

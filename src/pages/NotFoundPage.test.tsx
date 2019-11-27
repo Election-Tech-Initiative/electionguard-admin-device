@@ -16,6 +16,6 @@ it('renders NotFoundPage', () => {
     }
   )
   expect(container.firstChild).toMatchSnapshot()
-  fireEvent.click(getByText('Return to Start'))
+  fireEvent.click(getByText('Start Over'))
   expect(resetElection).toHaveBeenCalled()
 })

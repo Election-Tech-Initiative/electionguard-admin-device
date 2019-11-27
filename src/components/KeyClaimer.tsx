@@ -29,7 +29,7 @@ const KeyClaimer = (props: Props) => {
     >
       <Button
         id={`button-${props.id}`}
-        onClick={() => props.onClaim(props.id)}
+        onPress={() => props.onClaim(props.id)}
         disabled={props.claimed}
       >
         Claim

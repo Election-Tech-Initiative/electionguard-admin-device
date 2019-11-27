@@ -3,11 +3,11 @@ import { Route } from 'react-router-dom'
 
 import { render } from '../../test/testUtils'
 
-import SetupElectionPage from './SetupElectionPage'
+import SetupTrusteesPage from './SetupTrusteesPage'
 
 it('renders SetupElectionPage', async () => {
   const { container } = render(
-    <Route path="/" component={SetupElectionPage} />,
+    <Route path="/" component={SetupTrusteesPage} />,
     {
       route: '/',
     }

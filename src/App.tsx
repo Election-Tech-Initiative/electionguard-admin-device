@@ -1,31 +1,24 @@
 import React from 'react'
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom'
 
-import GLOBALS from './config/globals'
+import { Election, OptionalElection } from '@votingworks/ballot-encoder'
+
+import * as GLOBALS from './config/globals'
 
 import 'normalize.css'
 import './App.css'
 
 import {
-  Election,
-  ElectionDefaults,
-  OptionalElection,
   PartialUserSettings,
   TextSizeSetting,
   UserSettings,
 } from './config/types'
 
 import Layout from './components/Layout'
-import Screen from './components/Screen'
 import ElectionContext from './contexts/electionContext'
 
-import electionDefaults from './data/electionDefaults.json'
 import electionSample from './data/electionSampleWithSeal.json'
-
-export const mergeWithDefaults = (
-  election: Election,
-  defaults: ElectionDefaults = electionDefaults
-) => ({ ...defaults, ...election })
+import FocusManager from './components/FocusManager'
 
 interface State {
   election: OptionalElection
@@ -78,11 +71,13 @@ export class App extends React.Component<RouteComponentProps, State> {
 
   public getElection = (): OptionalElection => {
     const election = window.localStorage.getItem(electionKey)
-    return election ? JSON.parse(election) : undefined
+    return election
+      ? JSON.parse(election)
+      : ((undefined as unknown) as Election)
   }
 
   public setElection = (electionConfigFile: Election) => {
-    const election = mergeWithDefaults(electionConfigFile)
+    const election = electionConfigFile
     this.setState({ election })
     window.localStorage.setItem(electionKey, JSON.stringify(election))
   }
@@ -116,7 +111,7 @@ export class App extends React.Component<RouteComponentProps, State> {
     return (
       <ElectionContext.Provider
         value={{
-          election,
+          election: election as Election,
           resetElection: this.resetElection,
           setUserSettings: this.setUserSettings,
           userSettings: this.state.userSettings,
@@ -130,9 +125,9 @@ export class App extends React.Component<RouteComponentProps, State> {
 
 const Root = () => (
   <BrowserRouter>
-    <Screen>
+    <FocusManager>
       <Route path="/" component={App} />
-    </Screen>
+    </FocusManager>
   </BrowserRouter>
 )
 

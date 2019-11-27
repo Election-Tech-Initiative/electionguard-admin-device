@@ -1,12 +1,11 @@
 {
-  "title": "2020 General Election",
-  "demo": true,
+  "title": "Primary Election",
   "state": "State of Hamilton",
   "county": {
     "id": "franklin",
     "name": "Franklin County"
   },
-  "date": "Tuesday, November 3, 2020",
+  "date": "November 3, 2020",
   "districts": [
     {
       "id": "district-1",
@@ -60,6 +59,11 @@
       "id": "6",
       "name": "Independent",
       "abbrev": "I"
+    },
+    {
+      "id": "7",
+      "name": "Democrat",
+      "abbrev": "D"
     }
   ],
   "contests": [
@@ -727,7 +731,7 @@
   ],
   "ballotStyles": [
     {
-      "id": "12",
+      "id": "12D",
       "precincts": ["23", "21"],
       "districts": ["district-1", "district-2"]
     },

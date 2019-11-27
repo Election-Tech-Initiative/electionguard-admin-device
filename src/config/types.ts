@@ -1,127 +1,48 @@
-// Generic
-export interface Dictionary<T> {
-  [key: string]: T | undefined
+import { Election } from '@votingworks/ballot-encoder'
+
+// ElectionGuard
+export interface BallotEncryptionConfig {
+  subgroupOrder: string
+  electionMetadata: string
+  jointPublicKey: string
 }
 
-// AsyncFunction
-export type AsyncFunction<O> = () => Promise<O>
+export interface ElectionGuardConfig extends BallotEncryptionConfig {
+  numberOfSelections: number
+  numberOfTrustees: number
+}
+
+// Generic
+export type VoidFunction = () => void
 
 // Events
-export type InputEvent = React.FormEvent<EventTarget>
-export type ButtonEvent = React.MouseEvent<HTMLButtonElement>
-
-// Candidates
-export interface Candidate {
-  readonly id: string
-  readonly name: string
-  readonly partyId?: string
-  isWriteIn?: boolean
-}
-export type OptionalCandidate = Candidate | undefined
-
-// Contests
-export type ContestTypes = 'candidate' | 'yesno'
-export interface Contest {
-  readonly id: string
-  readonly districtId: string
-  readonly partyId?: string
-  readonly section: string
-  readonly title: string
-  readonly type: ContestTypes
-}
-export interface CandidateContest extends Contest {
-  readonly type: 'candidate'
-  readonly seats: number
-  readonly candidates: Candidate[]
-  readonly allowWriteIns: boolean
-}
-export interface YesNoContest extends Contest {
-  readonly type: 'yesno'
-  readonly description: string
-  readonly shortTitle: string
-}
-export type Contests = (CandidateContest | YesNoContest)[]
-
-// Election
-export interface BMDConfig {
-  readonly requireActivation?: boolean
-  readonly showHelpPage?: boolean
-  readonly showSettingsPage?: boolean
-}
-export interface ElectionDefaults {
-  readonly bmdConfig: BMDConfig
-}
-export interface BallotStyle {
-  readonly id: string
-  readonly precincts: string[]
-  readonly districts: string[]
-  readonly partyId?: string
-}
-export interface Party {
-  readonly id: string
-  readonly name: string
-  readonly abbrev: string
-}
-export type Parties = Party[]
-export interface Precinct {
-  readonly id: string
-  readonly name: string
-}
-export interface District {
-  readonly id: string
-  readonly name: string
-}
-export interface County {
-  readonly id: string
-  readonly name: string
-}
-
-// eventually we'll have more tracker types
-export type BallotTrackerType = 'electionguard'
-export interface BallotTrackerConfig {
-  readonly trackerType: BallotTrackerType
-  readonly trackerSiteDisplay: string
-  readonly trackerUrlTemplate: string // e.g. "https://example.org/track?tracker=<tracker_id>"
-}
-
-export interface Election {
-  readonly ballotStyles: BallotStyle[]
-  readonly county: County
-  readonly demo: boolean
-  readonly ballotTrackerConfig?: BallotTrackerConfig
-  readonly parties: Parties
-  readonly precincts: Precinct[]
-  readonly districts: District[]
-  readonly contests: Contests
-  readonly date: string
-  readonly seal?: string
-  readonly sealURL?: string
-  readonly state: string
-  readonly title: string
-  readonly bmdConfig?: BMDConfig
-}
-export type OptionalElection = Election | undefined
-
-export interface ActivationData {
-  ballotStyle: BallotStyle
-  precinct: Precinct
-}
+export type EventTargetFunction = (event: React.FormEvent<EventTarget>) => void
 
 // Votes
-export type CandidateVote = Candidate[]
-export type YesNoVote = 'yes' | 'no'
-export type OptionalYesNoVote = YesNoVote | undefined
-export type Vote = CandidateVote | YesNoVote
-export type OptionalVote = Vote | undefined
-export type VotesDict = Dictionary<Vote>
+export interface WriteInCandidateTally {
+  name: string
+  tally: number
+}
+export type TallyCount = number
+export interface CandidateVoteTally {
+  candidates: TallyCount[]
+  writeIns: WriteInCandidateTally[]
+}
+export interface YesNoVoteTally {
+  yes: TallyCount
+  no: TallyCount
+}
+export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 
 // ElectionContext
 export interface ElectionContextInterface {
-  readonly election: OptionalElection // Optional only because ballot context needs a default value. This is manually set to Election in Ballot component.
+  readonly election: Election
   resetElection: (path?: string) => void
   setUserSettings: (partial: PartialUserSettings) => void
   userSettings: UserSettings
 }
+
+export type OptionalElection = Election | undefined
 
 // Smart Card Content
 export type CardDataTypes = 'voter' | 'pollworker' | 'clerk'
@@ -130,9 +51,13 @@ export interface CardData {
 }
 export interface VoterCardData extends CardData {
   readonly t: 'voter'
-  readonly bs: string
-  readonly pr: string
-  readonly uz?: number
+  readonly c: number // created date
+  readonly bs: string // ballot style id
+  readonly pr: string // precinct id
+  readonly uz?: number // used (voided)
+  readonly bp?: number // ballot printed date
+  readonly u?: number // updated date
+  readonly m?: string // mark machine id
 }
 export interface PollworkerCardData extends CardData {
   readonly t: 'pollworker'
@@ -141,6 +66,21 @@ export interface PollworkerCardData extends CardData {
 export interface ClerkCardData extends CardData {
   readonly t: 'clerk'
   readonly h: string
+}
+
+export interface CardAbsentAPI {
+  present: false
+}
+export interface CardPresentAPI {
+  present: true
+  shortValue: string
+  longValueExists?: boolean
+}
+export type CardAPI = CardAbsentAPI | CardPresentAPI
+
+// Machine ID API
+export interface MachineIdAPI {
+  machineId: string
 }
 
 // User Interface
@@ -160,6 +100,7 @@ export type ValidTrusteeCount = 1 | 2 | 3 | 4 | 5
 export interface UserSettings {
   textSize: TextSizeSetting
 }
+export type SetUserSettings = (partial: PartialUserSettings) => void
 export type PartialUserSettings = Partial<UserSettings>
 
 export default {}

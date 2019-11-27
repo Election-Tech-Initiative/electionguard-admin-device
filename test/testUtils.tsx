@@ -2,17 +2,17 @@ import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { render as testRender } from '@testing-library/react'
+import { Election } from '@votingworks/ballot-encoder'
 
-import GLOBALS from '../src/config/globals'
+import * as GLOBALS from '../src/config/globals'
 
 // it's necessary to use the no-seal version, which has neither
 // of the two optional seal fields, because otherwise
 // typescript concludes that sealURL is required.
 import electionSampleNoSeal from '../src/data/electionSampleNoSeal.json'
 
-import { Election, TextSizeSetting } from '../src/config/types'
+import { TextSizeSetting } from '../src/config/types'
 
-import { mergeWithDefaults } from '../src/App'
 import ElectionContext from '../src/contexts/electionContext'
 
 export function render(
@@ -30,7 +30,7 @@ export function render(
     ...testRender(
       <ElectionContext.Provider
         value={{
-          election: mergeWithDefaults(election as Election),
+          election: election as Election,
           resetElection,
           setUserSettings,
           userSettings,
