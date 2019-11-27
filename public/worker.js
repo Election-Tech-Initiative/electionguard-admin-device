@@ -4,7 +4,7 @@
 /* eslint-disable func-names */
 /* eslint-disable no-restricted-globals */
 const CACHE_NAME = 'pwa-election-guard'
-const urlsToCache = ['/', '/completed']
+const urlsToCache = []
 
 // Install a service worker
 self.addEventListener('install', event => {
