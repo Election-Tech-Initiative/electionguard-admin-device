@@ -1,4 +1,4 @@
-import React, { useState, useContext, PointerEventHandler } from 'react'
+import React, { useContext, PointerEventHandler } from 'react'
 import styled from 'styled-components'
 import ElectionContext from '../contexts/electionContext'
 import Main, { MainChild } from '../components/Main'
@@ -23,8 +23,10 @@ const LogoImage = styled.img`
 `
 
 const SetupEncryptersPage = () => {
-  const { election } = useContext(ElectionContext)
-  const [numberOfEncrypters, setNumberOfEncrypters] = useState(1 as number)
+  const { election, electionGuardConfig, setNumberOfEncrypters } = useContext(
+    ElectionContext
+  )
+  const { numberOfEncrypters } = electionGuardConfig
 
   const onNumberOfEncryptersChange: PointerEventHandler = event => {
     const target = event.target as HTMLInputElement
@@ -42,7 +44,7 @@ const SetupEncryptersPage = () => {
         <MainChild>
           <Prose id="audiofocus">
             <Header>
-              <h1>Setup Trustees</h1>
+              <h1>Setup Encrypters</h1>
             </Header>
           </Prose>
           <Prose textCenter>
@@ -83,7 +85,7 @@ const SetupEncryptersPage = () => {
         }
       >
         <p>
-          <LinkButton big primary to="/keys" id="next">
+          <LinkButton big primary to="/encrypters" id="next">
             <TextIcon arrowRight white>
               Next
             </TextIcon>

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const sealMaxWidth = '250px'
+const sealMaxWidth = '5rem'
 
 const SealContainer = styled.div`
   max-width: ${sealMaxWidth};

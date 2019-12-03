@@ -1,15 +1,47 @@
 import { Election } from '@votingworks/ballot-encoder'
 
 // ElectionGuard
-export interface BallotEncryptionConfig {
+export enum ElectionGuardStatus {
+  Error = -1,
+  KeyCeremony = 0,
+  TallyVotes = 1,
+  Complete = 2,
+}
+
+export enum ClaimStatus {
+  Error = -1,
+  Unclaimed = 0,
+  Claimed = 1,
+}
+
+export interface ElectionGuardConfig {
+  numberOfSelections: number
+  numberOfTrustees: number
+  threshold: number
+  numberOfEncrypters: number
   subgroupOrder: string
   electionMetadata: string
   jointPublicKey: string
 }
 
-export interface ElectionGuardConfig extends BallotEncryptionConfig {
-  numberOfSelections: number
-  numberOfTrustees: number
+export interface TrusteeKeyVault {
+  [trusteeId: string]: TrusteeKey
+}
+
+export interface TrusteeKey {
+  id: string
+  data: string
+  status: ClaimStatus
+}
+
+export interface EncrypterStore {
+  [encrypterId: string]: Encrypter
+}
+
+export interface Encrypter {
+  id: string
+  data: string
+  status: ClaimStatus
 }
 
 // Generic
@@ -38,8 +70,21 @@ export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 export interface ElectionContextInterface {
   readonly election: Election
   resetElection: (path?: string) => void
-  setUserSettings: (partial: PartialUserSettings) => void
+  electionGuardStatus: ElectionGuardStatus
+  setElectionGuardStatus: (status: ElectionGuardStatus) => void
+  electionGuardConfig: ElectionGuardConfig
+  setNumberOfTrustees: (numberOfTrustees: number) => void
+  setThreshold: (threshold: number) => void
+  setElectionGuardConfig: (electionGuardConfig: ElectionGuardConfig) => void
+  keyVault: TrusteeKeyVault
+  setKeyVault: (keyVault: TrusteeKeyVault) => void
+  claimTrusteeKey: (trusteeId: string) => void
+  encrypterStore: EncrypterStore
+  setNumberOfEncrypters: (numberOfEncrypters: number) => void
+  setEncrypterStore: (encrypterStore: EncrypterStore) => void
+  claimEncrypterDrive: (encrypterId: string) => void
   userSettings: UserSettings
+  setUserSettings: (partial: PartialUserSettings) => void
 }
 
 export type OptionalElection = Election | undefined

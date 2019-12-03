@@ -11,7 +11,13 @@ import * as GLOBALS from '../src/config/globals'
 // typescript concludes that sealURL is required.
 import electionSampleNoSeal from '../src/data/electionSampleNoSeal.json'
 
-import { TextSizeSetting } from '../src/config/types'
+import {
+  TextSizeSetting,
+  ElectionGuardConfig,
+  TrusteeKeyVault,
+  EncrypterStore,
+  ElectionGuardStatus,
+} from '../src/config/types'
 
 import ElectionContext from '../src/contexts/electionContext'
 
@@ -20,10 +26,23 @@ export function render(
   {
     route = '/',
     election = electionSampleNoSeal,
+    electionGuardStatus = ElectionGuardStatus.KeyCeremony,
+    setElectionGuardStatus = jest.fn(),
     history = createMemoryHistory({ initialEntries: [] }),
     resetElection = jest.fn(),
-    setUserSettings = jest.fn(),
+    electionGuardConfig = {} as ElectionGuardConfig,
+    setNumberOfTrustees = jest.fn(),
+    setThreshold = jest.fn(),
+    setElectionGuardConfig = jest.fn(),
+    keyVault = {} as TrusteeKeyVault,
+    setKeyVault = jest.fn(),
+    claimTrusteeKey = jest.fn(),
+    encrypterStore = {} as EncrypterStore,
+    setNumberOfEncrypters = jest.fn(),
+    setEncrypterStore = jest.fn(),
+    claimEncrypterDrive = jest.fn(),
     userSettings = { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
+    setUserSettings = jest.fn(),
   } = {}
 ) {
   return {
@@ -31,7 +50,20 @@ export function render(
       <ElectionContext.Provider
         value={{
           election: election as Election,
+          electionGuardStatus,
           resetElection,
+          setElectionGuardStatus,
+          electionGuardConfig,
+          setNumberOfTrustees,
+          setThreshold,
+          setElectionGuardConfig,
+          keyVault,
+          setKeyVault,
+          claimTrusteeKey,
+          encrypterStore,
+          setNumberOfEncrypters,
+          setEncrypterStore,
+          claimEncrypterDrive,
           setUserSettings,
           userSettings,
         }}

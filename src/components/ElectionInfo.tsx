@@ -18,7 +18,7 @@ const VerticalContainer = styled.div`
 
 const CenteringBlock = styled.div`
   display: flex;
-  margin: 1.5rem 1rem 0;
+  margin: 0 1rem;
 `
 
 const HorizontalContainer = styled.div`
@@ -53,6 +53,9 @@ const ElectionInfo = ({
         ballotStyleId,
       })
     : ''
+  if (!election) {
+    return <></>
+  }
   const title = `${partyPrimaryAdjective} ${t}`
   if (horizontal) {
     return (

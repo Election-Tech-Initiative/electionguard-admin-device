@@ -31,7 +31,8 @@ const LinkButton = (props: Props) => {
     /* istanbul ignore else */
     if (onPress) {
       onPress(event)
-    } else if (goBack && !to) {
+    }
+    if (goBack && !to) {
       // Delay to avoid passing tap to next screen
       window.setTimeout(() => {
         history.goBack()

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
+import { ClaimStatus, EncrypterStore } from '../config/types'
 import ElectionContext from '../contexts/electionContext'
 import Main, { MainChild } from '../components/Main'
 import Prose from '../components/Prose'
@@ -8,7 +9,6 @@ import ElectionInfo from '../components/ElectionInfo'
 import Sidebar from '../components/Sidebar'
 import ClaimButton from '../components/ClaimButton'
 import LinkButton from '../components/LinkButton'
-import { TrusteeKeyVault, ClaimStatus } from '../config/types'
 
 const Header = styled.div`
   margin: 0 auto;
@@ -27,53 +27,58 @@ const KeysGrid = styled.div`
   grid-gap: 0.5rem;
 `
 
-const getKeys = (numberOfTrustees: number): TrusteeKeyVault => {
-  const keyVault = {} as TrusteeKeyVault
-  for (let i = 0; i < numberOfTrustees; i += 1) {
-    keyVault[i] = {
+const getEncrypters = (numberOfEncrypters: number): EncrypterStore => {
+  const encrypterStore = {} as EncrypterStore
+  for (let i = 0; i < numberOfEncrypters; i += 1) {
+    encrypterStore[i] = {
       id: `${i}`,
       data: `${i}`,
       status: ClaimStatus.Unclaimed,
     }
   }
-  return keyVault
+  return encrypterStore
 }
 
-const KeyDistributionPage = () => {
-  const { election, electionGuardConfig, keyVault, setKeyVault } = useContext(
-    ElectionContext
-  )
-  if (Object.keys(keyVault).length === 0) {
-    setKeyVault(getKeys(electionGuardConfig.numberOfTrustees))
+const EncryptionDistributionPage = () => {
+  const {
+    election,
+    electionGuardConfig,
+    encrypterStore,
+    setEncrypterStore,
+  } = useContext(ElectionContext)
+
+  if (Object.keys(encrypterStore).length === 0) {
+    setEncrypterStore(getEncrypters(electionGuardConfig.numberOfEncrypters))
   }
 
-  const allKeys = Object.keys(keyVault).map(key => keyVault[key])
-  const allClaimed = allKeys.reduce(
+  const allEncrypters = Object.keys(encrypterStore).map(
+    key => encrypterStore[key]
+  )
+  const allClaimed = allEncrypters.reduce(
     (claimed, key) => claimed && key.status === ClaimStatus.Claimed,
     true
   )
-
   return (
     <Screen>
       <Main>
         <MainChild>
           <Prose id="audiofocus">
             <Header>
-              <h1>Distribute Keys</h1>
+              <h1>Download Encrypter</h1>
             </Header>
           </Prose>
           <Prose textCenter>
             <p aria-label="Select unclaimed key to distribute">
-              <b>Select key to distribute </b>
+              <b>Select to download</b>
             </p>
             <KeysGrid>
-              {allKeys.map(key => {
+              {allEncrypters.map(encrypter => {
                 return (
                   <ClaimButton
-                    key={key.id}
-                    claimId={key.id}
-                    status={key.status}
-                    to="/keys"
+                    key={encrypter.id}
+                    claimId={encrypter.id}
+                    status={encrypter.status}
+                    to="/encrypters"
                   />
                 )
               })}
@@ -99,14 +104,14 @@ const KeyDistributionPage = () => {
             big
             primary={allClaimed}
             disabled={!allClaimed}
-            to="/setup-encrypters"
+            to="/ready"
             id="next"
           >
             Next
           </LinkButton>
         </p>
         <p>
-          <LinkButton disabled small to="/setup-keys" id="back">
+          <LinkButton disabled small to="/start" id="back">
             Back
           </LinkButton>
         </p>
@@ -115,4 +120,4 @@ const KeyDistributionPage = () => {
   )
 }
 
-export default KeyDistributionPage
+export default EncryptionDistributionPage

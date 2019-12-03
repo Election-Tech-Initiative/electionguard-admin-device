@@ -1,4 +1,4 @@
-import React, { useState, useContext, PointerEventHandler } from 'react'
+import React, { useContext, PointerEventHandler } from 'react'
 import styled from 'styled-components'
 import ElectionContext from '../contexts/electionContext'
 import Main, { MainChild } from '../components/Main'
@@ -24,17 +24,23 @@ const LogoImage = styled.img`
 `
 
 const SetupTrusteesPage = () => {
-  const { election } = useContext(ElectionContext)
+  const {
+    election,
+    electionGuardConfig,
+    setNumberOfTrustees,
+    setThreshold,
+  } = useContext(ElectionContext)
+  const { numberOfTrustees, threshold } = electionGuardConfig
 
-  const [numberOfTrustees, setNumberOfTrustees] = useState(
-    1 as ValidTrusteeCount
-  )
-  const [threshold, setThreshold] = useState(1 as ValidTrusteeCount)
+  if (!threshold && !numberOfTrustees) {
+    setNumberOfTrustees(1)
+    setThreshold(1)
+  }
 
   const onNumberOfTrusteesChange: PointerEventHandler = event => {
     const target = event.target as HTMLInputElement
     const value = +target.value as ValidTrusteeCount
-    if (value < threshold) {
+    if (value < electionGuardConfig.threshold) {
       setThreshold(value)
     }
     setNumberOfTrustees(value)
