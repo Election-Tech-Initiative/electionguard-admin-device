@@ -1,4 +1,4 @@
-import SetupElectionPage from './pages/SetupElectionPage'
+import SetupTrusteesPage from './pages/SetupTrusteesPage'
 import StartPage from './pages/StartPage'
 import TallyPage from './pages/TallyPage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -21,10 +21,10 @@ export const routes: { [id: string]: Route } = {
   },
   setup: {
     id: 'setup',
-    name: 'Setup Election',
+    name: 'Setup Trustees',
     path: '/setup',
     exact: true,
-    component: SetupElectionPage,
+    component: SetupTrusteesPage,
   },
   // keys: {
   //   id: 'keys',

@@ -1,78 +1,128 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders KeyDistributionPage 1`] = `
-<main
-  class="sc-htpNat eUEnuv"
+<div
+  class="sc-bxivhb duQixI"
 >
-  <div
-    class="sc-bxivhb fEFIwD"
+  <main
+    class="sc-bdVaJa iiFDUH"
   >
     <div
-      class="sc-ifAKCX cObZIz"
+      class="sc-bwzfXH cJzayE"
     >
-      <h1>
-        Distribute Keys
-      </h1>
       <div
-        class="sc-VigVT ftZsxU"
+        class="sc-htpNat feTyaj"
+        id="audiofocus"
       >
         <div
-          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
+          class="sc-kAzzGY leSgAS"
         >
-          <button
-            class="sc-bwzfXH kHZqpR"
-            id="button-1"
-            type="button"
-          >
-            Claim
-          </button>
-        </div>
-        <div
-          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
-        >
-          <button
-            class="sc-bwzfXH kHZqpR"
-            id="button-2"
-            type="button"
-          >
-            Claim
-          </button>
-        </div>
-        <div
-          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
-        >
-          <button
-            class="sc-bwzfXH kHZqpR"
-            id="button-3"
-            type="button"
-          >
-            Claim
-          </button>
-        </div>
-        <div
-          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
-        >
-          <button
-            class="sc-bwzfXH kHZqpR"
-            id="button-4"
-            type="button"
-          >
-            Claim
-          </button>
-        </div>
-        <div
-          style="display: flex; flex-direction: row; align-content: center; justify-content: center;"
-        >
-          <button
-            class="sc-bwzfXH kHZqpR"
-            id="button-5"
-            type="button"
-          >
-            Claim
-          </button>
+          <h1>
+            Distribute Keys
+          </h1>
         </div>
       </div>
+      <div
+        class="sc-htpNat chxRAJ"
+      >
+        <p
+          aria-label="Select unclaimed key to distribute"
+        >
+          <b>
+            Select key to distribute 
+          </b>
+        </p>
+        <div
+          class="sc-kgoBCf hhFZrY"
+        />
+      </div>
     </div>
-  </div>
-</main>
+  </main>
+  <nav
+    class="sc-gZMcBi gyqVoq"
+  >
+    <div
+      class="sc-VigVT JNuqd"
+    >
+      <p>
+        <button
+          class="sc-jzJRlG byCwxn"
+          id="next"
+          role="option"
+          type="button"
+        >
+          Next
+        </button>
+      </p>
+      <p>
+        <button
+          class="sc-jzJRlG fVHyVV"
+          disabled=""
+          id="back"
+          role="option"
+          type="button"
+        >
+          Back
+        </button>
+      </p>
+    </div>
+    <div
+      class="sc-jTzLTM iBwhQj"
+    >
+      <hr />
+      <div
+        aria-hidden="true"
+        class="sc-dnqmqq exjFso"
+        data-testid="election-info"
+      >
+        <div
+          class="sc-iwsKbI eyMKeV"
+        >
+          <div
+            aria-hidden="true"
+            class="sc-ifAKCX jpWdgG"
+          />
+          <div
+            class="sc-htpNat jFlhLj"
+          >
+            <h5
+              aria-label=" General Election."
+            >
+               General Election
+            </h5>
+            <p
+              class="sc-bZQynM TVUTw"
+            >
+              November 3, 2020
+              <br />
+              <span
+                class="sc-gzVnrw djKZhV"
+              >
+                Franklin County
+                ,
+              </span>
+               
+              <span
+                class="sc-gzVnrw djKZhV"
+              >
+                State of Hamilton
+              </span>
+            </p>
+            <p
+              class="sc-bZQynM hVWfdn"
+            >
+               
+            </p>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <img
+        alt="Election Guard Logo"
+        class="sc-chPdSV cFhLDJ"
+        src="/images/electionguard.svg"
+      />
+    </div>
+  </nav>
+</div>
 `;

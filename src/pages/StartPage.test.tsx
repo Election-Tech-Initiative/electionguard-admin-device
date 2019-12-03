@@ -7,14 +7,14 @@ import electionSampleNoSeal from '../data/electionSampleNoSeal.json'
 
 import StartPage from './StartPage'
 
-it(`renders StartPage`, async () => {
+it('renders StartPage', async () => {
   const { container } = render(<Route path="/" component={StartPage} />, {
     route: '/',
   })
   expect(container.firstChild).toMatchSnapshot()
 })
 
-it(`renders StartPage with inline SVG`, async () => {
+it('renders StartPage with inline SVG', async () => {
   const { container } = render(<Route path="/" component={StartPage} />, {
     route: '/',
     election: electionSampleWithSeal,
@@ -22,7 +22,7 @@ it(`renders StartPage with inline SVG`, async () => {
   expect(container.firstChild).toMatchSnapshot()
 })
 
-it(`renders StartPage with no seal`, async () => {
+it('renders StartPage with no seal', async () => {
   const { container } = render(<Route path="/" component={StartPage} />, {
     route: '/',
     election: electionSampleNoSeal,

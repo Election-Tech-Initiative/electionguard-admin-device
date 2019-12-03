@@ -5,7 +5,7 @@ import { render } from '../../test/testUtils'
 
 import TallyPage from './TallyPage'
 
-it(`renders TallyPage`, async () => {
+it('renders TallyPage', async () => {
   const { container } = render(<Route path="/" component={TallyPage} />, {
     route: '/',
   })

@@ -2,7 +2,7 @@
 
 exports[`renders Prose defaults 1`] = `
 <div
-  class="sc-bdVaJa fUpyWZ"
+  class="sc-bdVaJa eWKPbL"
 >
   <h1>
     Heading 1
@@ -39,7 +39,7 @@ exports[`renders Prose defaults 1`] = `
 
 exports[`renders Prose with compact spacing 1`] = `
 <div
-  class="sc-bdVaJa hMDJJy"
+  class="sc-bdVaJa cUBCZA"
 >
   <h1>
     Heading 1
@@ -77,7 +77,7 @@ exports[`renders Prose with compact spacing 1`] = `
 
 exports[`renders Prose with compact spacing 2`] = `
 <div
-  class="sc-bdVaJa UBVRg"
+  class="sc-bdVaJa hWqeGp"
 >
   <h1>
     Heading 1

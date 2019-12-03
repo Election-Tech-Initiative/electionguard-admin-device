@@ -5,7 +5,7 @@ import { render } from '../../test/testUtils'
 
 import KeyDistributionPage from './KeyDistributionPage'
 
-it(`renders KeyDistributionPage`, async () => {
+it('renders KeyDistributionPage', async () => {
   const { container } = render(
     <Route path="/" component={KeyDistributionPage} />,
     {

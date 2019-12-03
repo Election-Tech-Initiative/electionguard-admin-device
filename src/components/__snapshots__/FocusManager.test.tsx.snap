@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders FocusManager 1`] = `
+<div
+  class="sc-bdVaJa eMFrIq"
+  tabindex="-1"
+>
+  foo
+</div>
+`;

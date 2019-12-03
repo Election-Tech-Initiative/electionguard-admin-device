@@ -1,20 +1,21 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 
-import GLOBALS from '../config/globals'
+import * as GLOBALS from '../config/globals'
 
 interface Props {
   bold?: boolean
+  light?: boolean
   center?: boolean
   error?: boolean
   italic?: boolean
   muted?: boolean
   narrow?: boolean
+  noWrap?: boolean
   small?: boolean
   warning?: boolean
   warningIcon?: boolean
   wordBreak?: boolean
-  white?: boolean
   voteIcon?: boolean
 }
 
@@ -35,7 +36,7 @@ const iconStyles = css<Props>`
     font-size: 90%;
     font-weight: 800;
     content: ${({ warningIcon, voteIcon }) =>
-      (warningIcon && `'!'`) || (voteIcon && `'${GLOBALS.CHECK_ICON}'`)};
+      (warningIcon && "'!'") || (voteIcon && `'${GLOBALS.CHECK_ICON}'`)};
   }
 `
 
@@ -44,22 +45,22 @@ const Text = styled('p')<Props>`
   margin-left: ${({ narrow }) => (narrow ? 'auto' : undefined)};
   max-width: ${({ narrow }) => (narrow ? '33ch' : undefined)};
   text-align: ${({ center }) => (center ? 'center' : undefined)};
-  color: ${({ error, muted, warning, white }) =>
+  white-space: ${({ noWrap }) => (noWrap ? 'nowrap' : undefined)};
+  color: ${({ error, muted, warning }) =>
     (error && 'red') ||
     (warning && 'darkorange') ||
-    (white && '#FFFFFF') ||
     (muted && 'gray') ||
     undefined};
   @media print {
-    color: ${({ error, muted, warning, white }) =>
+    color: ${({ error, muted, warning }) =>
       (error && 'black') ||
       (warning && 'black') ||
-      (white && '#FFFFFF') ||
       (muted && 'black') ||
       undefined};
   }
   font-size: ${({ small }) => (small ? '0.8rem' : undefined)};
-  font-weight: ${({ bold }) => (bold ? '600' : undefined)};
+  font-weight: ${({ bold, light }) =>
+    (bold && '600') || (light && '300') || undefined};
   font-style: ${({ italic }) => (italic ? 'italic' : undefined)};
   word-break: ${({ wordBreak }) => (wordBreak ? 'break-word' : undefined)};
   /* stylelint-disable-next-line value-keyword-case, order/properties-order */
@@ -68,17 +69,21 @@ const Text = styled('p')<Props>`
 
 export const TextWithLineBreaks = ({ text }: { text: string }) => (
   <>
-    {text.split(/[\n|\r]{2}/g).map(x => (
+    {text.split(/[\n\r]{2}/g).map(x => (
       <p key={x}>
-        {x.split(/[\n|\r]/g).map((y, i, arr) => (
+        {x.split(/[\n\r]/g).map((y, i, arr) => (
           <React.Fragment key={y}>
             {y}
-            {arr.length > 1 && i !== arr.length - 1 && <br />}
+            {i !== arr.length - 1 && <br />}
           </React.Fragment>
         ))}
       </p>
     ))}
   </>
 )
+
+export const NoWrap = styled.span`
+  white-space: nowrap;
+`
 
 export default Text

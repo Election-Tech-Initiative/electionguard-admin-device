@@ -1,78 +1,84 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-
-import BallotContext from '../contexts/electionContext'
-
-import LinkButton from '../components/LinkButton'
+import ElectionContext from '../contexts/electionContext'
 import Main, { MainChild } from '../components/Main'
+import LinkButton from '../components/LinkButton'
+import Screen from '../components/Screen'
+
+import ElectionInfo from '../components/ElectionInfo'
+import Sidebar from '../components/Sidebar'
 import Prose from '../components/Prose'
+import { ElectionGuardStatus } from '../config/types'
 
-const Seal = styled.div`
-  margin: 0 auto 1rem;
-  max-width: 320px;
-`
-
-const SealImage = styled.img`
-  max-width: 320px;
-`
-
-const ButtonOptions = styled.div`
+const LogoImage = styled.img`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  & > button {
-    margin: 10px;
-    width: 240px;
-  }
+  margin: 0 auto;
+  max-width: 12rem;
 `
 
 const StartPage = () => {
-  const { election } = useContext(BallotContext)
-  const { title, state, county, date, seal, sealURL } = election!
-
+  const { election, electionGuardStatus } = useContext(ElectionContext)
+  const getElectionGuardStatus = () => {
+    switch (electionGuardStatus) {
+      case ElectionGuardStatus.KeyCeremony:
+        return 'Election needs to be setup.'
+      case ElectionGuardStatus.TallyVotes:
+        return 'Ready to Tally Votes.'
+      case ElectionGuardStatus.Complete:
+        return 'Election Complete.'
+      default:
+        return 'Election Error.'
+    }
+  }
   return (
-    <Main>
-      <MainChild center>
-        {seal ? (
-          <Seal aria-hidden="true" dangerouslySetInnerHTML={{ __html: seal }} />
-        ) : sealURL ? (
-          <Seal aria-hidden="true">
-            <SealImage alt="" src={sealURL} />
-          </Seal>
-        ) : (
-          <></>
-        )}
-        <Prose textCenter>
-          <h1 aria-label={`${title}.`}>{title}</h1>
-          <p aria-hidden="true">
-            {date}
-            <br />
-            {county.name}, {state}
-            <br />
-          </p>
-          <ButtonOptions>
-            <LinkButton
-              primary
-              to="/setup"
-              id="setup"
-              aria-label="Select Setup to Setup Election"
-            >
-              Setup Election
-            </LinkButton>
-            <LinkButton
-              disabled
-              to="/tally"
-              id="tally"
-              aria-label="Select Tally to Tally Votes"
-            >
-              Tally Votes
-            </LinkButton>
-          </ButtonOptions>
-        </Prose>
-      </MainChild>
-    </Main>
+    <Screen>
+      <Main>
+        <MainChild center>
+          <Prose textCenter>
+            <h1>Welcome to ElectionGuard</h1>
+            <hr />
+            <p>{getElectionGuardStatus()}</p>
+          </Prose>
+        </MainChild>
+      </Main>
+      <Sidebar
+        footer={
+          <>
+            <hr />
+            <ElectionInfo election={election} precinctId="" horizontal />
+            <hr />
+            <LogoImage
+              alt="Election Guard Logo"
+              src="/images/electionguard.svg"
+            />
+          </>
+        }
+      >
+        <p>
+          <LinkButton
+            primary={electionGuardStatus === ElectionGuardStatus.KeyCeremony}
+            disabled={electionGuardStatus !== ElectionGuardStatus.KeyCeremony}
+            to="/setup-keys"
+            id="setup"
+            aria-label="Select Setup to Setup Election"
+          >
+            Setup Election
+          </LinkButton>
+        </p>
+        <p>
+          <LinkButton
+            primary={electionGuardStatus === ElectionGuardStatus.TallyVotes}
+            disabled={electionGuardStatus !== ElectionGuardStatus.TallyVotes}
+            to="/tally"
+            id="tally"
+            aria-label="Select Tally to Tally Votes"
+          >
+            Tally Votes
+          </LinkButton>
+        </p>
+      </Sidebar>
+    </Screen>
   )
 }
 

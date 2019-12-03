@@ -2,7 +2,7 @@
 
 exports[`renders Button 1`] = `
 <button
-  class="sc-bwzfXH kHZqpR"
+  class="sc-bwzfXH gBzjSr"
   type="button"
 >
   foo
@@ -11,7 +11,7 @@ exports[`renders Button 1`] = `
 
 exports[`renders DecoyButton 1`] = `
 <div
-  class="sc-bdVaJa dnJkEm"
+  class="sc-bdVaJa fUKbkn"
 >
   DecoyButton
 </div>
@@ -19,7 +19,7 @@ exports[`renders DecoyButton 1`] = `
 
 exports[`renders big Button 1`] = `
 <button
-  class="sc-bwzfXH eYHDXc"
+  class="sc-bwzfXH bbSMPw"
   type="button"
 >
   I’m a big button!
@@ -28,7 +28,7 @@ exports[`renders big Button 1`] = `
 
 exports[`renders danger Button 1`] = `
 <button
-  class="sc-bwzfXH kDljbx"
+  class="sc-bwzfXH kKlRTC"
   type="button"
 >
   Danger!
@@ -37,7 +37,7 @@ exports[`renders danger Button 1`] = `
 
 exports[`renders primary Button 1`] = `
 <button
-  class="sc-bwzfXH URjIp"
+  class="sc-bwzfXH gvKole"
   type="button"
 >
   Primary
@@ -46,7 +46,7 @@ exports[`renders primary Button 1`] = `
 
 exports[`renders small Button 1`] = `
 <button
-  class="sc-bwzfXH jhNkEE"
+  class="sc-bwzfXH hyvTSe"
   type="button"
 >
   I’m a small button!

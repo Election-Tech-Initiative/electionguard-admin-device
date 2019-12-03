@@ -5,7 +5,7 @@ import { render } from '../../test/testUtils'
 
 import ElectionReadyPage from './ElectionReadyPage'
 
-it(`renders ElectionReadyPage`, async () => {
+it('renders ElectionReadyPage', async () => {
   const { container } = render(
     <Route path="/" component={ElectionReadyPage} />,
     {

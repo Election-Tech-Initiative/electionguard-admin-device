@@ -1,43 +1,25 @@
-import React from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
-const StyledScreen = styled.div`
+interface Props {
+  flexDirection?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
+  voterMode?: boolean
+  white?: boolean
+}
+
+const Screen = styled.div<Props>`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ flexDirection = 'row' }) => flexDirection};
+  background-color: ${({ white }) => (white ? 'white' : undefined)};
   height: 100%;
-  &:focus {
-    outline: none;
+  & > nav {
+    flex: ${({ voterMode = true }) => (voterMode ? '1' : '2')};
+  }
+  & > main {
+    flex: ${({ voterMode = true }) => (voterMode ? '2' : '3')};
+  }
+  @media print {
+    display: none;
   }
 `
 
-class Screen extends React.Component<RouteComponentProps> {
-  public screen = React.createRef<HTMLDivElement>()
-
-  public componentDidMount() {
-    this.focus()
-  }
-
-  public componentDidUpdate(prevProps: RouteComponentProps) {
-    if (this.props.location.pathname !== prevProps.location.pathname) {
-      this.focus()
-    }
-  }
-
-  public focus = () => {
-    const elementToFocus =
-      document.getElementById('audiofocus') || this.screen.current!
-    elementToFocus.focus()
-    elementToFocus.click()
-  }
-
-  public render() {
-    return (
-      <StyledScreen ref={this.screen} tabIndex={-1}>
-        {this.props.children}
-      </StyledScreen>
-    )
-  }
-}
-
-export default withRouter(Screen)
+export default Screen

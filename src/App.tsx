@@ -1,34 +1,36 @@
 import React from 'react'
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom'
 
-import GLOBALS from './config/globals'
+import { Election, OptionalElection } from '@votingworks/ballot-encoder'
+
+import * as GLOBALS from './config/globals'
 
 import 'normalize.css'
 import './App.css'
 
 import {
-  Election,
-  ElectionDefaults,
-  OptionalElection,
   PartialUserSettings,
   TextSizeSetting,
   UserSettings,
+  ElectionGuardConfig,
+  EncrypterStore,
+  TrusteeKeyVault,
+  ClaimStatus,
+  ElectionGuardStatus,
 } from './config/types'
 
 import Layout from './components/Layout'
-import Screen from './components/Screen'
 import ElectionContext from './contexts/electionContext'
 
-import electionDefaults from './data/electionDefaults.json'
-import electionSample from './data/electionSampleWithSeal.json'
-
-export const mergeWithDefaults = (
-  election: Election,
-  defaults: ElectionDefaults = electionDefaults
-) => ({ ...defaults, ...election })
+import electionSample from './data/electionPrimarySample.json'
+import FocusManager from './components/FocusManager'
 
 interface State {
   election: OptionalElection
+  electionGuardStatus: ElectionGuardStatus
+  electionGuardConfig: ElectionGuardConfig
+  keyVault: TrusteeKeyVault
+  encrypterStore: EncrypterStore
   loadingElection: boolean
   userSettings: UserSettings
 }
@@ -37,6 +39,10 @@ export const electionKey = 'election'
 
 const initialState = {
   election: undefined,
+  electionGuardConfig: {} as ElectionGuardConfig,
+  keyVault: {} as TrusteeKeyVault,
+  encrypterStore: {} as EncrypterStore,
+  electionGuardStatus: ElectionGuardStatus.KeyCeremony,
   loadingElection: false,
   userSettings: { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
 }
@@ -78,11 +84,13 @@ export class App extends React.Component<RouteComponentProps, State> {
 
   public getElection = (): OptionalElection => {
     const election = window.localStorage.getItem(electionKey)
-    return election ? JSON.parse(election) : undefined
+    return election
+      ? JSON.parse(election)
+      : ((undefined as unknown) as Election)
   }
 
   public setElection = (electionConfigFile: Election) => {
-    const election = mergeWithDefaults(electionConfigFile)
+    const election = electionConfigFile
     this.setState({ election })
     window.localStorage.setItem(electionKey, JSON.stringify(election))
   }
@@ -107,19 +115,111 @@ export class App extends React.Component<RouteComponentProps, State> {
     )
   }
 
+  public setElectionGuardConfig = (
+    electionGuardConfig: ElectionGuardConfig
+  ) => {
+    this.setState({ electionGuardConfig })
+  }
+
+  public setEncrypterStore = (encrypterStore: EncrypterStore) => {
+    this.setState({ encrypterStore })
+  }
+
+  public setKeyVault = (keyVault: TrusteeKeyVault) => {
+    this.setState({ keyVault })
+  }
+
+  public setNumberOfTrustees = (numberOfTrustees: number) => {
+    this.setState(prevState => ({
+      electionGuardConfig: {
+        ...prevState.electionGuardConfig,
+        numberOfTrustees,
+      },
+    }))
+  }
+
+  public setThreshold = (threshold: number) => {
+    this.setState(prevState => ({
+      electionGuardConfig: {
+        ...prevState.electionGuardConfig,
+        threshold,
+      },
+    }))
+  }
+
+  public setNumberOfEncrypters = (numberOfEncrypters: number) => {
+    this.setState(prevState => ({
+      electionGuardConfig: {
+        ...prevState.electionGuardConfig,
+        numberOfEncrypters,
+      },
+    }))
+  }
+
+  public claimTrusteeKey = (trusteeId: string) => {
+    this.setState(prevState => ({
+      keyVault: {
+        ...prevState.keyVault,
+        [trusteeId]: {
+          ...prevState.keyVault[trusteeId],
+          status: ClaimStatus.Claimed,
+        },
+      },
+    }))
+  }
+
+  public claimEncrypterDrive = (encrypterId: string) => {
+    this.setState(prevState => ({
+      encrypterStore: {
+        ...prevState.encrypterStore,
+        [encrypterId]: {
+          ...prevState.encrypterStore[encrypterId],
+          status: ClaimStatus.Claimed,
+        },
+      },
+    }))
+  }
+
+  public setElectionGuardStatus = (status: ElectionGuardStatus) => {
+    this.setState({
+      electionGuardStatus: status,
+    })
+  }
+
   public setDocumentFontSize = (textSize: number = GLOBALS.TEXT_SIZE) => {
     document.documentElement.style.fontSize = `${GLOBALS.FONT_SIZES[textSize]}px`
   }
 
   public render() {
-    const { election } = this.state
+    const {
+      election,
+      electionGuardConfig,
+      keyVault,
+      encrypterStore,
+      userSettings,
+      electionGuardStatus,
+    } = this.state
     return (
       <ElectionContext.Provider
         value={{
-          election,
+          election: election as Election,
           resetElection: this.resetElection,
+          electionGuardStatus,
+          setElectionGuardStatus: this.setElectionGuardStatus,
+          electionGuardConfig,
+          setNumberOfTrustees: this.setNumberOfTrustees,
+          setThreshold: this.setThreshold,
+          setElectionGuardConfig: this.setElectionGuardConfig,
+          keyVault,
+          setKeyVault: this.setKeyVault,
+          claimTrusteeKey: this.claimTrusteeKey,
+          encrypterStore,
+          setNumberOfEncrypters: this.setNumberOfEncrypters,
+          setEncrypterStore: this.setEncrypterStore,
+          claimEncrypterDrive: this.claimEncrypterDrive,
+
           setUserSettings: this.setUserSettings,
-          userSettings: this.state.userSettings,
+          userSettings,
         }}
       >
         <Layout />
@@ -130,9 +230,9 @@ export class App extends React.Component<RouteComponentProps, State> {
 
 const Root = () => (
   <BrowserRouter>
-    <Screen>
+    <FocusManager>
       <Route path="/" component={App} />
-    </Screen>
+    </FocusManager>
   </BrowserRouter>
 )
 

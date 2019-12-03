@@ -2,17 +2,23 @@ import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { render as testRender } from '@testing-library/react'
+import { Election } from '@votingworks/ballot-encoder'
 
-import GLOBALS from '../src/config/globals'
+import * as GLOBALS from '../src/config/globals'
 
 // it's necessary to use the no-seal version, which has neither
 // of the two optional seal fields, because otherwise
 // typescript concludes that sealURL is required.
 import electionSampleNoSeal from '../src/data/electionSampleNoSeal.json'
 
-import { Election, TextSizeSetting } from '../src/config/types'
+import {
+  TextSizeSetting,
+  ElectionGuardConfig,
+  TrusteeKeyVault,
+  EncrypterStore,
+  ElectionGuardStatus,
+} from '../src/config/types'
 
-import { mergeWithDefaults } from '../src/App'
 import ElectionContext from '../src/contexts/electionContext'
 
 export function render(
@@ -20,18 +26,44 @@ export function render(
   {
     route = '/',
     election = electionSampleNoSeal,
+    electionGuardStatus = ElectionGuardStatus.KeyCeremony,
+    setElectionGuardStatus = jest.fn(),
     history = createMemoryHistory({ initialEntries: [] }),
     resetElection = jest.fn(),
-    setUserSettings = jest.fn(),
+    electionGuardConfig = {} as ElectionGuardConfig,
+    setNumberOfTrustees = jest.fn(),
+    setThreshold = jest.fn(),
+    setElectionGuardConfig = jest.fn(),
+    keyVault = {} as TrusteeKeyVault,
+    setKeyVault = jest.fn(),
+    claimTrusteeKey = jest.fn(),
+    encrypterStore = {} as EncrypterStore,
+    setNumberOfEncrypters = jest.fn(),
+    setEncrypterStore = jest.fn(),
+    claimEncrypterDrive = jest.fn(),
     userSettings = { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
+    setUserSettings = jest.fn(),
   } = {}
 ) {
   return {
     ...testRender(
       <ElectionContext.Provider
         value={{
-          election: mergeWithDefaults(election as Election),
+          election: election as Election,
+          electionGuardStatus,
           resetElection,
+          setElectionGuardStatus,
+          electionGuardConfig,
+          setNumberOfTrustees,
+          setThreshold,
+          setElectionGuardConfig,
+          keyVault,
+          setKeyVault,
+          claimTrusteeKey,
+          encrypterStore,
+          setNumberOfEncrypters,
+          setEncrypterStore,
+          claimEncrypterDrive,
           setUserSettings,
           userSettings,
         }}

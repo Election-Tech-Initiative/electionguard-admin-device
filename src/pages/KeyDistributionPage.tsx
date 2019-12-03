@@ -1,13 +1,24 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
+import ElectionContext from '../contexts/electionContext'
 import Main, { MainChild } from '../components/Main'
 import Prose from '../components/Prose'
-import KeyClaimer from '../components/KeyClaimer'
-import ButtonBar from '../components/ButtonBar'
+import Screen from '../components/Screen'
+import ElectionInfo from '../components/ElectionInfo'
+import Sidebar from '../components/Sidebar'
+import ClaimButton from '../components/ClaimButton'
 import LinkButton from '../components/LinkButton'
+import { TrusteeKeyVault, ClaimStatus } from '../config/types'
 
-const Filler = styled.div`
-  flex: 2;
+const Header = styled.div`
+  margin: 0 auto;
+  text-align: center;
+`
+
+const LogoImage = styled.img`
+  display: flex;
+  margin: 0 auto;
+  max-width: 12rem;
 `
 
 const KeysGrid = styled.div`
@@ -16,70 +27,53 @@ const KeysGrid = styled.div`
   grid-gap: 0.5rem;
 `
 
-const mockKeys: { [id: string]: Key } = {
-  '1': {
-    id: 1,
-    claimed: false,
-    data: '',
-  },
-  '2': {
-    id: 2,
-    claimed: false,
-    data: '',
-  },
-  '3': {
-    id: 3,
-    claimed: false,
-    data: '',
-  },
-  '4': {
-    id: 4,
-    claimed: false,
-    data: '',
-  },
-  '5': {
-    id: 5,
-    claimed: false,
-    data: '',
-  },
-}
-
-interface Key {
-  id: number
-  claimed: boolean
-  data: string
+const getKeys = (numberOfTrustees: number): TrusteeKeyVault => {
+  const keyVault = {} as TrusteeKeyVault
+  for (let i = 0; i < numberOfTrustees; i += 1) {
+    keyVault[i] = {
+      id: `${i}`,
+      data: `${i}`,
+      status: ClaimStatus.Unclaimed,
+    }
+  }
+  return keyVault
 }
 
 const KeyDistributionPage = () => {
-  const [keys, setKeys] = useState<{ [id: string]: Key }>(mockKeys)
-  const test = (id: number) => {
-    setKeys({
-      ...keys,
-      [id]: {
-        ...keys[id],
-        claimed: true,
-      },
-    })
+  const { election, electionGuardConfig, keyVault, setKeyVault } = useContext(
+    ElectionContext
+  )
+  if (Object.keys(keyVault).length === 0) {
+    setKeyVault(getKeys(electionGuardConfig.numberOfTrustees))
   }
-  const allKeys = Object.keys(keys).map(key => keys[key])
+
+  const allKeys = Object.keys(keyVault).map(key => keyVault[key])
   const allClaimed = allKeys.reduce(
-    (claimed, key) => claimed && key.claimed,
+    (claimed, key) => claimed && key.status === ClaimStatus.Claimed,
     true
   )
+
   return (
-    <>
+    <Screen>
       <Main>
-        <MainChild center>
+        <MainChild>
+          <Prose id="audiofocus">
+            <Header>
+              <h1>Distribute Keys</h1>
+            </Header>
+          </Prose>
           <Prose textCenter>
-            <h1>Distribute Keys</h1>
+            <p aria-label="Select unclaimed key to distribute">
+              <b>Select key to distribute </b>
+            </p>
             <KeysGrid>
               {allKeys.map(key => {
                 return (
-                  <KeyClaimer
+                  <ClaimButton
                     key={key.id}
-                    id={key.id}
-                    claimed={key.claimed}
-                    onClaim={test}
+                    claimId={key.id}
+                    status={key.status}
+                    to="/keys"
                   />
                 )
               })}
@@ -87,23 +81,37 @@ const KeyDistributionPage = () => {
           </Prose>
         </MainChild>
       </Main>
-      <ButtonBar>
-        <>
+      <Sidebar
+        footer={
+          <>
+            <hr />
+            <ElectionInfo election={election} precinctId="" horizontal />
+            <hr />
+            <LogoImage
+              alt="Election Guard Logo"
+              src="/images/electionguard.svg"
+            />
+          </>
+        }
+      >
+        <p>
           <LinkButton
-            disabled={!allClaimed}
+            big
             primary={allClaimed}
-            to="/ready"
+            disabled={!allClaimed}
+            to="/setup-encrypters"
             id="next"
           >
             Next
           </LinkButton>
-          <LinkButton disabled to="/setup" id="back">
+        </p>
+        <p>
+          <LinkButton disabled small to="/setup-keys" id="back">
             Back
           </LinkButton>
-          <Filler />
-        </>
-      </ButtonBar>
-    </>
+        </p>
+      </Sidebar>
+    </Screen>
   )
 }
 

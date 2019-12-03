@@ -2,7 +2,7 @@
 
 exports[`centers centered style 1`] = `
 <p
-  class="sc-bdVaJa bApkjD"
+  class="sc-bdVaJa jxBjFH"
 >
   Centered Text?
 </p>
@@ -10,7 +10,7 @@ exports[`centers centered style 1`] = `
 
 exports[`displays error style 1`] = `
 <p
-  class="sc-bdVaJa iGcpUZ"
+  class="sc-bdVaJa gIkAkw"
 >
   Error Text?
 </p>
@@ -18,15 +18,23 @@ exports[`displays error style 1`] = `
 
 exports[`displays muted style 1`] = `
 <p
-  class="sc-bdVaJa WYgMq"
+  class="sc-bdVaJa qeOOz"
 >
   Muted Text?
 </p>
 `;
 
+exports[`narrow style 1`] = `
+<p
+  class="sc-bdVaJa hXJKxS"
+>
+  Narrow Wrapper
+</p>
+`;
+
 exports[`outputs "span" tag specified by "as" prop 1`] = `
 <span
-  class="sc-bdVaJa gemIuj"
+  class="sc-bdVaJa jJpfgz"
 >
   Text in a span?
 </span>
@@ -34,7 +42,7 @@ exports[`outputs "span" tag specified by "as" prop 1`] = `
 
 exports[`outputs paragraph tag 1`] = `
 <p
-  class="sc-bdVaJa gemIuj"
+  class="sc-bdVaJa jJpfgz"
 >
   paragraph
 </p>

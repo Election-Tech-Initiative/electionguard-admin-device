@@ -6,7 +6,7 @@ import { render } from '../../test/testUtils'
 
 import NotFoundPage from './NotFoundPage'
 
-it(`renders NotFoundPage`, () => {
+it('renders NotFoundPage', () => {
   const resetElection = jest.fn()
   const { container, getByText } = render(
     <Route path="/" component={NotFoundPage} />,
@@ -16,6 +16,6 @@ it(`renders NotFoundPage`, () => {
     }
   )
   expect(container.firstChild).toMatchSnapshot()
-  fireEvent.click(getByText('Return to Start'))
+  fireEvent.click(getByText('Start Over'))
   expect(resetElection).toHaveBeenCalled()
 })

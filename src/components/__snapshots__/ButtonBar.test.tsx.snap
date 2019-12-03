@@ -2,7 +2,7 @@
 
 exports[`renders ButtonBar 1`] = `
 <nav
-  class="sc-bdVaJa bjTiK"
+  class="sc-bdVaJa aNhTI"
 >
   foo
 </nav>
