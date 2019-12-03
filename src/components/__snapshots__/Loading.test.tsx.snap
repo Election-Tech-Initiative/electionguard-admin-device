@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders default 1`] = `
+<div
+  class="sc-bwzfXH fkdqTu"
+>
+  <h1
+    aria-label="Loading."
+    class="sc-bdVaJa pOapD"
+  >
+    Loading
+  </h1>
+</div>
+`;
+
+exports[`renders fullscreen with tag and label 1`] = `
+<div
+  class="sc-htpNat cqmYhc"
+>
+  <div
+    class="sc-bwzfXH fkdqTu"
+  >
+    <h1
+      aria-label="Printing."
+      class="sc-bdVaJa pOapD"
+    >
+      Printing
+    </h1>
+  </div>
+</div>
+`;

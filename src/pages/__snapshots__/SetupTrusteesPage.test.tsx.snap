@@ -1,0 +1,205 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders SetupElectionPage 1`] = `
+<div
+  class="sc-bZQynM ebsnPk"
+>
+  <main
+    class="sc-bdVaJa iiFDUH"
+  >
+    <div
+      class="sc-bwzfXH cJzayE"
+    >
+      <div
+        class="sc-dnqmqq bznNpt"
+        id="audiofocus"
+      >
+        <div
+          class="sc-chPdSV dAbUGJ"
+        >
+          <h1>
+            Setup Trustees
+          </h1>
+        </div>
+      </div>
+      <div
+        class="sc-dnqmqq buYLZL"
+      >
+        <p
+          aria-label="Select number of trustees available. You have selected undefined trustee(s). Use the down arrow to hear your options. Use the right arrow to move to the next contest."
+        >
+          <b>
+            How many trustees available? 
+          </b>
+        </p>
+        <p>
+           
+           trustee(s) 
+        </p>
+        <span
+          class="sc-ifAKCX eqnyTq"
+          data-testid="change-number-of-trustee-buttons"
+        >
+          <button
+            class="sc-bxivhb cOyoGh"
+            data-size="0"
+            type="button"
+            value="1"
+          >
+            1
+          </button>
+          <button
+            class="sc-bxivhb cOyoGh"
+            data-size="1"
+            type="button"
+            value="2"
+          >
+            2
+          </button>
+          <button
+            class="sc-bxivhb cOyoGh"
+            data-size="2"
+            type="button"
+            value="3"
+          >
+            3
+          </button>
+          <button
+            class="sc-bxivhb cOyoGh"
+            data-size="3"
+            type="button"
+            value="4"
+          >
+            4
+          </button>
+          <button
+            class="sc-bxivhb cOyoGh"
+            data-size="4"
+            type="button"
+            value="5"
+          >
+            5
+          </button>
+        </span>
+        <p
+          aria-label="Select number of trustees required to decrypt. You have selected undefined trustee(s). Use the down arrow to hear your options. Use the right arrow to move to the next contest."
+        >
+          <b>
+            How many trustees required to decrypt?
+          </b>
+        </p>
+        <p>
+           
+           trustee(s) 
+        </p>
+        <span
+          class="sc-ifAKCX eqnyTq"
+          data-testid="change-threshold-buttons"
+        >
+          <button
+            class="sc-bxivhb cOyoGh"
+            data-size="0"
+            type="button"
+            value="1"
+          >
+            1
+          </button>
+        </span>
+      </div>
+    </div>
+  </main>
+  <nav
+    class="sc-fjdhpX esZIZf"
+  >
+    <div
+      class="sc-cSHVUG eLCTxm"
+    >
+      <p>
+        <button
+          class="sc-bxivhb rdECE"
+          id="next"
+          role="option"
+          type="button"
+        >
+          <span
+            class="sc-EHOje bZxfGe"
+          >
+            Next
+          </span>
+        </button>
+      </p>
+      <p>
+        <button
+          class="sc-bxivhb cOyoGh"
+          id="back"
+          role="option"
+          type="button"
+        >
+          <span
+            class="sc-EHOje zoDGT"
+          >
+            Back
+          </span>
+        </button>
+      </p>
+    </div>
+    <div
+      class="sc-kAzzGY gObJYC"
+    >
+      <hr />
+      <div
+        aria-hidden="true"
+        class="sc-VigVT gbgFAa"
+        data-testid="election-info"
+      >
+        <div
+          class="sc-jTzLTM gIFeXt"
+        >
+          <div
+            aria-hidden="true"
+            class="sc-gzVnrw kgzhsX"
+          />
+          <div
+            class="sc-dnqmqq eppipW"
+          >
+            <h5
+              aria-label=" General Election."
+            >
+               General Election
+            </h5>
+            <p
+              class="sc-iwsKbI hNZFgJ"
+            >
+              November 3, 2020
+              <br />
+              <span
+                class="sc-gZMcBi hbCako"
+              >
+                Franklin County
+                ,
+              </span>
+               
+              <span
+                class="sc-gZMcBi hbCako"
+              >
+                State of Hamilton
+              </span>
+            </p>
+            <p
+              class="sc-iwsKbI lhbfNZ"
+            >
+               
+            </p>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <img
+        alt="Election Guard Logo"
+        class="sc-kgoBCf kCLXgh"
+        src="/images/electionguard.svg"
+      />
+    </div>
+  </nav>
+</div>
+`;

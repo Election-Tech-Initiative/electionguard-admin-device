@@ -1,37 +1,49 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renders Main with centered content 1`] = `
+<main
+  class="sc-bdVaJa iiFDUH"
+>
+  <div
+    class="sc-bwzfXH jAEsws"
+  >
+    foo
+  </div>
+</main>
+`;
+
 exports[`renders Main with child 1`] = `
 <main
-  class="sc-bdVaJa kAfsva"
+  class="sc-bdVaJa iiFDUH"
 >
   <div
-    class="sc-bwzfXH dxmKnD"
+    class="sc-bwzfXH cJzayE"
   >
     foo
   </div>
 </main>
 `;
 
-exports[`renders centered content 1`] = `
+exports[`renders Main with not centered content 1`] = `
 <main
-  class="sc-bdVaJa kAfsva"
+  class="sc-bdVaJa ytQaW"
 >
   <div
-    class="sc-bwzfXH duCbvi"
+    class="sc-bwzfXH cJzayE"
   >
     foo
   </div>
 </main>
 `;
 
-exports[`renders not centered content 1`] = `
+exports[`renders Main with padding 1`] = `
 <main
-  class="sc-bdVaJa kAfsva"
+  class="sc-bdVaJa gjMqtI"
 >
   <div
-    class="sc-bwzfXH dxmKnD"
+    class="sc-bwzfXH cJzayE"
   >
-    foo
+    padded
   </div>
 </main>
 `;

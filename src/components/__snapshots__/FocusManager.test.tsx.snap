@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders Screen 1`] = `
+exports[`renders FocusManager 1`] = `
 <div
-  class="sc-jTzLTM inzcys"
+  class="sc-bdVaJa eMFrIq"
   tabindex="-1"
 >
   foo
