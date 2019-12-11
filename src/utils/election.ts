@@ -1,5 +1,12 @@
 import { Election, Contest, BallotStyle } from '@votingworks/ballot-encoder'
-import { Tally } from '../config/types'
+import {
+  Tally,
+  ElectionGuardConfig,
+  ElectionResponse,
+  ElectionRequest,
+  OptionalElection,
+} from '../config/types'
+import fetchJSON from './fetchJSON'
 
 export const getContests = ({
   ballotStyle,
@@ -61,6 +68,23 @@ export const getZeroTally = (election: Election): Tally =>
     // to fail loudly in this situation.
     throw new Error(`unexpected contest type: ${(contest as Contest).type}`)
   })
+
+export const createElection = ({
+  election,
+  electionGuardConfig,
+}: {
+  election: OptionalElection
+  electionGuardConfig: ElectionGuardConfig
+}) => {
+  return fetchJSON<ElectionResponse>('/election', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      election,
+      config: electionGuardConfig,
+    } as ElectionRequest),
+  })
+}
 
 export default {
   getBallotStyle,
