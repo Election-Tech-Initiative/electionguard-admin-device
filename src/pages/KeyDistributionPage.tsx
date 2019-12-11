@@ -8,7 +8,7 @@ import ElectionInfo from '../components/ElectionInfo'
 import Sidebar from '../components/Sidebar'
 import ClaimButton from '../components/ClaimButton'
 import LinkButton from '../components/LinkButton'
-import { TrusteeKeyVault, ClaimStatus } from '../config/types'
+import { ClaimStatus } from '../config/types'
 
 const Header = styled.div`
   margin: 0 auto;
@@ -27,25 +27,8 @@ const KeysGrid = styled.div`
   grid-gap: 0.5rem;
 `
 
-const getKeys = (numberOfTrustees: number): TrusteeKeyVault => {
-  const keyVault = {} as TrusteeKeyVault
-  for (let i = 0; i < numberOfTrustees; i += 1) {
-    keyVault[i] = {
-      id: `${i}`,
-      data: `${i}`,
-      status: ClaimStatus.Unclaimed,
-    }
-  }
-  return keyVault
-}
-
 const KeyDistributionPage = () => {
-  const { election, electionGuardConfig, keyVault, setKeyVault } = useContext(
-    ElectionContext
-  )
-  if (Object.keys(keyVault).length === 0) {
-    setKeyVault(getKeys(electionGuardConfig.numberOfTrustees))
-  }
+  const { election, keyVault } = useContext(ElectionContext)
 
   const allKeys = Object.keys(keyVault).map(key => keyVault[key])
   const allClaimed = allKeys.reduce(

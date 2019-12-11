@@ -24,6 +24,20 @@ export interface ElectionGuardConfig {
   jointPublicKey: string
 }
 
+export interface ElectionRequest {
+  config: ElectionGuardConfig
+  election: Election
+}
+
+export interface ElectionResponse {
+  electionGuardConfig: ElectionGuardConfig
+  trusteeKeys: KeyMap
+}
+
+export interface KeyMap {
+  [id: string]: string
+}
+
 export interface TrusteeKeyVault {
   [trusteeId: string]: TrusteeKey
 }
@@ -69,6 +83,7 @@ export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 // ElectionContext
 export interface ElectionContextInterface {
   readonly election: Election
+  createElection: () => Promise<void>
   resetElection: (path?: string) => void
   electionGuardStatus: ElectionGuardStatus
   setElectionGuardStatus: (status: ElectionGuardStatus) => void
@@ -77,7 +92,6 @@ export interface ElectionContextInterface {
   setThreshold: (threshold: number) => void
   setElectionGuardConfig: (electionGuardConfig: ElectionGuardConfig) => void
   keyVault: TrusteeKeyVault
-  setKeyVault: (keyVault: TrusteeKeyVault) => void
   claimTrusteeKey: (trusteeId: string) => void
   encrypterStore: EncrypterStore
   setNumberOfEncrypters: (numberOfEncrypters: number) => void

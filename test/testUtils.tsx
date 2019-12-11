@@ -26,6 +26,7 @@ export function render(
   {
     route = '/',
     election = electionSampleNoSeal,
+    createElection = jest.fn(),
     electionGuardStatus = ElectionGuardStatus.KeyCeremony,
     setElectionGuardStatus = jest.fn(),
     history = createMemoryHistory({ initialEntries: [] }),
@@ -35,7 +36,6 @@ export function render(
     setThreshold = jest.fn(),
     setElectionGuardConfig = jest.fn(),
     keyVault = {} as TrusteeKeyVault,
-    setKeyVault = jest.fn(),
     claimTrusteeKey = jest.fn(),
     encrypterStore = {} as EncrypterStore,
     setNumberOfEncrypters = jest.fn(),
@@ -50,6 +50,7 @@ export function render(
       <ElectionContext.Provider
         value={{
           election: election as Election,
+          createElection,
           electionGuardStatus,
           resetElection,
           setElectionGuardStatus,
@@ -58,7 +59,6 @@ export function render(
           setThreshold,
           setElectionGuardConfig,
           keyVault,
-          setKeyVault,
           claimTrusteeKey,
           encrypterStore,
           setNumberOfEncrypters,

@@ -13,6 +13,7 @@ import {
 
 const context: ElectionContextInterface = {
   election: (undefined as unknown) as Election,
+  createElection: () => Promise.resolve(undefined),
   resetElection: () => undefined,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
   setElectionGuardStatus: () => undefined,
@@ -21,7 +22,6 @@ const context: ElectionContextInterface = {
   setThreshold: () => undefined,
   setElectionGuardConfig: () => undefined,
   keyVault: (undefined as unknown) as TrusteeKeyVault,
-  setKeyVault: () => undefined,
   claimTrusteeKey: () => undefined,
   encrypterStore: (undefined as unknown) as EncrypterStore,
   setNumberOfEncrypters: () => undefined,

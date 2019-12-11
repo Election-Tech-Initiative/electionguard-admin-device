@@ -1,5 +1,6 @@
-import React, { useContext, PointerEventHandler } from 'react'
+import React, { useContext, PointerEventHandler, useState } from 'react'
 import styled from 'styled-components'
+import { Redirect } from 'react-router-dom'
 import ElectionContext from '../contexts/electionContext'
 import Main, { MainChild } from '../components/Main'
 import Button, { SegmentedButton } from '../components/Button'
@@ -29,8 +30,11 @@ const SetupTrusteesPage = () => {
     electionGuardConfig,
     setNumberOfTrustees,
     setThreshold,
+    keyVault,
+    createElection,
   } = useContext(ElectionContext)
   const { numberOfTrustees, threshold } = electionGuardConfig
+  const [isBusy, setIsBusy] = useState(false)
 
   if (!threshold && !numberOfTrustees) {
     setNumberOfTrustees(1)
@@ -60,6 +64,20 @@ const SetupTrusteesPage = () => {
   const thresholdOptions = Array.from(Array(numberOfTrustees).keys()).map(
     x => x + 1
   )
+
+  const onNext = () => {
+    setIsBusy(true)
+    try {
+      createElection()
+    } catch (error) {
+      setIsBusy(false)
+      throw error
+    }
+  }
+
+  if (Object.keys(keyVault).length) {
+    return <Redirect to="/keys" />
+  }
 
   return (
     <Screen>
@@ -128,7 +146,13 @@ const SetupTrusteesPage = () => {
         }
       >
         <p>
-          <LinkButton big primary to="/keys" id="next">
+          <LinkButton
+            big
+            disabled={isBusy}
+            primary={!isBusy}
+            id="next"
+            onPress={onNext}
+          >
             <TextIcon arrowRight white>
               Next
             </TextIcon>

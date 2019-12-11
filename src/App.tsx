@@ -1,9 +1,10 @@
 import React from 'react'
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom'
 
-import { Election, OptionalElection } from '@votingworks/ballot-encoder'
+import { Election } from '@votingworks/ballot-encoder'
 
 import * as GLOBALS from './config/globals'
+import * as eletionUtils from './utils/election'
 
 import 'normalize.css'
 import './App.css'
@@ -17,6 +18,8 @@ import {
   TrusteeKeyVault,
   ClaimStatus,
   ElectionGuardStatus,
+  TrusteeKey,
+  OptionalElection,
 } from './config/types'
 
 import Layout from './components/Layout'
@@ -39,7 +42,9 @@ export const electionKey = 'election'
 
 const initialState = {
   election: undefined,
-  electionGuardConfig: {} as ElectionGuardConfig,
+  electionGuardConfig: {
+    electionMetadata: '',
+  } as ElectionGuardConfig,
   keyVault: {} as TrusteeKeyVault,
   encrypterStore: {} as EncrypterStore,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
@@ -125,10 +130,6 @@ export class App extends React.Component<RouteComponentProps, State> {
     this.setState({ encrypterStore })
   }
 
-  public setKeyVault = (keyVault: TrusteeKeyVault) => {
-    this.setState({ keyVault })
-  }
-
   public setNumberOfTrustees = (numberOfTrustees: number) => {
     this.setState(prevState => ({
       electionGuardConfig: {
@@ -190,6 +191,31 @@ export class App extends React.Component<RouteComponentProps, State> {
     document.documentElement.style.fontSize = `${GLOBALS.FONT_SIZES[textSize]}px`
   }
 
+  public createElection = async () => {
+    try {
+      const {
+        electionGuardConfig,
+        trusteeKeys,
+      } = await eletionUtils.createElection(this.state)
+      const updatedTrusteeKeys = {} as TrusteeKeyVault
+      Object.keys(trusteeKeys).forEach(keyId => {
+        const keyValue = trusteeKeys[keyId]
+        updatedTrusteeKeys[keyId] = {
+          id: keyId,
+          data: keyValue,
+          status: ClaimStatus.Unclaimed,
+        } as TrusteeKey
+      })
+
+      this.setState({
+        keyVault: updatedTrusteeKeys,
+        electionGuardConfig,
+      })
+    } catch (error) {
+      // eslint-disable-next-line no-empty
+    }
+  }
+
   public render() {
     const {
       election,
@@ -203,6 +229,7 @@ export class App extends React.Component<RouteComponentProps, State> {
       <ElectionContext.Provider
         value={{
           election: election as Election,
+          createElection: this.createElection,
           resetElection: this.resetElection,
           electionGuardStatus,
           setElectionGuardStatus: this.setElectionGuardStatus,
@@ -211,13 +238,11 @@ export class App extends React.Component<RouteComponentProps, State> {
           setThreshold: this.setThreshold,
           setElectionGuardConfig: this.setElectionGuardConfig,
           keyVault,
-          setKeyVault: this.setKeyVault,
           claimTrusteeKey: this.claimTrusteeKey,
           encrypterStore,
           setNumberOfEncrypters: this.setNumberOfEncrypters,
           setEncrypterStore: this.setEncrypterStore,
           claimEncrypterDrive: this.claimEncrypterDrive,
-
           setUserSettings: this.setUserSettings,
           userSettings,
         }}
