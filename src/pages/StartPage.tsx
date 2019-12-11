@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import ElectionContext from '../contexts/electionContext'
+import ElectionContext from '../contexts/adminContext'
 import Main, { MainChild } from '../components/Main'
 import LinkButton from '../components/LinkButton'
 import Screen from '../components/Screen'
@@ -70,7 +70,7 @@ const StartPage = () => {
           <LinkButton
             primary={electionGuardStatus === ElectionGuardStatus.TallyVotes}
             disabled={electionGuardStatus !== ElectionGuardStatus.TallyVotes}
-            to="/tally"
+            to="/trustees"
             id="tally"
             aria-label="Select Tally to Tally Votes"
           >

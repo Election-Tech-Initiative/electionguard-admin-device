@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
-import Main, { MainChild } from '../components/Main'
-import ProgressBar from '../components/ProgressBar'
-import Prose from '../components/Prose'
-import Screen from '../components/Screen'
-import Loading from '../components/Loading'
+import Main, { MainChild } from '../../components/Main'
+import ProgressBar from '../../components/ProgressBar'
+import Prose from '../../components/Prose'
+import Screen from '../../components/Screen'
+import Loading from '../../components/Loading'
 
-const SaveDriveScreen = () => {
+const SaveTrusteeKeyPage = () => {
   const saveDelay = 2500
   const [progress, setProgress] = useState(0)
   const [done, setDone] = useState(false)
@@ -22,7 +22,7 @@ const SaveDriveScreen = () => {
   }, [])
 
   if (done) {
-    return <Redirect to="/encrypter/remove" />
+    return <Redirect to="/remove" />
   }
   return (
     <Screen white>
@@ -31,7 +31,7 @@ const SaveDriveScreen = () => {
           <Prose textCenter id="audiofocus">
             <ProgressBar progress={progress} duration={saveDelay} />
             <h1>
-              <Loading>Saving encrypter to drive</Loading>
+              <Loading>Saving trustee key to the card</Loading>
             </h1>
           </Prose>
         </MainChild>
@@ -40,4 +40,4 @@ const SaveDriveScreen = () => {
   )
 }
 
-export default SaveDriveScreen
+export default SaveTrusteeKeyPage

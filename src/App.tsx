@@ -14,26 +14,22 @@ import {
   TextSizeSetting,
   UserSettings,
   ElectionGuardConfig,
-  EncrypterStore,
-  TrusteeKeyVault,
-  ClaimStatus,
   ElectionGuardStatus,
   TrusteeKey,
   OptionalElection,
 } from './config/types'
 
-import Layout from './components/Layout'
-import ElectionContext from './contexts/electionContext'
+import Layout from './pages/Layout'
+import AdminContext from './contexts/adminContext'
 
-import electionSample from './data/electionPrimarySample.json'
+import electionSample from './data/electionSample.json'
 import FocusManager from './components/FocusManager'
 
 interface State {
   election: OptionalElection
   electionGuardStatus: ElectionGuardStatus
   electionGuardConfig: ElectionGuardConfig
-  keyVault: TrusteeKeyVault
-  encrypterStore: EncrypterStore
+  electionMapping: any
   loadingElection: boolean
   userSettings: UserSettings
 }
@@ -42,12 +38,9 @@ export const electionKey = 'election'
 
 const initialState = {
   election: undefined,
-  electionGuardConfig: {
-    electionMetadata: '',
-  } as ElectionGuardConfig,
-  keyVault: {} as TrusteeKeyVault,
-  encrypterStore: {} as EncrypterStore,
-  electionGuardStatus: ElectionGuardStatus.KeyCeremony,
+  electionGuardStatus: ElectionGuardStatus.TallyVotes,
+  electionGuardConfig: {} as ElectionGuardConfig,
+  electionMapping: {},
   loadingElection: false,
   userSettings: { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
 }
@@ -126,61 +119,6 @@ export class App extends React.Component<RouteComponentProps, State> {
     this.setState({ electionGuardConfig })
   }
 
-  public setEncrypterStore = (encrypterStore: EncrypterStore) => {
-    this.setState({ encrypterStore })
-  }
-
-  public setNumberOfTrustees = (numberOfTrustees: number) => {
-    this.setState(prevState => ({
-      electionGuardConfig: {
-        ...prevState.electionGuardConfig,
-        numberOfTrustees,
-      },
-    }))
-  }
-
-  public setThreshold = (threshold: number) => {
-    this.setState(prevState => ({
-      electionGuardConfig: {
-        ...prevState.electionGuardConfig,
-        threshold,
-      },
-    }))
-  }
-
-  public setNumberOfEncrypters = (numberOfEncrypters: number) => {
-    this.setState(prevState => ({
-      electionGuardConfig: {
-        ...prevState.electionGuardConfig,
-        numberOfEncrypters,
-      },
-    }))
-  }
-
-  public claimTrusteeKey = (trusteeId: string) => {
-    this.setState(prevState => ({
-      keyVault: {
-        ...prevState.keyVault,
-        [trusteeId]: {
-          ...prevState.keyVault[trusteeId],
-          status: ClaimStatus.Claimed,
-        },
-      },
-    }))
-  }
-
-  public claimEncrypterDrive = (encrypterId: string) => {
-    this.setState(prevState => ({
-      encrypterStore: {
-        ...prevState.encrypterStore,
-        [encrypterId]: {
-          ...prevState.encrypterStore[encrypterId],
-          status: ClaimStatus.Claimed,
-        },
-      },
-    }))
-  }
-
   public setElectionGuardStatus = (status: ElectionGuardStatus) => {
     this.setState({
       electionGuardStatus: status,
@@ -220,13 +158,12 @@ export class App extends React.Component<RouteComponentProps, State> {
     const {
       election,
       electionGuardConfig,
-      keyVault,
-      encrypterStore,
       userSettings,
+      electionMapping,
       electionGuardStatus,
     } = this.state
     return (
-      <ElectionContext.Provider
+      <AdminContext.Provider
         value={{
           election: election as Election,
           createElection: this.createElection,
@@ -234,21 +171,15 @@ export class App extends React.Component<RouteComponentProps, State> {
           electionGuardStatus,
           setElectionGuardStatus: this.setElectionGuardStatus,
           electionGuardConfig,
-          setNumberOfTrustees: this.setNumberOfTrustees,
-          setThreshold: this.setThreshold,
           setElectionGuardConfig: this.setElectionGuardConfig,
-          keyVault,
-          claimTrusteeKey: this.claimTrusteeKey,
-          encrypterStore,
-          setNumberOfEncrypters: this.setNumberOfEncrypters,
-          setEncrypterStore: this.setEncrypterStore,
-          claimEncrypterDrive: this.claimEncrypterDrive,
+          electionMapping,
+          setElectionMapping: () => {},
           setUserSettings: this.setUserSettings,
           userSettings,
         }}
       >
         <Layout />
-      </ElectionContext.Provider>
+      </AdminContext.Provider>
     )
   }
 }

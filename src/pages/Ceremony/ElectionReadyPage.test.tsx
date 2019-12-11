@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
 
-import { render } from '../../test/testUtils'
+import { render } from '../../../test/testUtils'
 
 import ElectionReadyPage from './ElectionReadyPage'
 

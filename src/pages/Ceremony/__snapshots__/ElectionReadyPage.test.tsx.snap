@@ -2,7 +2,7 @@
 
 exports[`renders ElectionReadyPage 1`] = `
 <div
-  class="sc-jTzLTM lrSTo"
+  class="sc-dnqmqq kPSlCf"
 >
   <main
     class="sc-bdVaJa iiFDUH"
@@ -32,7 +32,7 @@ exports[`renders ElectionReadyPage 1`] = `
       <p>
         <button
           aria-label="Election Complete"
-          class="sc-jzJRlG byCwxn"
+          class="sc-gZMcBi krfVMT"
           id="election-complete"
           role="option"
           type="button"
@@ -47,15 +47,15 @@ exports[`renders ElectionReadyPage 1`] = `
       <hr />
       <div
         aria-hidden="true"
-        class="sc-gqjmRU hzcSMq"
+        class="sc-jzJRlG kgKkYA"
         data-testid="election-info"
       >
         <div
-          class="sc-VigVT ifaGGk"
+          class="sc-cSHVUG iQiYGp"
         >
           <div
             aria-hidden="true"
-            class="sc-dnqmqq fBUOLF"
+            class="sc-VigVT gcsvdf"
           />
           <div
             class="sc-htpNat jFlhLj"

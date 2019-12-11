@@ -1,23 +1,17 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
-import ElectionContext from '../contexts/electionContext'
-import Main, { MainChild } from '../components/Main'
-import Prose from '../components/Prose'
-import Screen from '../components/Screen'
-import Sidebar from '../components/Sidebar'
-import ElectionInfo from '../components/ElectionInfo'
-import LinkButton from '../components/LinkButton'
+import Main, { MainChild } from '../../components/Main'
+import Prose from '../../components/Prose'
+import Screen from '../../components/Screen'
+import Sidebar from '../../components/Sidebar'
+import LinkButton from '../../components/LinkButton'
+import CeremonyContext from '../../contexts/ceremonyContext'
+import SidebarFooter from '../../components/SidebarFooter'
 
 const InsertCardImage = styled.img`
   margin: 0 auto -1rem;
   height: 30vw;
-`
-
-const LogoImage = styled.img`
-  display: flex;
-  margin: 0 auto;
-  max-width: 12rem;
 `
 
 interface TrusteeKeyParams {
@@ -26,22 +20,10 @@ interface TrusteeKeyParams {
 
 const InsertCardScreen = (props: RouteComponentProps<TrusteeKeyParams>) => {
   const { trusteeId } = props.match.params
-  const { election, claimTrusteeKey } = useContext(ElectionContext)
+  const { claimTrusteeKey } = useContext(CeremonyContext)
   return (
     <Screen flexDirection="row-reverse" white>
-      <Sidebar
-        footer={
-          <>
-            <hr />
-            <ElectionInfo election={election} precinctId="" horizontal />
-            <hr />
-            <LogoImage
-              alt="Election Guard Logo"
-              src="/images/electionguard.svg"
-            />
-          </>
-        }
-      >
+      <Sidebar footer={<SidebarFooter />}>
         <p>
           <LinkButton
             onPress={() => claimTrusteeKey(trusteeId)}

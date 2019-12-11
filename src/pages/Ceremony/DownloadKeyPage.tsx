@@ -1,6 +1,6 @@
 import React from 'react'
-import Main, { MainChild } from '../components/Main'
-import Prose from '../components/Prose'
+import Main, { MainChild } from '../../components/Main'
+import Prose from '../../components/Prose'
 
 const DownloadKeyPage = () => {
   return (

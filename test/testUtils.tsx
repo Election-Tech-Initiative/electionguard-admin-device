@@ -14,12 +14,10 @@ import electionSampleNoSeal from '../src/data/electionSampleNoSeal.json'
 import {
   TextSizeSetting,
   ElectionGuardConfig,
-  TrusteeKeyVault,
-  EncrypterStore,
   ElectionGuardStatus,
 } from '../src/config/types'
 
-import ElectionContext from '../src/contexts/electionContext'
+import AdminContext from '../src/contexts/adminContext'
 
 export function render(
   component: React.ReactNode,
@@ -32,22 +30,16 @@ export function render(
     history = createMemoryHistory({ initialEntries: [] }),
     resetElection = jest.fn(),
     electionGuardConfig = {} as ElectionGuardConfig,
-    setNumberOfTrustees = jest.fn(),
-    setThreshold = jest.fn(),
     setElectionGuardConfig = jest.fn(),
-    keyVault = {} as TrusteeKeyVault,
-    claimTrusteeKey = jest.fn(),
-    encrypterStore = {} as EncrypterStore,
-    setNumberOfEncrypters = jest.fn(),
-    setEncrypterStore = jest.fn(),
-    claimEncrypterDrive = jest.fn(),
+    electionMapping = {},
+    setElectionMapping = jest.fn(),
     userSettings = { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
     setUserSettings = jest.fn(),
   } = {}
 ) {
   return {
     ...testRender(
-      <ElectionContext.Provider
+      <AdminContext.Provider
         value={{
           election: election as Election,
           createElection,
@@ -55,15 +47,9 @@ export function render(
           resetElection,
           setElectionGuardStatus,
           electionGuardConfig,
-          setNumberOfTrustees,
-          setThreshold,
           setElectionGuardConfig,
-          keyVault,
-          claimTrusteeKey,
-          encrypterStore,
-          setNumberOfEncrypters,
-          setEncrypterStore,
-          claimEncrypterDrive,
+          electionMapping,
+          setElectionMapping,
           setUserSettings,
           userSettings,
         }}
@@ -75,7 +61,7 @@ export function render(
         >
           {component}
         </Router>
-      </ElectionContext.Provider>
+      </AdminContext.Provider>
     ),
     history,
   }

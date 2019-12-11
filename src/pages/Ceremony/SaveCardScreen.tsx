@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
-import Main, { MainChild } from '../components/Main'
-import ProgressBar from '../components/ProgressBar'
-import Prose from '../components/Prose'
-import Screen from '../components/Screen'
-import Loading from '../components/Loading'
+import Main, { MainChild } from '../../components/Main'
+import ProgressBar from '../../components/ProgressBar'
+import Prose from '../../components/Prose'
+import Screen from '../../components/Screen'
+import Loading from '../../components/Loading'
 
 const SaveCardScreen = () => {
   const saveDelay = 2500

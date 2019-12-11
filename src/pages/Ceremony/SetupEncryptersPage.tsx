@@ -1,32 +1,25 @@
 import React, { useContext, PointerEventHandler } from 'react'
 import styled from 'styled-components'
-import ElectionContext from '../contexts/electionContext'
-import Main, { MainChild } from '../components/Main'
-import Button, { SegmentedButton } from '../components/Button'
-import TextIcon from '../components/TextIcon'
-import Screen from '../components/Screen'
-import LinkButton from '../components/LinkButton'
-import ElectionInfo from '../components/ElectionInfo'
-import Sidebar from '../components/Sidebar'
-import Prose from '../components/Prose'
-import { MAX_ENCRYPTERS } from '../config/globals'
+import Main, { MainChild } from '../../components/Main'
+import Button, { SegmentedButton } from '../../components/Button'
+import TextIcon from '../../components/TextIcon'
+import Screen from '../../components/Screen'
+import LinkButton from '../../components/LinkButton'
+import Sidebar from '../../components/Sidebar'
+import Prose from '../../components/Prose'
+import { MAX_ENCRYPTERS } from '../../config/globals'
+import CeremonyContext from '../../contexts/ceremonyContext'
+import SidebarFooter from '../../components/SidebarFooter'
 
 const Header = styled.div`
   margin: 0 auto;
   text-align: center;
 `
 
-const LogoImage = styled.img`
-  display: flex;
-  margin: 0 auto;
-  max-width: 12rem;
-`
-
 const SetupEncryptersPage = () => {
-  const { election, electionGuardConfig, setNumberOfEncrypters } = useContext(
-    ElectionContext
+  const { numberOfEncrypters, setNumberOfEncrypters } = useContext(
+    CeremonyContext
   )
-  const { numberOfEncrypters } = electionGuardConfig
 
   const onNumberOfEncryptersChange: PointerEventHandler = event => {
     const target = event.target as HTMLInputElement
@@ -71,19 +64,7 @@ const SetupEncryptersPage = () => {
           </Prose>
         </MainChild>
       </Main>
-      <Sidebar
-        footer={
-          <>
-            <hr />
-            <ElectionInfo election={election} precinctId="" horizontal />
-            <hr />
-            <LogoImage
-              alt="Election Guard Logo"
-              src="/images/electionguard.svg"
-            />
-          </>
-        }
-      >
+      <Sidebar footer={<SidebarFooter />}>
         <p>
           <LinkButton big primary to="/encrypters" id="next">
             <TextIcon arrowRight white>

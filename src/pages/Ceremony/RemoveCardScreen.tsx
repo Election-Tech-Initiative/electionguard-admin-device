@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Redirect } from 'react-router-dom'
-import Main, { MainChild } from '../components/Main'
-import Prose from '../components/Prose'
-import Screen from '../components/Screen'
+import Main, { MainChild } from '../../components/Main'
+import Prose from '../../components/Prose'
+import Screen from '../../components/Screen'
 
 const Graphic = styled.img`
   margin: 0 auto -1rem;
