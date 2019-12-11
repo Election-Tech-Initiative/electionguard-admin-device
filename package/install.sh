@@ -7,9 +7,11 @@ echo "installing USB dependencies"
 
 command -v node >/dev/null 2>&1 || {
     echo "Node not found. installing."
-    sudo apt-get install curl
+    sudo apt-get install -y curl
     curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+    sudo apt-get install -y nodejs
     sudo ln -sf $(command -v node) /usr/bin/node
+    sudo ln -sf $(command -v npm) /usr/bin/npm
 }
 
 node -v
@@ -52,6 +54,6 @@ sudo systemctl enable $SERVICE_NAME
 
 echo "starting ElectionGuard services"
 sudo systemctl start $SERVICE_NAME
-systemctl status $SERVICE_NAME
+systemctl status $SERVICE_NAME --no-pager
 
 echo "done"

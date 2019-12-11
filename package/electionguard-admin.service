@@ -1,5 +1,5 @@
 [Unit]
-Description=Elkectionguard Admin Device
+Description=ElectionGuard Admin Device
 
 [Service]
 WorkingDirectory=/bin/electionguard-admin/prodserver

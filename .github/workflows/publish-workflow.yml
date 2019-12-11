@@ -10,8 +10,10 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
     - uses: actions/checkout@v1
-      with:
-        submodules: true
+    - name: Setup
+      run: yarn
+    - name: Build
+      run: yarn build
     - name: Change Package Script Access
       run: chmod +x ./package/package.sh
     - name: Package
