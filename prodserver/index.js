@@ -25,4 +25,4 @@ app.get('/machine-id', (req, res) => {
 
 app.use('/', express.static('../build'))
 
-app.listen(port, () => console.log(`BMD listening on port ${port}!`))
+app.listen(port, () => console.log(`Admin Device listening on port ${port}!`))
