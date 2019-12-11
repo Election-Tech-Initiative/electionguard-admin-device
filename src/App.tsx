@@ -36,7 +36,7 @@ export const electionKey = 'election'
 
 const initialState = {
   election: undefined,
-  electionGuardStatus: ElectionGuardStatus.TallyVotes,
+  electionGuardStatus: ElectionGuardStatus.KeyCeremony,
   electionGuardConfig: {} as ElectionGuardConfig,
   electionMapping: {},
   loadingElection: false,

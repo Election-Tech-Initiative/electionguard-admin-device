@@ -54,12 +54,12 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
         <MainChild>
           <Prose id="audiofocus">
             <Header>
-              <h1>Announce Trustees</h1>
+              <h1>Upload Election Artifacts</h1>
             </Header>
           </Prose>
           <Prose textCenter>
             <p aria-label="Select trustee to announce">
-              <b>Select trustee to announce</b>
+              <b>Select artifact to upload</b>
             </p>
             <StatusButtonGrid>
               {BallotListButton(encryptedBallotPaths, 'Encrypted Ballots', () =>
