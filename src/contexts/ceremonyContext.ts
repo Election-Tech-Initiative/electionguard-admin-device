@@ -19,6 +19,7 @@ const context: CeremonyContextInterface = {
   encrypterStore: (undefined as unknown) as EncrypterStore,
   setEncrypterStore: () => undefined,
   claimEncrypterDrive: () => undefined,
+  createElection: () => Promise.resolve(undefined),
 }
 
 const CeremonyContext = createContext(context)

@@ -4,7 +4,6 @@ import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom'
 import { Election } from '@votingworks/ballot-encoder'
 
 import * as GLOBALS from './config/globals'
-import * as eletionUtils from './utils/election'
 
 import 'normalize.css'
 import './App.css'
@@ -15,7 +14,6 @@ import {
   UserSettings,
   ElectionGuardConfig,
   ElectionGuardStatus,
-  TrusteeKey,
   OptionalElection,
 } from './config/types'
 
@@ -129,31 +127,6 @@ export class App extends React.Component<RouteComponentProps, State> {
     document.documentElement.style.fontSize = `${GLOBALS.FONT_SIZES[textSize]}px`
   }
 
-  public createElection = async () => {
-    try {
-      const {
-        electionGuardConfig,
-        trusteeKeys,
-      } = await eletionUtils.createElection(this.state)
-      const updatedTrusteeKeys = {} as TrusteeKeyVault
-      Object.keys(trusteeKeys).forEach(keyId => {
-        const keyValue = trusteeKeys[keyId]
-        updatedTrusteeKeys[keyId] = {
-          id: keyId,
-          data: keyValue,
-          status: ClaimStatus.Unclaimed,
-        } as TrusteeKey
-      })
-
-      this.setState({
-        keyVault: updatedTrusteeKeys,
-        electionGuardConfig,
-      })
-    } catch (error) {
-      // eslint-disable-next-line no-empty
-    }
-  }
-
   public render() {
     const {
       election,
@@ -166,7 +139,6 @@ export class App extends React.Component<RouteComponentProps, State> {
       <AdminContext.Provider
         value={{
           election: election as Election,
-          createElection: this.createElection,
           resetElection: this.resetElection,
           electionGuardStatus,
           setElectionGuardStatus: this.setElectionGuardStatus,

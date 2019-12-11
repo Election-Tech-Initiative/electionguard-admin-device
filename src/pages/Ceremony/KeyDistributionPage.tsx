@@ -8,7 +8,7 @@ import Screen from '../../components/Screen'
 import Sidebar from '../../components/Sidebar'
 import StatusButton, { StatusButtonGrid } from '../../components/StatusButton'
 import LinkButton from '../../components/LinkButton'
-import { TrusteeKeyVault, CompletionStatus } from '../../config/types'
+import { CompletionStatus } from '../../config/types'
 import { KEY_ICON, CHECK_ICON } from '../../config/globals'
 import SidebarFooter from '../../components/SidebarFooter'
 
@@ -17,25 +17,8 @@ const Header = styled.div`
   text-align: center;
 `
 
-const getKeys = (numberOfTrustees: number): TrusteeKeyVault => {
-  const keyVault = {} as TrusteeKeyVault
-  for (let i = 0; i < numberOfTrustees; i += 1) {
-    keyVault[i] = {
-      id: `${i}`,
-      data: `${i}`,
-      status: CompletionStatus.Incomplete,
-    }
-  }
-  return keyVault
-}
-
 const KeyDistributionPage = (props: RouteComponentProps) => {
-  const { numberOfTrustees, keyVault, setKeyVault } = useContext(
-    CeremonyContext
-  )
-  if (Object.keys(keyVault).length === 0) {
-    setKeyVault(getKeys(numberOfTrustees))
-  }
+  const { keyVault } = useContext(CeremonyContext)
 
   const allKeys = Object.keys(keyVault).map(key => keyVault[key])
   const allClaimed = allKeys.reduce(

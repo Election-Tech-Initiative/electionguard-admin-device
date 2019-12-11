@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import SetupTrusteesPage from './SetupTrusteesPage'
 import KeyDistributionPage from './KeyDistributionPage'
@@ -17,9 +17,14 @@ import {
   TrusteeKeyVault,
   EncrypterStore,
   CompletionStatus,
+  TrusteeKey,
+  ElectionGuardConfig,
 } from '../../config/types'
+import AdminContext from '../../contexts/adminContext'
+import * as electionUtils from '../../utils/election'
 
 const CeremonyLayout = () => {
+  const { setElectionGuardConfig, election } = useContext(AdminContext)
   const [numberOfTrustees, setNumberOfTrustees] = useState(
     (undefined as unknown) as number
   )
@@ -50,6 +55,36 @@ const CeremonyLayout = () => {
     })
   }
 
+  const createElection = async () => {
+    try {
+      const {
+        electionGuardConfig,
+        trusteeKeys,
+      } = await electionUtils.createElection({
+        election,
+        electionGuardConfig: {
+          threshold,
+          numberOfTrustees,
+          electionMetadata: '',
+        } as ElectionGuardConfig,
+      })
+      const updatedTrusteeKeys = {} as TrusteeKeyVault
+      Object.keys(trusteeKeys).forEach(keyId => {
+        const keyValue = trusteeKeys[keyId]
+        updatedTrusteeKeys[keyId] = {
+          id: keyId,
+          data: keyValue,
+          status: CompletionStatus.Incomplete,
+        } as TrusteeKey
+      })
+
+      setKeyVault(updatedTrusteeKeys)
+      setElectionGuardConfig(electionGuardConfig)
+    } catch (error) {
+      // eslint-disable-next-line no-empty
+    }
+  }
+
   return (
     <CeremonyContext.Provider
       value={{
@@ -65,6 +100,7 @@ const CeremonyLayout = () => {
         encrypterStore,
         setEncrypterStore,
         claimEncrypterDrive,
+        createElection,
       }}
     >
       <Switch>

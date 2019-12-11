@@ -24,7 +24,6 @@ export function render(
   {
     route = '/',
     election = electionSampleNoSeal,
-    createElection = jest.fn(),
     electionGuardStatus = ElectionGuardStatus.KeyCeremony,
     setElectionGuardStatus = jest.fn(),
     history = createMemoryHistory({ initialEntries: [] }),
@@ -42,7 +41,6 @@ export function render(
       <AdminContext.Provider
         value={{
           election: election as Election,
-          createElection,
           electionGuardStatus,
           resetElection,
           setElectionGuardStatus,

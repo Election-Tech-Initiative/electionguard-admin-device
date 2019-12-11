@@ -96,7 +96,6 @@ export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 // Admin Context
 export interface AdminContextInterface {
   readonly election: Election
-  createElection: () => Promise<void>
   resetElection: (path?: string) => void
   electionGuardStatus: ElectionGuardStatus
   setElectionGuardStatus: (status: ElectionGuardStatus) => void
@@ -121,6 +120,7 @@ export interface CeremonyContextInterface {
   encrypterStore: EncrypterStore
   setEncrypterStore: (store: EncrypterStore) => void
   claimEncrypterDrive: (id: string) => void
+  createElection: () => Promise<void>
 }
 
 export interface TallyContextInterface {
