@@ -1,4 +1,4 @@
-import { Election } from '@votingworks/ballot-encoder'
+import { Election, Contest } from '@votingworks/ballot-encoder'
 
 // ElectionGuard
 export enum ElectionGuardStatus {
@@ -25,6 +25,28 @@ export interface ElectionGuardConfig {
   jointPublicKey: string
 }
 
+export interface ElectionMap {
+  numberOfSelections: number
+  contestMaps: Map<string, ContestMap>
+  ballotStyleMaps: Map<string, BallotStyleMap>
+}
+
+export interface BallotStyleMap {
+  expectedNumberOfSelected: number
+  contestMaps: Map<string, ContestMap>
+}
+
+export interface ContestMap {
+  contest: Contest
+  selectionMap: Map<string, number>
+  numberOfSelections: number
+  expectedNumberOfSelected: number
+  startIndex: number
+  endIndex: number
+  writeInStartIndex: number
+  nullVoteStartIndex: number
+}
+
 export interface ElectionRequest {
   config: ElectionGuardConfig
   election: Election
@@ -33,6 +55,7 @@ export interface ElectionRequest {
 export interface ElectionResponse {
   electionGuardConfig: ElectionGuardConfig
   trusteeKeys: KeyMap
+  electionMap: ElectionMap
 }
 
 export interface KeyMap {
@@ -97,12 +120,12 @@ export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 export interface AdminContextInterface {
   readonly election: Election
   resetElection: (path?: string) => void
+  readonly electionMap: ElectionMap
+  setElectionMap: (electionMap: ElectionMap) => void
   electionGuardStatus: ElectionGuardStatus
   setElectionGuardStatus: (status: ElectionGuardStatus) => void
   electionGuardConfig: ElectionGuardConfig
   setElectionGuardConfig: (electionGuardConfig: ElectionGuardConfig) => void
-  electionMapping: any
-  setElectionMapping: (electionMapping: any) => void
   userSettings: UserSettings
   setUserSettings: (partial: PartialUserSettings) => void
 }

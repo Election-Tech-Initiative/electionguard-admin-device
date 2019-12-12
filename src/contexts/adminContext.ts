@@ -7,18 +7,19 @@ import {
   TextSizeSetting,
   ElectionGuardConfig,
   ElectionGuardStatus,
+  ElectionMap,
 } from '../config/types'
 
 // TODO Refactor to ceremonyContext?
 const context: AdminContextInterface = {
   election: (undefined as unknown) as Election,
   resetElection: () => undefined,
+  electionMap: (undefined as unknown) as ElectionMap,
+  setElectionMap: () => undefined,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
   setElectionGuardStatus: () => undefined,
   electionGuardConfig: (undefined as unknown) as ElectionGuardConfig,
   setElectionGuardConfig: () => undefined,
-  electionMapping: undefined,
-  setElectionMapping: () => undefined,
   userSettings: { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
   setUserSettings: () => undefined,
 }

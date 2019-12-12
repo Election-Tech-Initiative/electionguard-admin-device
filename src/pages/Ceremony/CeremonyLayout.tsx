@@ -24,6 +24,7 @@ import AdminContext from '../../contexts/adminContext'
 import * as electionUtils from '../../utils/election'
 
 const CeremonyLayout = () => {
+  const { setElectionMap } = useContext(AdminContext)
   const { setElectionGuardConfig, election } = useContext(AdminContext)
   const [numberOfTrustees, setNumberOfTrustees] = useState(
     (undefined as unknown) as number
@@ -59,6 +60,7 @@ const CeremonyLayout = () => {
     try {
       const {
         electionGuardConfig,
+        electionMap,
         trusteeKeys,
       } = await electionUtils.createElection({
         election,
@@ -79,6 +81,7 @@ const CeremonyLayout = () => {
       })
 
       setKeyVault(updatedTrusteeKeys)
+      setElectionMap(electionMap)
       setElectionGuardConfig(electionGuardConfig)
     } catch (error) {
       // eslint-disable-next-line no-empty

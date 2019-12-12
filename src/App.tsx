@@ -15,6 +15,7 @@ import {
   ElectionGuardConfig,
   ElectionGuardStatus,
   OptionalElection,
+  ElectionMap,
 } from './config/types'
 
 import Layout from './pages/Layout'
@@ -25,9 +26,9 @@ import FocusManager from './components/FocusManager'
 
 interface State {
   election: OptionalElection
+  electionMap: ElectionMap
   electionGuardStatus: ElectionGuardStatus
   electionGuardConfig: ElectionGuardConfig
-  electionMapping: any
   loadingElection: boolean
   userSettings: UserSettings
 }
@@ -36,9 +37,9 @@ export const electionKey = 'election'
 
 const initialState = {
   election: undefined,
+  electionMap: {} as ElectionMap,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
   electionGuardConfig: {} as ElectionGuardConfig,
-  electionMapping: {},
   loadingElection: false,
   userSettings: { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
 }
@@ -111,6 +112,10 @@ export class App extends React.Component<RouteComponentProps, State> {
     )
   }
 
+  public setElectionMap = (electionMap: ElectionMap) => {
+    this.setState({ electionMap })
+  }
+
   public setElectionGuardConfig = (
     electionGuardConfig: ElectionGuardConfig
   ) => {
@@ -130,9 +135,9 @@ export class App extends React.Component<RouteComponentProps, State> {
   public render() {
     const {
       election,
+      electionMap,
       electionGuardConfig,
       userSettings,
-      electionMapping,
       electionGuardStatus,
     } = this.state
     return (
@@ -140,12 +145,12 @@ export class App extends React.Component<RouteComponentProps, State> {
         value={{
           election: election as Election,
           resetElection: this.resetElection,
+          electionMap,
+          setElectionMap: this.setElectionMap,
           electionGuardStatus,
           setElectionGuardStatus: this.setElectionGuardStatus,
           electionGuardConfig,
           setElectionGuardConfig: this.setElectionGuardConfig,
-          electionMapping,
-          setElectionMapping: () => {},
           setUserSettings: this.setUserSettings,
           userSettings,
         }}
