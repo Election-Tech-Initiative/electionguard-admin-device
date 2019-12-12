@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 
-import ElectionContext from '../contexts/electionContext'
+import ElectionContext from '../contexts/adminContext'
 
 import Button from '../components/Button'
 import Main, { MainChild } from '../components/Main'

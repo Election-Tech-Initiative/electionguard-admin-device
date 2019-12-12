@@ -1,6 +1,6 @@
-import SetupTrusteesPage from './pages/SetupTrusteesPage'
+import SetupTrusteesPage from './pages/Ceremony/SetupTrusteesPage'
 import StartPage from './pages/StartPage'
-import TallyPage from './pages/TallyPage'
+import TallyPage from './pages/Tally/TallyPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export type Route = {

@@ -8,10 +8,11 @@ export enum ElectionGuardStatus {
   Complete = 2,
 }
 
-export enum ClaimStatus {
+export enum CompletionStatus {
+  Warning = -2,
   Error = -1,
-  Unclaimed = 0,
-  Claimed = 1,
+  Incomplete = 0,
+  Complete = 1,
 }
 
 export interface ElectionGuardConfig {
@@ -45,7 +46,19 @@ export interface TrusteeKeyVault {
 export interface TrusteeKey {
   id: string
   data: string
-  status: ClaimStatus
+  status: CompletionStatus
+}
+
+export const createTrusteeKey = (
+  id: string,
+  data: string,
+  status: CompletionStatus = CompletionStatus.Complete
+) => {
+  return {
+    id,
+    data,
+    status,
+  } as TrusteeKey
 }
 
 export interface EncrypterStore {
@@ -55,7 +68,7 @@ export interface EncrypterStore {
 export interface Encrypter {
   id: string
   data: string
-  status: ClaimStatus
+  status: CompletionStatus
 }
 
 // Generic
@@ -80,25 +93,48 @@ export interface YesNoVoteTally {
 }
 export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 
-// ElectionContext
-export interface ElectionContextInterface {
+// Admin Context
+export interface AdminContextInterface {
   readonly election: Election
-  createElection: () => Promise<void>
   resetElection: (path?: string) => void
   electionGuardStatus: ElectionGuardStatus
   setElectionGuardStatus: (status: ElectionGuardStatus) => void
   electionGuardConfig: ElectionGuardConfig
-  setNumberOfTrustees: (numberOfTrustees: number) => void
-  setThreshold: (threshold: number) => void
   setElectionGuardConfig: (electionGuardConfig: ElectionGuardConfig) => void
-  keyVault: TrusteeKeyVault
-  claimTrusteeKey: (trusteeId: string) => void
-  encrypterStore: EncrypterStore
-  setNumberOfEncrypters: (numberOfEncrypters: number) => void
-  setEncrypterStore: (encrypterStore: EncrypterStore) => void
-  claimEncrypterDrive: (encrypterId: string) => void
+  electionMapping: any
+  setElectionMapping: (electionMapping: any) => void
   userSettings: UserSettings
   setUserSettings: (partial: PartialUserSettings) => void
+}
+
+export interface CeremonyContextInterface {
+  numberOfTrustees: number
+  setNumberOfTrustees: (numberOfTrustees: number) => void
+  threshold: number
+  setThreshold: (threshold: number) => void
+  keyVault: TrusteeKeyVault
+  setKeyVault: (vault: TrusteeKeyVault) => void
+  claimTrusteeKey: (id: string) => void
+  numberOfEncrypters: number
+  setNumberOfEncrypters: (numberOfEncrypters: number) => void
+  encrypterStore: EncrypterStore
+  setEncrypterStore: (store: EncrypterStore) => void
+  claimEncrypterDrive: (id: string) => void
+  createElection: () => Promise<void>
+}
+
+export interface TallyContextInterface {
+  castIds: string[]
+  setCastIds: (castIds: string[]) => void
+  spoiledIds: string[]
+  setSpoiledIds: (spoiledIds: string[]) => void
+  encryptedBallotPaths: string[]
+  addEncryptedBallotPath: (path: string) => void
+  trustees: TrusteeKey[]
+  setTrustees: (trustees: TrusteeKey[]) => void
+  announceTrustee: (trustee: TrusteeKey) => void
+  tally: Tally
+  setTally: (tally: Tally) => void
 }
 
 export type OptionalElection = Election | undefined
