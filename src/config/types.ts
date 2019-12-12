@@ -164,8 +164,8 @@ export interface TallyContextInterface {
 export interface UsbContextInterface {
   adminDriveConnected: boolean
   storageDriveConnected: boolean
-  poll: () => void
-  read: <T>(driveId: string) => T
+  updateDriveStatus: () => void
+  read: <T>(driveId: number, file: string) => Promise<T>
   write: <T>(driveId: string, data: T) => void
   eject: (driveId: string) => void
 }

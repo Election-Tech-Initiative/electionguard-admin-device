@@ -4,10 +4,8 @@ import { UsbContextInterface } from '../config/types'
 const context: UsbContextInterface = {
   adminDriveConnected: false,
   storageDriveConnected: false,
-  poll: () => {},
-  read: <T>() => {
-    return {} as T
-  },
+  updateDriveStatus: () => {},
+  read: <T>() => Promise.resolve({} as T),
   write: () => {},
   eject: () => {},
 }

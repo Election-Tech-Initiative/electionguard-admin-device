@@ -21,7 +21,6 @@ import {
 import Layout from './pages/Layout'
 import AdminContext from './contexts/adminContext'
 
-import electionSample from './data/electionSample.json'
 import FocusManager from './components/FocusManager'
 import UsbManager from './components/UsbManager'
 
@@ -38,9 +37,9 @@ export const electionKey = 'election'
 
 const initialState = {
   election: undefined,
-  electionMap: {} as ElectionMap,
+  electionMap: (undefined as unknown) as ElectionMap,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
-  electionGuardConfig: {} as ElectionGuardConfig,
+  electionGuardConfig: (undefined as unknown) as ElectionGuardConfig,
   loadingElection: false,
   userSettings: { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
 }
@@ -52,7 +51,6 @@ export class App extends React.Component<RouteComponentProps, State> {
   }
 
   public componentDidMount = () => {
-    this.setElection(electionSample as Election)
     document.documentElement.setAttribute('data-useragent', navigator.userAgent)
     this.setDocumentFontSize()
   }
