@@ -157,11 +157,10 @@ export class App extends React.Component<RouteComponentProps, State> {
         }}
       >
         <SmartcardManager>
-          <Layout />
+          <UsbManager>
+            <Layout />
+          </UsbManager>
         </SmartcardManager>
-        <UsbManager>
-          <Layout />
-        </UsbManager>
       </AdminContext.Provider>
     )
   }
