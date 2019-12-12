@@ -1,9 +1,14 @@
 import React, { FC, ReactNode, useState } from 'react'
 import UsbContext from '../contexts/usbContext'
 import fetchJSON from '../utils/fetchJSON'
+import { UsbWriteResult } from '../config/types'
+import * as GLOBALS from '../config/globals'
 
 export const adminDriveIndex = 0
 export const storageDriveIndex = 1
+export const electionFile = `data${GLOBALS.PATH_DELIMITER}election.json`
+export const configFile = `data${GLOBALS.PATH_DELIMITER}election.config.json`
+export const mapFile = `data${GLOBALS.PATH_DELIMITER}election.map.json`
 
 const initialDriveState: UsbDrives = {
   0: false,
@@ -36,10 +41,15 @@ const UsbManager: FC<Props> = (props: Props) => {
   ): Promise<T> => {
     return fetchJSON<T>(`/usb/${driveId}/file?path=${file}`)
   }
-  const write = () => {}
+  const write = async (driveId: number, file: string, data: object) => {
+    return fetchJSON<UsbWriteResult>(`/usb/${driveId}/file?path=${file}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+  }
 
   const updateDriveStatus = async () => {
-    console.log('updating drive states')
     const availableDrives = (await fetchJSON<UsbDrive[]>('/usb')) || []
 
     const currentDrives: UsbDrives = { ...initialDriveState }

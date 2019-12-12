@@ -1,12 +1,12 @@
 import { createContext } from 'react'
-import { UsbContextInterface } from '../config/types'
+import { UsbContextInterface, UsbWriteResult } from '../config/types'
 
 const context: UsbContextInterface = {
   adminDriveConnected: false,
   storageDriveConnected: false,
   updateDriveStatus: () => {},
   read: <T>() => Promise.resolve({} as T),
-  write: () => {},
+  write: () => Promise.resolve({} as UsbWriteResult),
   eject: () => {},
 }
 

@@ -7,11 +7,13 @@ import UsbContext from '../contexts/usbContext'
 import AdminContext from '../contexts/adminContext'
 import { ElectionGuardConfig, ElectionMap } from '../config/types'
 import * as GLOBALS from '../config/globals'
-import { adminDriveIndex } from '../components/UsbManager'
+import {
+  adminDriveIndex,
+  electionFile,
+  configFile,
+  mapFile,
+} from '../components/UsbManager'
 
-const electionFile = `data${GLOBALS.PATH_DELIMITER}election.json`
-const configFile = `data${GLOBALS.PATH_DELIMITER}election.config.json`
-const mapFile = `data${GLOBALS.PATH_DELIMITER}election.map.json`
 const LoadAdminDrive = () => {
   const [pollInterval, setPollInterval] = useState(0)
   const { adminDriveConnected, updateDriveStatus, read } = useContext(
@@ -24,6 +26,7 @@ const LoadAdminDrive = () => {
     setElectionGuardConfig,
     electionMap,
     setElectionMap,
+    setElectionGuardStatus,
   } = useContext(AdminContext)
   useEffect(() => {
     if (!pollInterval) {
@@ -54,6 +57,11 @@ const LoadAdminDrive = () => {
           configFile
         )
         setElectionGuardConfig(currentConfig)
+
+        const { status } = currentConfig as any
+        if (status !== undefined) {
+          setElectionGuardStatus(status)
+        }
       } catch (error) {
         setElectionGuardConfig({} as ElectionGuardConfig)
       }

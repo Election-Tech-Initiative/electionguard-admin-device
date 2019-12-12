@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import Main, { MainChild } from '../../components/Main'
 import Sidebar from '../../components/Sidebar'
 import AdminContext from '../../contexts/adminContext'
@@ -7,9 +8,66 @@ import LinkButton from '../../components/LinkButton'
 import Prose from '../../components/Prose'
 import { ElectionGuardStatus } from '../../config/types'
 import SidebarFooter from '../../components/SidebarFooter'
+import LoadAdminDrive from '../LoadAdminDrive'
+import UsbContext from '../../contexts/usbContext'
+import {
+  adminDriveIndex,
+  electionFile,
+  configFile,
+  mapFile,
+} from '../../components/UsbManager'
 
-const ElectionReadyPage = () => {
-  const { setElectionGuardStatus } = useContext(AdminContext)
+const ElectionReadyPage = (props: RouteComponentProps) => {
+  const {
+    election,
+    electionMap,
+    electionGuardConfig,
+    setElectionGuardStatus,
+  } = useContext(AdminContext)
+  const { adminDriveConnected, updateDriveStatus, write } = useContext(
+    UsbContext
+  )
+  const [savingElectionData, setSavingElectionData] = useState(false)
+
+  useEffect(() => {
+    updateDriveStatus()
+  }, [updateDriveStatus])
+
+  const completeElectionSetup = () => {
+    setSavingElectionData(true)
+  }
+
+  if (savingElectionData && !adminDriveConnected) {
+    return <LoadAdminDrive />
+  }
+
+  if (savingElectionData && adminDriveConnected) {
+    const writeFilesToAdminDrive = async () => {
+      let result = await write(adminDriveIndex, electionFile, election)
+      if (!result.success) {
+        throw new Error('failed to write election data')
+      }
+
+      result = await write(adminDriveIndex, configFile, {
+        ...electionGuardConfig,
+        status: ElectionGuardStatus.TallyVotes,
+      })
+      if (!result.success) {
+        throw new Error('failed to write election configuration data')
+      }
+
+      result = await write(adminDriveIndex, mapFile, electionMap)
+      if (!result.success) {
+        throw new Error('failed to write election map data')
+      }
+    }
+
+    const { history } = props
+    writeFilesToAdminDrive().then(() => {
+      setElectionGuardStatus(ElectionGuardStatus.TallyVotes)
+      history.push('/start')
+    })
+  }
 
   return (
     <Screen>
@@ -26,11 +84,9 @@ const ElectionReadyPage = () => {
         <p>
           <LinkButton
             big
-            primary
-            onPress={() =>
-              setElectionGuardStatus(ElectionGuardStatus.TallyVotes)
-            }
-            to="/start"
+            primary={!savingElectionData}
+            disabled={savingElectionData}
+            onPress={completeElectionSetup}
             id="election-complete"
             aria-label="Election Complete"
           >
@@ -42,4 +98,4 @@ const ElectionReadyPage = () => {
   )
 }
 
-export default ElectionReadyPage
+export default withRouter(ElectionReadyPage)

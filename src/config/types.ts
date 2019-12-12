@@ -166,8 +166,17 @@ export interface UsbContextInterface {
   storageDriveConnected: boolean
   updateDriveStatus: () => void
   read: <T>(driveId: number, file: string) => Promise<T>
-  write: <T>(driveId: string, data: T) => void
+  write: (
+    driveId: number,
+    file: string,
+    data: object
+  ) => Promise<UsbWriteResult>
   eject: (driveId: string) => void
+}
+
+export interface UsbWriteResult {
+  success: boolean
+  message: string
 }
 
 export type OptionalElection = Election | undefined
