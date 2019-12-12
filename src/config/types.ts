@@ -94,6 +94,11 @@ export interface Encrypter {
   status: CompletionStatus
 }
 
+export interface SmartcardState {
+  isCardConnected: boolean
+  isWritingToCard: boolean
+}
+
 // Generic
 export type VoidFunction = () => void
 
@@ -161,6 +166,17 @@ export interface TallyContextInterface {
   setTally: (tally: Tally) => void
 }
 
+export interface SmartcardContextInterface {
+  isCardConnected: boolean
+  isWritingToCard: boolean
+  currentCard: CardData
+  connect: () => void
+  disconnect: () => void
+  read: <T extends CardData>() => Promise<T>
+  readValue: <T>() => Promise<T>
+  write: <T>(data: T) => Promise<void>
+}
+
 export interface UsbContextInterface {
   adminDriveConnected: boolean
   storageDriveConnected: boolean
@@ -182,7 +198,7 @@ export interface UsbWriteResult {
 export type OptionalElection = Election | undefined
 
 // Smart Card Content
-export type CardDataTypes = 'voter' | 'pollworker' | 'clerk'
+export type CardDataTypes = 'voter' | 'pollworker' | 'clerk' | 'trustee'
 export interface CardData {
   readonly t: CardDataTypes
 }
@@ -202,6 +218,11 @@ export interface PollworkerCardData extends CardData {
 }
 export interface ClerkCardData extends CardData {
   readonly t: 'clerk'
+  readonly h: string
+}
+
+export interface TrusteeCardData extends CardData {
+  readonly t: 'trustee'
   readonly h: string
 }
 

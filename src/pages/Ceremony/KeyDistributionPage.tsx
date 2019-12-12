@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import CeremonyContext from '../../contexts/ceremonyContext'
+import SmartcardContext from '../../contexts/smartcardContext'
 import Main, { MainChild } from '../../components/Main'
 import Prose from '../../components/Prose'
 import Screen from '../../components/Screen'
@@ -19,6 +20,7 @@ const Header = styled.div`
 
 const KeyDistributionPage = (props: RouteComponentProps) => {
   const { keyVault } = useContext(CeremonyContext)
+  const { disconnect } = useContext(SmartcardContext)
 
   const allKeys = Object.keys(keyVault).map(key => keyVault[key])
   const allClaimed = allKeys.reduce(
@@ -74,6 +76,7 @@ const KeyDistributionPage = (props: RouteComponentProps) => {
       <Sidebar footer={<SidebarFooter />}>
         <p>
           <LinkButton
+            onPress={() => disconnect()}
             big
             primary={allClaimed}
             disabled={!allClaimed}

@@ -22,6 +22,7 @@ import Layout from './pages/Layout'
 import AdminContext from './contexts/adminContext'
 
 import FocusManager from './components/FocusManager'
+import SmartcardManager from './components/SmartcardManager'
 import UsbManager from './components/UsbManager'
 
 interface State {
@@ -155,6 +156,9 @@ export class App extends React.Component<RouteComponentProps, State> {
           userSettings,
         }}
       >
+        <SmartcardManager>
+          <Layout />
+        </SmartcardManager>
         <UsbManager>
           <Layout />
         </UsbManager>

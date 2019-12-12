@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { Redirect } from 'react-router-dom'
 import Main, { MainChild } from '../../components/Main'
 import Prose from '../../components/Prose'
 import Screen from '../../components/Screen'
+import SmartcardContext from '../../contexts/smartcardContext'
 
 const Graphic = styled.img`
   margin: 0 auto -1rem;
@@ -11,16 +12,9 @@ const Graphic = styled.img`
 `
 
 const RemoveCardScreen = () => {
-  const saveDelay = 2500
-  const [done, setDone] = useState(false)
+  const { isCardConnected } = useContext(SmartcardContext)
 
-  useEffect(() => {
-    setTimeout(() => {
-      setDone(true)
-    }, saveDelay)
-  }, [])
-
-  if (done) {
+  if (!isCardConnected) {
     return <Redirect to="/keys" />
   }
   return (

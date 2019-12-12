@@ -13,6 +13,7 @@ import RemoveDriveScreen from './RemoveDriveScreen'
 import ElectionReadyPage from './ElectionReadyPage'
 import NotFoundPage from '../NotFoundPage'
 import CeremonyContext from '../../contexts/ceremonyContext'
+import SmartcardContext from '../../contexts/smartcardContext'
 import {
   TrusteeKeyVault,
   EncrypterStore,
@@ -36,7 +37,9 @@ const CeremonyLayout = () => {
   const [keyVault, setKeyVault] = useState({} as TrusteeKeyVault)
   const [encrypterStore, setEncrypterStore] = useState({} as EncrypterStore)
 
-  const claimTrusteeKey = (trusteeId: string) => {
+  const { write } = useContext(SmartcardContext)
+
+  const claimTrusteeKey = async (trusteeId: string) => {
     setKeyVault({
       ...keyVault,
       [trusteeId]: {
@@ -44,6 +47,9 @@ const CeremonyLayout = () => {
         status: CompletionStatus.Complete,
       },
     })
+
+    const data = keyVault[trusteeId]
+    await write(data)
   }
 
   const claimEncrypterDrive = (encrypterId: string) => {
