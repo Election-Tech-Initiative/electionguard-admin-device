@@ -119,6 +119,7 @@ export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 // Admin Context
 export interface AdminContextInterface {
   readonly election: Election
+  setElection: (election: Election) => void
   resetElection: (path?: string) => void
   readonly electionMap: ElectionMap
   setElectionMap: (electionMap: ElectionMap) => void
@@ -158,6 +159,15 @@ export interface TallyContextInterface {
   announceTrustee: (trustee: TrusteeKey) => void
   tally: Tally
   setTally: (tally: Tally) => void
+}
+
+export interface UsbContextInterface {
+  adminDriveConnected: boolean
+  storageDriveConnected: boolean
+  poll: () => void
+  read: <T>(driveId: string) => T
+  write: <T>(driveId: string, data: T) => void
+  eject: (driveId: string) => void
 }
 
 export type OptionalElection = Election | undefined

@@ -10,9 +10,9 @@ import {
   ElectionMap,
 } from '../config/types'
 
-// TODO Refactor to ceremonyContext?
 const context: AdminContextInterface = {
   election: (undefined as unknown) as Election,
+  setElection: () => undefined,
   resetElection: () => undefined,
   electionMap: (undefined as unknown) as ElectionMap,
   setElectionMap: () => undefined,

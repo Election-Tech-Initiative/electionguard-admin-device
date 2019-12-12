@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import ElectionContext from '../contexts/adminContext'
+import AdminContext from '../contexts/adminContext'
 import CeremonyLayout from './Ceremony/CeremonyLayout'
 import TallyLayout from './Tally/TallyLayout'
 
@@ -9,7 +9,7 @@ import NotFoundPage from './NotFoundPage'
 import { ElectionGuardStatus } from '../config/types'
 
 const Layout = () => {
-  const { electionGuardStatus } = useContext(ElectionContext)
+  const { electionGuardStatus } = useContext(AdminContext)
   const getLayout = () => {
     switch (electionGuardStatus) {
       case ElectionGuardStatus.KeyCeremony:

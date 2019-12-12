@@ -23,6 +23,7 @@ import AdminContext from './contexts/adminContext'
 
 import electionSample from './data/electionSample.json'
 import FocusManager from './components/FocusManager'
+import UsbManager from './components/UsbManager'
 
 interface State {
   election: OptionalElection
@@ -144,6 +145,7 @@ export class App extends React.Component<RouteComponentProps, State> {
       <AdminContext.Provider
         value={{
           election: election as Election,
+          setElection: this.setElection,
           resetElection: this.resetElection,
           electionMap,
           setElectionMap: this.setElectionMap,
@@ -155,7 +157,9 @@ export class App extends React.Component<RouteComponentProps, State> {
           userSettings,
         }}
       >
-        <Layout />
+        <UsbManager>
+          <Layout />
+        </UsbManager>
       </AdminContext.Provider>
     )
   }

@@ -25,12 +25,13 @@ export function render(
   {
     route = '/',
     election = electionSampleNoSeal,
+    setElection = jest.fn(),
+    resetElection = jest.fn(),
     electionMap = {} as ElectionMap,
     setElectionMap = jest.fn(),
     electionGuardStatus = ElectionGuardStatus.KeyCeremony,
     setElectionGuardStatus = jest.fn(),
     history = createMemoryHistory({ initialEntries: [] }),
-    resetElection = jest.fn(),
     electionGuardConfig = {} as ElectionGuardConfig,
     setElectionGuardConfig = jest.fn(),
     userSettings = { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
@@ -42,10 +43,11 @@ export function render(
       <AdminContext.Provider
         value={{
           election: election as Election,
+          setElection,
+          resetElection,
           electionMap,
           setElectionMap,
           electionGuardStatus,
-          resetElection,
           setElectionGuardStatus,
           electionGuardConfig,
           setElectionGuardConfig,
