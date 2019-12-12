@@ -22,11 +22,11 @@ interface TrusteeKeyParams {
 const InsertCardScreen = (props: RouteComponentProps<TrusteeKeyParams>) => {
   const { trusteeId } = props.match.params
   const { claimTrusteeKey } = useContext(CeremonyContext)
-  const { isCardConnected, connect } = useContext(SmartcardContext)
+  const { isCardConnected, connect, disconnect } = useContext(SmartcardContext)
 
   useEffect(() => {
     connect()
-  }, [])
+  }, [!isCardConnected])
 
   return (
     <Screen flexDirection="row-reverse" white>
@@ -46,6 +46,7 @@ const InsertCardScreen = (props: RouteComponentProps<TrusteeKeyParams>) => {
         </p>
         <p>
           <LinkButton
+            onPress={() => disconnect()}
             small
             to="/keys"
             id="keys"

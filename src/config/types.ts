@@ -198,7 +198,7 @@ export interface UsbWriteResult {
 export type OptionalElection = Election | undefined
 
 // Smart Card Content
-export type CardDataTypes = 'voter' | 'pollworker' | 'clerk' | 'trustee'
+export type CardDataTypes = 'voter' | 'pollworker' | 'clerk' | 'trustee' | 'new'
 export interface CardData {
   readonly t: CardDataTypes
 }
@@ -219,6 +219,10 @@ export interface PollworkerCardData extends CardData {
 export interface ClerkCardData extends CardData {
   readonly t: 'clerk'
   readonly h: string
+}
+
+export interface NewCardData extends CardData {
+  readonly t: 'new'
 }
 
 export interface TrusteeCardData extends CardData {

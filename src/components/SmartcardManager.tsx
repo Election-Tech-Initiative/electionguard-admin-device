@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useState } from 'react'
+import { CardDataTypes } from '@votingworks/ballot-encoder'
 import SmartcardContext from '../contexts/smartcardContext'
 import {
   CardAPI,
@@ -8,19 +9,26 @@ import {
   PollworkerCardData,
   TrusteeCardData,
   VoterCardData,
+  NewCardData,
 } from '../config/types'
 import fetchJSON from '../utils/fetchJSON'
+import UseInterval from '../hooks/useInterval'
 
 interface Props {
   children?: ReactNode
   test?: boolean
 }
 
+const DEFAULT_CHECK_INTERVAL = 1000
+
 // TODO Fill in implementation (poll, read, etc) for USB Manager
 const SmartcardManager: FC<Props> = (props: Props) => {
   const [isCardConnected, setIsCardConnected] = useState(false)
   const [isWritingToCard, setIsWritingToCard] = useState(false)
-  const [cardCheckInterval, setCardCheckInterval] = useState(0)
+  const [isRunning, setIsRunning] = useState(false)
+  const [cardCheckInterval, setCardCheckInterval] = useState(
+    DEFAULT_CHECK_INTERVAL
+  )
   const [currentCard, setCurrentCard] = useState({} as CardData)
 
   const readCard = async (): Promise<CardAPI> => {
@@ -29,6 +37,17 @@ const SmartcardManager: FC<Props> = (props: Props) => {
 
   const readValue = async <T extends unknown>(): Promise<T> => {
     return fetchJSON<T>('/card/read_long')
+  }
+
+  const provisionNewCard = async <T extends CardData>(card: T) => {
+    setIsWritingToCard(true)
+    const formData = new FormData()
+    formData.append('short_value', btoa(JSON.stringify(card)))
+    await fetch('/card/write_short_b64', {
+      method: 'post',
+      body: formData,
+    })
+    setIsWritingToCard(false)
   }
 
   const writeValue = async (data: string) => {
@@ -44,15 +63,17 @@ const SmartcardManager: FC<Props> = (props: Props) => {
   }
 
   const disconnect = () => {
-    console.log(`disconnect: ${cardCheckInterval}`)
-    window.clearInterval(cardCheckInterval)
-    setCardCheckInterval(0)
+    setIsRunning(false)
     setIsCardConnected(false)
     setIsWritingToCard(false)
     setCurrentCard({} as CardData)
   }
 
-  const convert = ({ longValueExists, shortValue }: CardPresentAPI) => {
+  const convert = ({ shortValue }: CardPresentAPI) => {
+    if (!shortValue) {
+      return { t: 'new' } as NewCardData
+    }
+
     let cardData: CardData = (shortValue as unknown) as CardData
 
     if (!cardData) {
@@ -67,15 +88,16 @@ const SmartcardManager: FC<Props> = (props: Props) => {
         return cardData as PollworkerCardData
       }
       case 'trustee': {
-        console.log('convert: found trustee card')
         return cardData as TrusteeCardData
       }
       case 'voter': {
         return cardData as VoterCardData
       }
+      case 'new': {
+        return cardData as NewCardData
+      }
       default: {
-        console.log(`${cardData.t} longValueExists: ${longValueExists}`)
-        return cardData
+        return {} as CardData
       }
     }
   }
@@ -84,48 +106,42 @@ const SmartcardManager: FC<Props> = (props: Props) => {
     const card = await readCard()
 
     if (!card.present) {
-      setCurrentCard({} as CardData)
-      console.log('not present')
-      setIsCardConnected(false)
+      if (isCardConnected) {
+        setIsCardConnected(false)
+      }
       return {} as T
     }
     if (!isCardConnected) {
-      console.log('is present')
       setIsCardConnected(true)
     }
     return convert(card) as T
   }
 
   const write = async <T extends unknown>(data: T) => {
+    if (currentCard.t === 'new' || currentCard.t === undefined) {
+      // if the card is new, provision as a trustee by default
+      await provisionNewCard({ t: 'trustee', h: '' } as TrusteeCardData)
+    }
     await writeValue(btoa(JSON.stringify(data)))
   }
 
-  const getIsConnected = () => {
-    console.log(`getIsConnected: ${isCardConnected}`)
-    return isCardConnected
-  }
-
-  const callRead = async () => {
-    if (getIsConnected()) {
-      return
-    }
-
-    try {
-      const card: CardData = await read()
-      setCurrentCard(card)
-    } catch {
-      disconnect()
-    }
-  }
+  UseInterval(
+    async () => {
+      try {
+        const card: CardData = await read()
+        setCurrentCard(card)
+      } catch (e) {
+        disconnect()
+      }
+    },
+    isRunning ? cardCheckInterval : undefined
+  )
 
   const connect = () => {
-    if (cardCheckInterval !== 0) {
+    if (isRunning) {
       return
     }
-    const newInterval = window.setInterval(callRead, 1000)
-
-    console.log(`new interval: ${newInterval}`)
-    setCardCheckInterval(newInterval)
+    setIsRunning(true)
   }
 
   return (
