@@ -1,14 +1,18 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useReducer } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import BallotRegistrationPage from './BallotRegistrationPage'
 import TallyPage from './TallyPage'
 import NotFoundPage from '../NotFoundPage'
 import TallyContext from '../../contexts/tallyContext'
 import {
+  Action,
+  UpdateTrusteeAction,
+  updateTrusteesAction,
+  UpdateTrusteesAction,
+  CompletionStatus,
+  SetTrusteesAction,
   TrusteeKey,
   Tally,
-  CompletionStatus,
-  createTrusteeKey,
 } from '../../config/types'
 import AdminContext from '../../contexts/adminContext'
 import LoadTrusteePage from './LoadTrusteePage'
@@ -16,42 +20,107 @@ import LoadCastBallotsPage from './LoadCastBallotsPage'
 import LoadSpoiledBallotsPage from './LoadSpoiledBallotsPage'
 import LoadEncryptedBallotsPage from './LoadEncryptedBallotsPage'
 import TrusteeAnnouncementPage from './TrusteeAnnouncementPage'
+import LoadCardScreen from './LoadCardScreen'
+import RemoveCardScreen from './RemoveCardScreen'
+
+const trusteeReducer = (state: TrusteeKey[], action: Action) => {
+  switch (action.type) {
+    case 'set-trustees': {
+      const { payload } = action as SetTrusteesAction
+      return payload
+    }
+    case 'update-trustee': {
+      const { payload } = action as UpdateTrusteeAction
+      const index = state.findIndex(i => i.id === payload.id)
+      const item = { ...state[index] }
+      item.data = payload.data
+      item.status = payload.status
+
+      const items = Object.assign([], state)
+      items.splice(index, 1, item)
+      return items
+    }
+    case 'update-trustees': {
+      const { payload } = action as UpdateTrusteesAction
+      const items = Object.assign([], state)
+      payload.forEach(member => {
+        const index = state.findIndex(i => i.id === member.id)
+        const item = { ...state[index] }
+        item.data = member.data
+        item.status = member.status
+        items.splice(index, 1, item)
+      })
+      return items
+    }
+    default: {
+      return state
+    }
+  }
+}
 
 const TallyLayout = () => {
   const { electionGuardConfig } = useContext(AdminContext)
   const { numberOfTrustees, threshold } = electionGuardConfig
   const [castIds, setCastIds] = useState([] as string[])
   const [spoiledIds, setSpoiledIds] = useState([] as string[])
-  const [trustees, setTrustees] = useState([] as TrusteeKey[])
+  const [remainingThreshold, setRemainingThreshold] = useState(() => threshold)
+  const [trustees, trusteesDispatch] = useReducer(
+    trusteeReducer,
+    [] as TrusteeKey[]
+  )
   const [encryptedBallotPaths, setEncryptedBallotPaths] = useState(
     [] as string[]
   )
   const [tally, setTally] = useState((undefined as unknown) as Tally)
 
-  const announceTrustee = (announcedTrustee: TrusteeKey) => {
+  const recalculateThresholdStatus = (
+    announcedTrustee: TrusteeKey,
+    remaining: number
+  ) => {
     const completedTrustees = trustees.filter(
       trustee => trustee.status === CompletionStatus.Complete
     )
-    if (
-      completedTrustees.filter(trustee => trustee.id === announcedTrustee.id)
-        .length > 0
-    ) {
+
+    const missingTrustees = trustees.filter(
+      trustee =>
+        trustee.status !== CompletionStatus.Complete &&
+        trustee.id !== announcedTrustee.id
+    )
+
+    let required = remaining
+
+    const newTrustees: TrusteeKey[] = [...completedTrustees, announcedTrustee]
+    missingTrustees.forEach(i => {
+      const trustee = i
+      if (required > 0) {
+        trustee.status = CompletionStatus.Error
+        required -= 1
+      } else {
+        trustee.status = CompletionStatus.Warning
+      }
+      newTrustees.push(trustee)
+    })
+    return newTrustees
+  }
+
+  const announceTrustee = (announcedTrustee: TrusteeKey) => {
+    const index = trustees.findIndex(i => i.id === announcedTrustee.id)
+    if (index < 0) {
       return
     }
-    const missingTrustees = []
-    const missing = numberOfTrustees - (completedTrustees.length + 1)
-    let required = threshold - (completedTrustees.length + 1)
-    if (missing > 0) {
-      for (let i = 0; i < missing; i += 1) {
-        const newTrustee = createTrusteeKey('', '', CompletionStatus.Warning)
-        if (required > 0) {
-          newTrustee.status = CompletionStatus.Error
-          required -= 1
-        }
-        missingTrustees.push(newTrustee)
-      }
+
+    const trustee = { ...trustees[index] }
+    if (trustee.status === CompletionStatus.Complete) {
+      return
     }
-    setTrustees([...completedTrustees, ...missingTrustees, announcedTrustee])
+
+    const newRemainingThreshold = remainingThreshold - 1
+    setRemainingThreshold(newRemainingThreshold)
+    const newTrustees = recalculateThresholdStatus(
+      announcedTrustee,
+      newRemainingThreshold
+    )
+    trusteesDispatch(updateTrusteesAction(newTrustees))
   }
 
   const addEncryptedBallotPath = (path: string) => {
@@ -65,8 +134,10 @@ const TallyLayout = () => {
         setCastIds,
         spoiledIds,
         setSpoiledIds,
+        numberOfTrustees,
+        threshold,
         trustees,
-        setTrustees,
+        trusteesDispatch,
         announceTrustee,
         encryptedBallotPaths,
         addEncryptedBallotPath,
@@ -77,6 +148,8 @@ const TallyLayout = () => {
       <Switch>
         <Route path="/trustees" exact component={TrusteeAnnouncementPage} />
         <Route path="/trustee" exact component={LoadTrusteePage} />
+        <Route path="/trustee/load" exact component={LoadCardScreen} />
+        <Route path="/trustee/remove" exact component={RemoveCardScreen} />
         <Route path="/ballots" exact component={BallotRegistrationPage} />
         <Route path="/cast" exact component={LoadCastBallotsPage} />
         <Route path="/spoiled" exact component={LoadSpoiledBallotsPage} />
