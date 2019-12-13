@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import ElectionContext from '../contexts/adminContext'
+import AdminContext from '../contexts/adminContext'
 import Main, { MainChild } from '../components/Main'
 import LinkButton from '../components/LinkButton'
 import Screen from '../components/Screen'
@@ -10,6 +10,8 @@ import ElectionInfo from '../components/ElectionInfo'
 import Sidebar from '../components/Sidebar'
 import Prose from '../components/Prose'
 import { ElectionGuardStatus } from '../config/types'
+import LoadAdminDrive from './LoadAdminDrive'
+import UsbContext from '../contexts/usbContext'
 
 const LogoImage = styled.img`
   display: flex;
@@ -18,7 +20,8 @@ const LogoImage = styled.img`
 `
 
 const StartPage = () => {
-  const { election, electionGuardStatus } = useContext(ElectionContext)
+  const { adminDriveConnected } = useContext(UsbContext)
+  const { election, electionGuardStatus } = useContext(AdminContext)
   const getElectionGuardStatus = () => {
     switch (electionGuardStatus) {
       case ElectionGuardStatus.KeyCeremony:
@@ -30,6 +33,9 @@ const StartPage = () => {
       default:
         return 'Election Error.'
     }
+  }
+  if (!election || !adminDriveConnected) {
+    return <LoadAdminDrive />
   }
   return (
     <Screen>

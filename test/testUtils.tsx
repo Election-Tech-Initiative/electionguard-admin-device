@@ -15,6 +15,7 @@ import {
   TextSizeSetting,
   ElectionGuardConfig,
   ElectionGuardStatus,
+  ElectionMap,
 } from '../src/config/types'
 
 import AdminContext from '../src/contexts/adminContext'
@@ -24,14 +25,15 @@ export function render(
   {
     route = '/',
     election = electionSampleNoSeal,
+    setElection = jest.fn(),
+    resetElection = jest.fn(),
+    electionMap = {} as ElectionMap,
+    setElectionMap = jest.fn(),
     electionGuardStatus = ElectionGuardStatus.KeyCeremony,
     setElectionGuardStatus = jest.fn(),
     history = createMemoryHistory({ initialEntries: [] }),
-    resetElection = jest.fn(),
     electionGuardConfig = {} as ElectionGuardConfig,
     setElectionGuardConfig = jest.fn(),
-    electionMapping = {},
-    setElectionMapping = jest.fn(),
     userSettings = { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
     setUserSettings = jest.fn(),
   } = {}
@@ -41,13 +43,14 @@ export function render(
       <AdminContext.Provider
         value={{
           election: election as Election,
-          electionGuardStatus,
+          setElection,
           resetElection,
+          electionMap,
+          setElectionMap,
+          electionGuardStatus,
           setElectionGuardStatus,
           electionGuardConfig,
           setElectionGuardConfig,
-          electionMapping,
-          setElectionMapping,
           setUserSettings,
           userSettings,
         }}

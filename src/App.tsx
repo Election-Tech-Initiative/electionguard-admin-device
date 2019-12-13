@@ -15,19 +15,21 @@ import {
   ElectionGuardConfig,
   ElectionGuardStatus,
   OptionalElection,
+  ElectionMap,
 } from './config/types'
 
 import Layout from './pages/Layout'
 import AdminContext from './contexts/adminContext'
 
-import electionSample from './data/electionSample.json'
 import FocusManager from './components/FocusManager'
+import SmartcardManager from './components/SmartcardManager'
+import UsbManager from './components/UsbManager'
 
 interface State {
   election: OptionalElection
+  electionMap: ElectionMap
   electionGuardStatus: ElectionGuardStatus
   electionGuardConfig: ElectionGuardConfig
-  electionMapping: any
   loadingElection: boolean
   userSettings: UserSettings
 }
@@ -36,9 +38,9 @@ export const electionKey = 'election'
 
 const initialState = {
   election: undefined,
+  electionMap: (undefined as unknown) as ElectionMap,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
-  electionGuardConfig: {} as ElectionGuardConfig,
-  electionMapping: {},
+  electionGuardConfig: (undefined as unknown) as ElectionGuardConfig,
   loadingElection: false,
   userSettings: { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
 }
@@ -50,7 +52,6 @@ export class App extends React.Component<RouteComponentProps, State> {
   }
 
   public componentDidMount = () => {
-    this.setElection(electionSample as Election)
     document.documentElement.setAttribute('data-useragent', navigator.userAgent)
     this.setDocumentFontSize()
   }
@@ -111,6 +112,10 @@ export class App extends React.Component<RouteComponentProps, State> {
     )
   }
 
+  public setElectionMap = (electionMap: ElectionMap) => {
+    this.setState({ electionMap })
+  }
+
   public setElectionGuardConfig = (
     electionGuardConfig: ElectionGuardConfig
   ) => {
@@ -130,27 +135,32 @@ export class App extends React.Component<RouteComponentProps, State> {
   public render() {
     const {
       election,
+      electionMap,
       electionGuardConfig,
       userSettings,
-      electionMapping,
       electionGuardStatus,
     } = this.state
     return (
       <AdminContext.Provider
         value={{
           election: election as Election,
+          setElection: this.setElection,
           resetElection: this.resetElection,
+          electionMap,
+          setElectionMap: this.setElectionMap,
           electionGuardStatus,
           setElectionGuardStatus: this.setElectionGuardStatus,
           electionGuardConfig,
           setElectionGuardConfig: this.setElectionGuardConfig,
-          electionMapping,
-          setElectionMapping: () => {},
           setUserSettings: this.setUserSettings,
           userSettings,
         }}
       >
-        <Layout />
+        <SmartcardManager>
+          <UsbManager>
+            <Layout />
+          </UsbManager>
+        </SmartcardManager>
       </AdminContext.Provider>
     )
   }

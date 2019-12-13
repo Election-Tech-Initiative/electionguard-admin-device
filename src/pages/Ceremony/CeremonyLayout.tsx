@@ -13,6 +13,7 @@ import RemoveDriveScreen from './RemoveDriveScreen'
 import ElectionReadyPage from './ElectionReadyPage'
 import NotFoundPage from '../NotFoundPage'
 import CeremonyContext from '../../contexts/ceremonyContext'
+import SmartcardContext from '../../contexts/smartcardContext'
 import {
   TrusteeKeyVault,
   EncrypterStore,
@@ -24,6 +25,7 @@ import AdminContext from '../../contexts/adminContext'
 import * as electionUtils from '../../utils/election'
 
 const CeremonyLayout = () => {
+  const { setElectionMap } = useContext(AdminContext)
   const { setElectionGuardConfig, election } = useContext(AdminContext)
   const [numberOfTrustees, setNumberOfTrustees] = useState(
     (undefined as unknown) as number
@@ -35,7 +37,9 @@ const CeremonyLayout = () => {
   const [keyVault, setKeyVault] = useState({} as TrusteeKeyVault)
   const [encrypterStore, setEncrypterStore] = useState({} as EncrypterStore)
 
-  const claimTrusteeKey = (trusteeId: string) => {
+  const { write } = useContext(SmartcardContext)
+
+  const claimTrusteeKey = async (trusteeId: string) => {
     setKeyVault({
       ...keyVault,
       [trusteeId]: {
@@ -43,6 +47,9 @@ const CeremonyLayout = () => {
         status: CompletionStatus.Complete,
       },
     })
+
+    const data = keyVault[trusteeId]
+    await write(data)
   }
 
   const claimEncrypterDrive = (encrypterId: string) => {
@@ -59,6 +66,7 @@ const CeremonyLayout = () => {
     try {
       const {
         electionGuardConfig,
+        electionMap,
         trusteeKeys,
       } = await electionUtils.createElection({
         election,
@@ -79,6 +87,7 @@ const CeremonyLayout = () => {
       })
 
       setKeyVault(updatedTrusteeKeys)
+      setElectionMap(electionMap)
       setElectionGuardConfig(electionGuardConfig)
     } catch (error) {
       // eslint-disable-next-line no-empty

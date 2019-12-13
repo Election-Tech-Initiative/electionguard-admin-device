@@ -8,7 +8,7 @@ import Screen from '../../components/Screen'
 import Loading from '../../components/Loading'
 
 const SaveCardScreen = () => {
-  const saveDelay = 2500
+  const saveDelay = 8000
   const [progress, setProgress] = useState(0)
   const [done, setDone] = useState(false)
 
@@ -22,6 +22,7 @@ const SaveCardScreen = () => {
   }, [])
 
   if (done) {
+    // TODO: set progress based on actual request/response state
     return <Redirect to="/key/remove" />
   }
   return (

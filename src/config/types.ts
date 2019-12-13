@@ -1,4 +1,4 @@
-import { Election } from '@votingworks/ballot-encoder'
+import { Election, Contest } from '@votingworks/ballot-encoder'
 
 // ElectionGuard
 export enum ElectionGuardStatus {
@@ -25,6 +25,28 @@ export interface ElectionGuardConfig {
   jointPublicKey: string
 }
 
+export interface ElectionMap {
+  numberOfSelections: number
+  contestMaps: Map<string, ContestMap>
+  ballotStyleMaps: Map<string, BallotStyleMap>
+}
+
+export interface BallotStyleMap {
+  expectedNumberOfSelected: number
+  contestMaps: Map<string, ContestMap>
+}
+
+export interface ContestMap {
+  contest: Contest
+  selectionMap: Map<string, number>
+  numberOfSelections: number
+  expectedNumberOfSelected: number
+  startIndex: number
+  endIndex: number
+  writeInStartIndex: number
+  nullVoteStartIndex: number
+}
+
 export interface ElectionRequest {
   config: ElectionGuardConfig
   election: Election
@@ -33,6 +55,7 @@ export interface ElectionRequest {
 export interface ElectionResponse {
   electionGuardConfig: ElectionGuardConfig
   trusteeKeys: KeyMap
+  electionMap: ElectionMap
 }
 
 export interface KeyMap {
@@ -71,6 +94,11 @@ export interface Encrypter {
   status: CompletionStatus
 }
 
+export interface SmartcardState {
+  isCardConnected: boolean
+  isWritingToCard: boolean
+}
+
 // Generic
 export type VoidFunction = () => void
 
@@ -96,13 +124,14 @@ export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 // Admin Context
 export interface AdminContextInterface {
   readonly election: Election
+  setElection: (election: Election) => void
   resetElection: (path?: string) => void
+  readonly electionMap: ElectionMap
+  setElectionMap: (electionMap: ElectionMap) => void
   electionGuardStatus: ElectionGuardStatus
   setElectionGuardStatus: (status: ElectionGuardStatus) => void
   electionGuardConfig: ElectionGuardConfig
   setElectionGuardConfig: (electionGuardConfig: ElectionGuardConfig) => void
-  electionMapping: any
-  setElectionMapping: (electionMapping: any) => void
   userSettings: UserSettings
   setUserSettings: (partial: PartialUserSettings) => void
 }
@@ -137,10 +166,39 @@ export interface TallyContextInterface {
   setTally: (tally: Tally) => void
 }
 
+export interface SmartcardContextInterface {
+  isCardConnected: boolean
+  isWritingToCard: boolean
+  currentCard: CardData
+  connect: () => void
+  disconnect: () => void
+  read: <T extends CardData>() => Promise<T>
+  readValue: <T>() => Promise<T>
+  write: <T>(data: T) => Promise<void>
+}
+
+export interface UsbContextInterface {
+  adminDriveConnected: boolean
+  storageDriveConnected: boolean
+  updateDriveStatus: () => void
+  read: <T>(driveId: number, file: string) => Promise<T>
+  write: (
+    driveId: number,
+    file: string,
+    data: object
+  ) => Promise<UsbWriteResult>
+  eject: (driveId: string) => void
+}
+
+export interface UsbWriteResult {
+  success: boolean
+  message: string
+}
+
 export type OptionalElection = Election | undefined
 
 // Smart Card Content
-export type CardDataTypes = 'voter' | 'pollworker' | 'clerk'
+export type CardDataTypes = 'voter' | 'pollworker' | 'clerk' | 'trustee' | 'new'
 export interface CardData {
   readonly t: CardDataTypes
 }
@@ -160,6 +218,15 @@ export interface PollworkerCardData extends CardData {
 }
 export interface ClerkCardData extends CardData {
   readonly t: 'clerk'
+  readonly h: string
+}
+
+export interface NewCardData extends CardData {
+  readonly t: 'new'
+}
+
+export interface TrusteeCardData extends CardData {
+  readonly t: 'trustee'
   readonly h: string
 }
 

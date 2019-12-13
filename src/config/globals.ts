@@ -11,3 +11,4 @@ export const FONT_SIZES = [22, 30, 36, 48]
 export const DEFAULT_FONT_SIZE = 1
 export const LARGE_DISPLAY_FONT_SIZE = 3
 export const TEXT_SIZE = 1
+export const PATH_DELIMITER = '/'

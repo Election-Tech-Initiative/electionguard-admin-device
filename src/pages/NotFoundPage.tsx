@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 
-import ElectionContext from '../contexts/adminContext'
+import AdminContext from '../contexts/adminContext'
 
 import Button from '../components/Button'
 import Main, { MainChild } from '../components/Main'
@@ -9,7 +9,7 @@ import Prose from '../components/Prose'
 import Screen from '../components/Screen'
 
 const NotFoundPage = (props: RouteComponentProps) => {
-  const { resetElection } = useContext(ElectionContext)
+  const { resetElection } = useContext(AdminContext)
   const { pathname } = props.location
   const requestResetElection = () => {
     resetElection()
