@@ -22,7 +22,7 @@ import {
   ElectionGuardConfig,
 } from '../../config/types'
 import AdminContext from '../../contexts/adminContext'
-import * as electionUtils from '../../utils/election'
+import api from '../../api/electionGuardApi'
 
 const CeremonyLayout = () => {
   const { setElectionMap } = useContext(AdminContext)
@@ -68,14 +68,11 @@ const CeremonyLayout = () => {
         electionGuardConfig,
         electionMap,
         trusteeKeys,
-      } = await electionUtils.createElection({
-        election,
-        electionGuardConfig: {
-          threshold,
-          numberOfTrustees,
-          electionMetadata: '',
-        } as ElectionGuardConfig,
-      })
+      } = await api.createElection(election, {
+        threshold,
+        numberOfTrustees,
+        electionMetadata: '',
+      } as ElectionGuardConfig)
       const updatedTrusteeKeys = {} as TrusteeKeyVault
       Object.keys(trusteeKeys).forEach(keyId => {
         const keyValue = trusteeKeys[keyId]
