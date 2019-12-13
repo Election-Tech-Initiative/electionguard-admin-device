@@ -1,5 +1,4 @@
 import React, { FC, ReactNode, useState } from 'react'
-import { CardDataTypes } from '@votingworks/ballot-encoder'
 import SmartcardContext from '../contexts/smartcardContext'
 import {
   CardAPI,
@@ -26,9 +25,6 @@ const SmartcardManager: FC<Props> = (props: Props) => {
   const [isCardConnected, setIsCardConnected] = useState(false)
   const [isWritingToCard, setIsWritingToCard] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
-  const [cardCheckInterval, setCardCheckInterval] = useState(
-    DEFAULT_CHECK_INTERVAL
-  )
   const [currentCard, setCurrentCard] = useState({} as CardData)
 
   const readCard = async (): Promise<CardAPI> => {
@@ -134,7 +130,7 @@ const SmartcardManager: FC<Props> = (props: Props) => {
         disconnect()
       }
     },
-    isRunning ? cardCheckInterval : undefined
+    isRunning ? DEFAULT_CHECK_INTERVAL : undefined
   )
 
   const connect = () => {
