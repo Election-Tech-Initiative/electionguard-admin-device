@@ -63,13 +63,11 @@ const TallyLayout = () => {
   const { numberOfTrustees, threshold } = electionGuardConfig
   const [castIds, setCastIds] = useState([] as string[])
   const [spoiledIds, setSpoiledIds] = useState([] as string[])
+  const [encryptedBallots, setEncryptedBallots] = useState([] as string[])
   const [remainingThreshold, setRemainingThreshold] = useState(() => threshold)
   const [trustees, trusteesDispatch] = useReducer(
     trusteeReducer,
     [] as TrusteeKey[]
-  )
-  const [encryptedBallotPaths, setEncryptedBallotPaths] = useState(
-    [] as string[]
   )
   const [tally, setTally] = useState((undefined as unknown) as Tally)
 
@@ -123,10 +121,6 @@ const TallyLayout = () => {
     trusteesDispatch(updateTrusteesAction(newTrustees))
   }
 
-  const addEncryptedBallotPath = (path: string) => {
-    setEncryptedBallotPaths([...encryptedBallotPaths, path])
-  }
-
   return (
     <TallyContext.Provider
       value={{
@@ -139,8 +133,8 @@ const TallyLayout = () => {
         trustees,
         trusteesDispatch,
         announceTrustee,
-        encryptedBallotPaths,
-        addEncryptedBallotPath,
+        encryptedBallots,
+        setEncryptedBallots,
         tally,
         setTally,
       }}

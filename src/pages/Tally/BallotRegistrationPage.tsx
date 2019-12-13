@@ -35,12 +35,10 @@ const BallotListButton = (
 }
 
 const BallotRegistrationPage = (props: RouteComponentProps) => {
-  const { castIds, spoiledIds, encryptedBallotPaths } = useContext(TallyContext)
+  const { castIds, spoiledIds, encryptedBallots } = useContext(TallyContext)
   const ready = (): boolean => {
     return (
-      castIds.length > 0 &&
-      spoiledIds.length > 0 &&
-      encryptedBallotPaths.length > 0
+      castIds.length > 0 && spoiledIds.length > 0 && encryptedBallots.length > 0
     )
   }
 
@@ -62,7 +60,7 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
               <b>Select artifact to upload</b>
             </p>
             <StatusButtonGrid>
-              {BallotListButton(encryptedBallotPaths, 'Encrypted Ballots', () =>
+              {BallotListButton(encryptedBallots, 'Encrypted Ballots', () =>
                 navigate('/encrypted')
               )}
               {BallotListButton(castIds, 'Cast Ballot Ids', () =>

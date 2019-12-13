@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState, useEffect } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import UsbContext from '../contexts/usbContext'
 import fetchJSON from '../utils/fetchJSON'
 import { UsbWriteResult } from '../config/types'
@@ -12,6 +12,7 @@ export const configFile = `data${GLOBALS.PATH_DELIMITER}election.config.json`
 export const mapFile = `data${GLOBALS.PATH_DELIMITER}election.map.json`
 export const spoiledBallotsFile = `data${GLOBALS.PATH_DELIMITER}spoiledBallots.json`
 export const castBallotsFile = `data${GLOBALS.PATH_DELIMITER}castBallots.json`
+export const encryptedBallotsFile = `data${GLOBALS.PATH_DELIMITER}encryptedBallots.json`
 
 const initialDriveState: UsbDrives = {
   0: false,

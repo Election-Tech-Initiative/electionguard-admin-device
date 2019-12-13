@@ -157,8 +157,8 @@ export interface TallyContextInterface {
   setCastIds: (castIds: string[]) => void
   spoiledIds: string[]
   setSpoiledIds: (spoiledIds: string[]) => void
-  encryptedBallotPaths: string[]
-  addEncryptedBallotPath: (path: string) => void
+  encryptedBallots: string[]
+  setEncryptedBallots: (encryptedBallots: string[]) => void
   numberOfTrustees: number
   threshold: number
   trustees: TrusteeKey[]
