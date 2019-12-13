@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
 import Main, { MainChild } from '../../components/Main'
@@ -8,7 +8,11 @@ import Sidebar from '../../components/Sidebar'
 import SidebarFooter from '../../components/SidebarFooter'
 import LinkButton from '../../components/LinkButton'
 import StatusButton, { StatusButtonGrid } from '../../components/StatusButton'
-import { TrusteeKey, CompletionStatus } from '../../config/types'
+import {
+  TrusteeKey,
+  CompletionStatus,
+  setTrusteesAction,
+} from '../../config/types'
 import { CHECK_ICON, WARNING_ICON } from '../../config/globals'
 import TallyContext from '../../contexts/tallyContext'
 
@@ -16,13 +20,6 @@ const Header = styled.div`
   margin: 0 auto;
   text-align: center;
 `
-
-const mockKeys: TrusteeKey[] = [
-  { id: '0', data: '', status: CompletionStatus.Error },
-  { id: '1', data: '', status: CompletionStatus.Error },
-  { id: '2', data: '', status: CompletionStatus.Error },
-  { id: '3', data: '', status: CompletionStatus.Error },
-]
 
 const getStatus = (status: CompletionStatus) => {
   switch (status) {
@@ -56,10 +53,34 @@ const thresholdMet = (keys: TrusteeKey[]) => {
 }
 
 const TrusteeAnnouncementPage = (props: RouteComponentProps) => {
-  const { trustees, setTrustees } = useContext(TallyContext)
-  if (trustees.length <= 0) {
-    setTrustees(mockKeys)
+  const {
+    numberOfTrustees,
+    threshold,
+    trustees,
+    trusteesDispatch,
+  } = useContext(TallyContext)
+
+  const buildTrustees = () => {
+    const trusteeKeys: TrusteeKey[] = []
+    for (let i = 0; i <= numberOfTrustees - 1; i += 1) {
+      trusteeKeys.push({
+        id: `${i}`,
+        data: '',
+        status:
+          i < threshold ? CompletionStatus.Error : CompletionStatus.Warning,
+      })
+    }
+    return trusteeKeys
   }
+
+  const dispatchTrustees = () => {
+    if (trustees.length !== numberOfTrustees) {
+      const newTrustees = buildTrustees()
+      trusteesDispatch(setTrusteesAction(newTrustees))
+    }
+  }
+
+  useEffect(dispatchTrustees, [])
 
   const handlePress = () => {
     props.history.push('/trustee')

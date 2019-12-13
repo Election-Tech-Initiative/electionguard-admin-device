@@ -159,8 +159,10 @@ export interface TallyContextInterface {
   setSpoiledIds: (spoiledIds: string[]) => void
   encryptedBallotPaths: string[]
   addEncryptedBallotPath: (path: string) => void
+  numberOfTrustees: number
+  threshold: number
   trustees: TrusteeKey[]
-  setTrustees: (trustees: TrusteeKey[]) => void
+  trusteesDispatch: (action: Action) => void
   announceTrustee: (trustee: TrusteeKey) => void
   tally: Tally
   setTally: (tally: Tally) => void
@@ -264,5 +266,51 @@ export interface UserSettings {
 }
 export type SetUserSettings = (partial: PartialUserSettings) => void
 export type PartialUserSettings = Partial<UserSettings>
+
+export interface Action {
+  type: string
+}
+
+export interface SetTrusteesAction extends Action {
+  type: 'set-trustees'
+  payload: TrusteeKey[]
+}
+
+export const setTrusteesAction = (
+  trustees: TrusteeKey[]
+): SetTrusteesAction => {
+  return {
+    type: 'set-trustees',
+    payload: trustees,
+  } as SetTrusteesAction
+}
+
+export interface UpdateTrusteeAction extends Action {
+  type: 'update-trustee'
+  payload: TrusteeKey
+}
+
+export const updateTrusteeAction = (
+  trustee: TrusteeKey
+): UpdateTrusteeAction => {
+  return {
+    type: 'update-trustee',
+    payload: trustee,
+  } as UpdateTrusteeAction
+}
+
+export interface UpdateTrusteesAction extends Action {
+  type: 'update-trustees'
+  payload: TrusteeKey[]
+}
+
+export const updateTrusteesAction = (
+  trustees: TrusteeKey[]
+): UpdateTrusteesAction => {
+  return {
+    type: 'update-trustees',
+    payload: trustees,
+  } as UpdateTrusteesAction
+}
 
 export default {}

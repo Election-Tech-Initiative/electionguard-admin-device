@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
 import Main, { MainChild } from '../../components/Main'
@@ -24,9 +24,8 @@ const InsertCardScreen = (props: RouteComponentProps<TrusteeKeyParams>) => {
   const { claimTrusteeKey } = useContext(CeremonyContext)
   const { isCardConnected, connect, disconnect } = useContext(SmartcardContext)
 
-  useEffect(() => {
-    connect()
-  }, [!isCardConnected])
+  const startMonitoring = useCallback(connect, [])
+  useEffect(startMonitoring, [!isCardConnected, startMonitoring])
 
   return (
     <Screen flexDirection="row-reverse" white>
