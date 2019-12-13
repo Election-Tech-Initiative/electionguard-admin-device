@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import TallyContext from '../../contexts/tallyContext'
 import Main, { MainChild } from '../../components/Main'
@@ -8,7 +8,6 @@ import Sidebar from '../../components/Sidebar'
 import LinkButton from '../../components/LinkButton'
 import SidebarFooter from '../../components/SidebarFooter'
 import UsbContext from '../../contexts/usbContext'
-import * as GLOBALS from '../../config/globals'
 import {
   storageDriveIndex,
   spoiledBallotsFile,
@@ -16,9 +15,8 @@ import {
 
 const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
   const { setSpoiledIds } = useContext(TallyContext)
-  const [pollInterval, setPollInterval] = useState(0)
   const [isWriting, setIsWriting] = useState(false)
-  const { storageDriveConnected, updateDriveStatus, read } = useContext(
+  const { storageDriveConnected, connect, disconnect, read } = useContext(
     UsbContext
   )
   const handleLoad = async () => {
@@ -33,30 +31,20 @@ const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
       setSpoiledIds(spoiledBallots)
       history.goBack()
     } catch (error) {
-      // toast message?
       console.error(
         'Failed to read spoiled ballots from the drive. They may not exist.',
         error
       )
+      throw error
     }
   }
 
+  const startMonitoringDrives = useCallback(connect, [])
+  const stopMonitoringDrives = useCallback(disconnect, [])
   useEffect(() => {
-    if (!pollInterval) {
-      const interval = window.setInterval(async () => {
-        updateDriveStatus()
-      }, GLOBALS.USB_POLLING_INTERVAL)
-      setPollInterval(interval)
-    }
-
-    return () => {
-      window.clearInterval(pollInterval)
-    }
-  }, [pollInterval, setPollInterval, updateDriveStatus])
-
-  if (storageDriveConnected) {
-    window.clearInterval(pollInterval)
-  }
+    startMonitoringDrives()
+    return () => stopMonitoringDrives()
+  }, [startMonitoringDrives, stopMonitoringDrives])
 
   return (
     <Screen flexDirection="row-reverse" white>

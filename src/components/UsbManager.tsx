@@ -1,8 +1,9 @@
-import React, { FC, ReactNode, useState } from 'react'
+import React, { FC, ReactNode, useState, useEffect } from 'react'
 import UsbContext from '../contexts/usbContext'
 import fetchJSON from '../utils/fetchJSON'
 import { UsbWriteResult } from '../config/types'
 import * as GLOBALS from '../config/globals'
+import UseInterval from '../hooks/useInterval'
 
 export const adminDriveIndex = 0
 export const storageDriveIndex = 1
@@ -34,6 +35,7 @@ const UsbManager: FC<Props> = (props: Props) => {
   const [usbDrives, setUsbDrives] = useState({
     ...initialDriveState,
   } as UsbDrives)
+  const [isRunning, setIsRunning] = useState(false)
   const adminDriveConnected = usbDrives[adminDriveIndex] || !!props.test
   const storageDriveConnected = usbDrives[storageDriveIndex] || !!props.test
   const read = async <T extends unknown>(
@@ -50,23 +52,38 @@ const UsbManager: FC<Props> = (props: Props) => {
     })
   }
 
-  const updateDriveStatus = async () => {
-    const availableDrives = (await fetchJSON<UsbDrive[]>('/usb')) || []
+  const disconnect = () => {
+    setIsRunning(false)
+  }
 
-    const currentDrives: UsbDrives = { ...initialDriveState }
-    availableDrives.forEach((drive, index) => {
-      const driveIsMounted = drive.mountpoints && drive.mountpoints.length
-      currentDrives[index] = !!driveIsMounted
-    })
+  UseInterval(
+    async () => {
+      try {
+        const availableDrives = (await fetchJSON<UsbDrive[]>('/usb')) || []
 
-    const keys = Object.keys(currentDrives)
-    for (let i = 0; i < keys.length; i += 1) {
-      const key = +keys[i]
-      if (currentDrives[key] !== usbDrives[key]) {
-        setUsbDrives(currentDrives)
-        break
+        const currentDrives: UsbDrives = { ...initialDriveState }
+        availableDrives.forEach((drive, index) => {
+          const driveIsMounted = drive.mountpoints && drive.mountpoints.length
+          currentDrives[index] = !!driveIsMounted
+        })
+
+        const keys = Object.keys(currentDrives)
+        for (let i = 0; i < keys.length; i += 1) {
+          const key = +keys[i]
+          if (currentDrives[key] !== usbDrives[key]) {
+            setUsbDrives(currentDrives)
+            break
+          }
+        }
+      } catch (error) {
+        disconnect()
       }
-    }
+    },
+    isRunning ? GLOBALS.USB_POLLING_INTERVAL : undefined
+  )
+
+  const connect = () => {
+    setIsRunning(true)
   }
 
   const eject = () => {}
@@ -78,7 +95,8 @@ const UsbManager: FC<Props> = (props: Props) => {
         storageDriveConnected,
         read,
         write,
-        updateDriveStatus,
+        connect,
+        disconnect,
         eject,
       }}
     >

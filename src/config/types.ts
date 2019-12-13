@@ -183,7 +183,8 @@ export interface SmartcardContextInterface {
 export interface UsbContextInterface {
   adminDriveConnected: boolean
   storageDriveConnected: boolean
-  updateDriveStatus: () => void
+  connect: () => void
+  disconnect: () => void
   read: <T>(driveId: number, file: string) => Promise<T>
   write: (
     driveId: number,

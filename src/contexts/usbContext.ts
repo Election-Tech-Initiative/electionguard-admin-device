@@ -4,7 +4,8 @@ import { UsbContextInterface, UsbWriteResult } from '../config/types'
 const context: UsbContextInterface = {
   adminDriveConnected: false,
   storageDriveConnected: false,
-  updateDriveStatus: () => {},
+  connect: () => {},
+  disconnect: () => {},
   read: <T>() => Promise.resolve({} as T),
   write: () => Promise.resolve({} as UsbWriteResult),
   eject: () => {},
