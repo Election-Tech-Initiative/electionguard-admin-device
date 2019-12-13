@@ -20,6 +20,8 @@ import LoadCastBallotsPage from './LoadCastBallotsPage'
 import LoadSpoiledBallotsPage from './LoadSpoiledBallotsPage'
 import LoadEncryptedBallotsPage from './LoadEncryptedBallotsPage'
 import TrusteeAnnouncementPage from './TrusteeAnnouncementPage'
+import LoadCardScreen from './LoadCardScreen'
+import RemoveCardScreen from './RemoveCardScreen'
 
 const trusteeReducer = (state: TrusteeKey[], action: Action) => {
   switch (action.type) {
@@ -146,6 +148,8 @@ const TallyLayout = () => {
       <Switch>
         <Route path="/trustees" exact component={TrusteeAnnouncementPage} />
         <Route path="/trustee" exact component={LoadTrusteePage} />
+        <Route path="/trustee/load" exact component={LoadCardScreen} />
+        <Route path="/trustee/remove" exact component={RemoveCardScreen} />
         <Route path="/ballots" exact component={BallotRegistrationPage} />
         <Route path="/cast" exact component={LoadCastBallotsPage} />
         <Route path="/spoiled" exact component={LoadSpoiledBallotsPage} />

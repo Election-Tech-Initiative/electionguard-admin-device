@@ -170,6 +170,7 @@ export interface TallyContextInterface {
 
 export interface SmartcardContextInterface {
   isCardConnected: boolean
+  isReadingCard: boolean
   isWritingToCard: boolean
   currentCard: CardData
   connect: () => void

@@ -23,16 +23,23 @@ const DEFAULT_CHECK_INTERVAL = 1000
 // TODO Fill in implementation (poll, read, etc) for USB Manager
 const SmartcardManager: FC<Props> = (props: Props) => {
   const [isCardConnected, setIsCardConnected] = useState(false)
+  const [isReadingCard, setIsReadingCard] = useState(false)
   const [isWritingToCard, setIsWritingToCard] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [currentCard, setCurrentCard] = useState({} as CardData)
 
   const readCard = async (): Promise<CardAPI> => {
-    return fetchJSON<CardAPI>('/card/read')
+    setIsReadingCard(true)
+    const result = await fetchJSON<CardAPI>('/card/read')
+    setIsReadingCard(false)
+    return result
   }
 
   const readValue = async <T extends unknown>(): Promise<T> => {
-    return fetchJSON<T>('/card/read_long')
+    setIsReadingCard(true)
+    const result = await fetchJSON<T>('/card/read_long')
+    setIsReadingCard(false)
+    return result
   }
 
   const provisionNewCard = async <T extends CardData>(card: T) => {
@@ -144,6 +151,7 @@ const SmartcardManager: FC<Props> = (props: Props) => {
     <SmartcardContext.Provider
       value={{
         isCardConnected,
+        isReadingCard,
         isWritingToCard,
         currentCard,
         connect,

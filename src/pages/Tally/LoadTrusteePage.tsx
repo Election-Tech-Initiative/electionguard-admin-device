@@ -1,5 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Redirect } from 'react-router-dom'
+import React, { useCallback, useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import Main, { MainChild } from '../../components/Main'
 import Prose from '../../components/Prose'
@@ -21,7 +20,6 @@ const LoadTrusteePage = () => {
   const { isCardConnected, connect, disconnect, readValue } = useContext(
     SmartcardContext
   )
-  const [done, setDone] = useState(false)
 
   const startMonitoring = useCallback(connect, [])
   useEffect(startMonitoring, [!isCardConnected, startMonitoring])
@@ -29,12 +27,6 @@ const LoadTrusteePage = () => {
   const handleLoad = async () => {
     const trustee: TrusteeKey = await readValue()
     announceTrustee(createTrusteeKey(trustee.id, trustee.data))
-    setDone(true)
-  }
-
-  if (done) {
-    disconnect()
-    return <Redirect to="/trustees" />
   }
 
   return (
@@ -44,8 +36,10 @@ const LoadTrusteePage = () => {
           <LinkButton
             onPress={() => handleLoad()}
             big
-            primary
+            primary={isCardConnected}
+            disabled={!isCardConnected}
             id="load"
+            to="/trustee/load"
             aria-label="Load trustee from card."
           >
             Load

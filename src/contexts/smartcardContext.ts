@@ -4,6 +4,7 @@ import { CardData, SmartcardContextInterface } from '../config/types'
 
 const context: SmartcardContextInterface = {
   isCardConnected: false,
+  isReadingCard: false,
   isWritingToCard: false,
   currentCard: (undefined as unknown) as CardData,
   connect: () => {},
