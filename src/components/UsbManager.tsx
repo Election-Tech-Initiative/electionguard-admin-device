@@ -11,6 +11,7 @@ export const electionFile = `data${GLOBALS.PATH_DELIMITER}election.json`
 export const configFile = `data${GLOBALS.PATH_DELIMITER}election.config.json`
 export const mapFile = `data${GLOBALS.PATH_DELIMITER}election.map.json`
 export const spoiledBallotsFile = `data${GLOBALS.PATH_DELIMITER}spoiledBallots.json`
+export const castBallotsFile = `data${GLOBALS.PATH_DELIMITER}castBallots.json`
 
 const initialDriveState: UsbDrives = {
   0: false,
