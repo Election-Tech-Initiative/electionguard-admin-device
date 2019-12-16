@@ -11,13 +11,8 @@ import * as GLOBALS from '../src/config/globals'
 // typescript concludes that sealURL is required.
 import electionSampleNoSeal from '../src/data/electionSampleNoSeal.json'
 
-import {
-  TextSizeSetting,
-  ElectionGuardConfig,
-  ElectionGuardStatus,
-  ElectionMap,
-} from '../src/config/types'
-
+import { TextSizeSetting, ElectionGuardStatus } from '../src/config/types'
+import { ElectionGuardConfig, ElectionMap } from '../src/electionguard'
 import AdminContext from '../src/contexts/adminContext'
 
 export function render(

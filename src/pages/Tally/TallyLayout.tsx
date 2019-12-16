@@ -11,7 +11,6 @@ import {
   UpdateTrusteesAction,
   SetTrusteesAction,
   TrusteeKey,
-  Tally,
   CompletionStatus,
 } from '../../config/types'
 import AdminContext from '../../contexts/adminContext'
@@ -20,7 +19,7 @@ import LoadCastBallotsPage from './LoadCastBallotsPage'
 import LoadSpoiledBallotsPage from './LoadSpoiledBallotsPage'
 import LoadEncryptedBallotsPage from './LoadEncryptedBallotsPage'
 import TrusteeAnnouncementPage from './TrusteeAnnouncementPage'
-import api from '../../api/electionGuardApi'
+import { electionGuardApi, Tally } from '../../electionguard'
 import LoadCardScreen from './LoadCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
 
@@ -134,7 +133,7 @@ const TallyLayout = () => {
         encryptedBallotsFilename,
         spoiledBallotTrackers,
         castedBallotTrackers,
-      } = await api.recordBallots(
+      } = await electionGuardApi.recordBallots(
         electionGuardConfig,
         encryptedBallots,
         castIds,
@@ -160,7 +159,7 @@ const TallyLayout = () => {
 
   const tallyVotes = async () => {
     try {
-      const tallyResult = await api.tallyVotes(
+      const tallyResult = await electionGuardApi.tallyVotes(
         electionGuardConfig,
         electionMap,
         normalizeArray(trustees),

@@ -1,4 +1,4 @@
-export default async function fetchJSON<T>(
+export async function fetchJSON<T>(
   input: RequestInfo,
   init?: RequestInit
 ): Promise<T> {
@@ -18,3 +18,5 @@ export default async function fetchJSON<T>(
 
   return json
 }
+
+export default fetchJSON

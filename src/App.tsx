@@ -12,11 +12,11 @@ import {
   PartialUserSettings,
   TextSizeSetting,
   UserSettings,
-  ElectionGuardConfig,
   ElectionGuardStatus,
   OptionalElection,
-  ElectionMap,
 } from './config/types'
+
+import { ElectionGuardConfig, ElectionMap } from './electionguard'
 
 import Layout from './pages/Layout'
 import AdminContext from './contexts/adminContext'
