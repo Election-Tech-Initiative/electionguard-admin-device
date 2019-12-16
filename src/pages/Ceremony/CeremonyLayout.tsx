@@ -19,10 +19,9 @@ import {
   EncrypterStore,
   CompletionStatus,
   TrusteeKey,
-  ElectionGuardConfig,
 } from '../../config/types'
+import { ElectionGuardConfig, electionGuardApi } from '../../electionguard'
 import AdminContext from '../../contexts/adminContext'
-import api from '../../api/electionGuardApi'
 
 const CeremonyLayout = () => {
   const { setElectionMap } = useContext(AdminContext)
@@ -68,7 +67,7 @@ const CeremonyLayout = () => {
         electionGuardConfig,
         electionMap,
         trusteeKeys,
-      } = await api.createElection(election, {
+      } = await electionGuardApi.createElection(election, {
         threshold,
         numberOfTrustees,
         electionMetadata: '',

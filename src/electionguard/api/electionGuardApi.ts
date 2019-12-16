@@ -1,27 +1,21 @@
 import { Election } from '@votingworks/ballot-encoder'
 import {
   ElectionGuardConfig,
-  KeyMap,
   ElectionMap,
-  Tally,
-} from '../config/types'
-import fetchJSON from '../utils/fetchJSON'
+  CreateElectionRequest,
+  CreateElectionResponse,
+  RecordBallotsRequest,
+  RecordBallotsResponse,
+  TallyVotesRequest,
+  TallyVoteResponse,
+} from '../models'
+import fetchJSON from './fetchJSON'
+import { KeyMap } from '../models/KeyMap'
 
-const DEFAULT_BALLOT_EXPORT_PATH = '~/election_results/ballots'
-const DEFAULT_BALLOT_EXPORT_PREFIX = 'my_election_ballots'
-const DEFAULT_TALLY_EXPORT_PATH = '~/election_results/tallies'
-const DEFAULT_TALLY_EXPORT_PREFIX = 'my_election_tallies'
-
-export interface CreateElectionRequest {
-  config: ElectionGuardConfig
-  election: Election
-}
-
-export interface CreateElectionResponse {
-  electionGuardConfig: ElectionGuardConfig
-  trusteeKeys: KeyMap
-  electionMap: ElectionMap
-}
+export const DEFAULT_BALLOT_EXPORT_PATH = '~/election_results/ballots'
+export const DEFAULT_BALLOT_EXPORT_PREFIX = 'my_election_ballots'
+export const DEFAULT_TALLY_EXPORT_PATH = '~/election_results/tallies'
+export const DEFAULT_TALLY_EXPORT_PREFIX = 'my_election_tallies'
 
 const createElection = (
   election: Election,
@@ -35,21 +29,6 @@ const createElection = (
       config: electionGuardConfig,
     } as CreateElectionRequest),
   })
-}
-
-export interface RecordBallotsRequest {
-  electionGuardConfig: ElectionGuardConfig
-  encryptedBallots: string[]
-  castBallotIndicies: string[]
-  spoiledBallotIndicies: string[]
-  exportPath: string
-  exportFileNamePrefix: string
-}
-
-export type RecordBallotsResponse = {
-  encryptedBallotsFilename: string
-  castedBallotTrackers: string[]
-  spoiledBallotTrackers: string[]
 }
 
 const recordBallots = (
@@ -73,17 +52,6 @@ const recordBallots = (
     } as RecordBallotsRequest),
   })
 }
-
-export interface TallyVotesRequest {
-  electionGuardConfig: ElectionGuardConfig
-  electionMap: ElectionMap
-  trusteeKeys: KeyMap
-  encryptedBallotsFileName: string
-  exportPath: string
-  exportFileNamePrefix: string
-}
-
-export type TallyVoteResponse = Tally
 
 const tallyVotes = (
   electionGuardConfig: ElectionGuardConfig,

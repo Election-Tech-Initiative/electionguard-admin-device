@@ -9,12 +9,8 @@ import SidebarFooter from '../../components/SidebarFooter'
 import LinkButton from '../../components/LinkButton'
 import TallyContext from '../../contexts/tallyContext'
 import AdminContext from '../../contexts/adminContext'
-import {
-  Tally,
-  CandidateVoteTally,
-  YesNoVoteTally,
-  ElectionGuardStatus,
-} from '../../config/types'
+import { ElectionGuardStatus } from '../../config/types'
+import { Tally, CandidateVoteTally, YesNoVoteTally } from '../../electionguard'
 
 const Header = styled.div`
   margin: 0 auto;

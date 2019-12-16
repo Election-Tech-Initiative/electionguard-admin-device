@@ -5,7 +5,7 @@ import Prose from '../components/Prose'
 import Screen from '../components/Screen'
 import UsbContext from '../contexts/usbContext'
 import AdminContext from '../contexts/adminContext'
-import { ElectionGuardConfig, ElectionMap } from '../config/types'
+import { ElectionGuardConfig, ElectionMap } from '../electionguard'
 import {
   adminDriveIndex,
   electionFile,

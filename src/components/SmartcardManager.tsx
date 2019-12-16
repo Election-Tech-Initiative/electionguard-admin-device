@@ -10,7 +10,7 @@ import {
   VoterCardData,
   NewCardData,
 } from '../config/types'
-import fetchJSON from '../utils/fetchJSON'
+import { fetchJSON } from '../electionguard'
 import UseInterval from '../hooks/useInterval'
 
 interface Props {

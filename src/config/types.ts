@@ -1,4 +1,5 @@
-import { Election, Contest } from '@votingworks/ballot-encoder'
+import { Election } from '@votingworks/ballot-encoder'
+import { ElectionGuardConfig, ElectionMap, Tally } from '../electionguard'
 
 // ElectionGuard
 export enum ElectionGuardStatus {
@@ -13,42 +14,6 @@ export enum CompletionStatus {
   Error = -1,
   Incomplete = 0,
   Complete = 1,
-}
-
-export interface ElectionGuardConfig {
-  numberOfSelections: number
-  numberOfTrustees: number
-  threshold: number
-  numberOfEncrypters: number
-  subgroupOrder: string
-  electionMetadata: string
-  jointPublicKey: string
-}
-
-export interface ElectionMap {
-  numberOfSelections: number
-  contestMaps: Map<string, ContestMap>
-  ballotStyleMaps: Map<string, BallotStyleMap>
-}
-
-export interface BallotStyleMap {
-  expectedNumberOfSelected: number
-  contestMaps: Map<string, ContestMap>
-}
-
-export interface ContestMap {
-  contest: Contest
-  selectionMap: Map<string, number>
-  numberOfSelections: number
-  expectedNumberOfSelected: number
-  startIndex: number
-  endIndex: number
-  writeInStartIndex: number
-  nullVoteStartIndex: number
-}
-
-export interface KeyMap {
-  [id: string]: string
 }
 
 export interface TrusteeKeyVault {
@@ -93,22 +58,6 @@ export type VoidFunction = () => void
 
 // Events
 export type EventTargetFunction = (event: React.FormEvent<EventTarget>) => void
-
-// Votes
-export interface WriteInCandidateTally {
-  name: string
-  tally: number
-}
-export type TallyCount = number
-export interface CandidateVoteTally {
-  candidates: TallyCount[]
-  writeIns: WriteInCandidateTally[]
-}
-export interface YesNoVoteTally {
-  yes: TallyCount
-  no: TallyCount
-}
-export type Tally = (CandidateVoteTally | YesNoVoteTally)[]
 
 // Admin Context
 export interface AdminContextInterface {

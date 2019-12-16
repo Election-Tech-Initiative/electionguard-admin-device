@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useState } from 'react'
 import UsbContext from '../contexts/usbContext'
-import fetchJSON from '../utils/fetchJSON'
+import { fetchJSON } from '../electionguard'
 import { UsbWriteResult } from '../config/types'
 import * as GLOBALS from '../config/globals'
 import UseInterval from '../hooks/useInterval'

@@ -1,13 +1,12 @@
 import { createContext } from 'react'
 import { Election } from '@votingworks/ballot-encoder'
 import * as GLOBALS from '../config/globals'
+import { ElectionGuardConfig, ElectionMap } from '../electionguard'
 
 import {
   AdminContextInterface,
   TextSizeSetting,
-  ElectionGuardConfig,
   ElectionGuardStatus,
-  ElectionMap,
 } from '../config/types'
 
 const context: AdminContextInterface = {
