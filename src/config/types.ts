@@ -1,14 +1,12 @@
 import { Election } from '@votingworks/ballot-encoder'
-import { ElectionGuardConfig, ElectionMap, Tally } from '../electionguard'
+import {
+  ElectionGuardConfig,
+  ElectionMap,
+  Tally,
+  ElectionGuardStatus,
+} from '../electionguard'
 
 // ElectionGuard
-export enum ElectionGuardStatus {
-  Error = -1,
-  KeyCeremony = 0,
-  TallyVotes = 1,
-  Complete = 2,
-}
-
 export enum CompletionStatus {
   Warning = -2,
   Error = -1,
@@ -66,6 +64,8 @@ export interface AdminContextInterface {
   resetElection: (path?: string) => void
   readonly electionMap: ElectionMap
   setElectionMap: (electionMap: ElectionMap) => void
+  tally: Tally
+  setTally: (tally: Tally) => void
   electionGuardStatus: ElectionGuardStatus
   setElectionGuardStatus: (status: ElectionGuardStatus) => void
   electionGuardConfig: ElectionGuardConfig
@@ -105,8 +105,6 @@ export interface TallyContextInterface {
   recordBallots: () => Promise<void>
   castTrackers: string[]
   spoiledTrackers: string[]
-  tally: Tally
-  setTally: (tally: Tally) => void
   tallyVotes: () => Promise<void>
 }
 

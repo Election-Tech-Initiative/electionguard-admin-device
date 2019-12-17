@@ -24,7 +24,8 @@ exports[`renders TallyPage 1`] = `
       <p>
         <button
           aria-label="Navigate Back"
-          class="sc-cSHVUG gMkFbF"
+          class="sc-cSHVUG jbZltu"
+          disabled=""
           id="back"
           role="option"
           type="button"

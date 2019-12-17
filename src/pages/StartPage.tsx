@@ -9,7 +9,7 @@ import Screen from '../components/Screen'
 import ElectionInfo from '../components/ElectionInfo'
 import Sidebar from '../components/Sidebar'
 import Prose from '../components/Prose'
-import { ElectionGuardStatus } from '../config/types'
+import { ElectionGuardStatus } from '../electionguard'
 import LoadAdminDrive from './LoadAdminDrive'
 import UsbContext from '../contexts/usbContext'
 
@@ -21,7 +21,7 @@ const LogoImage = styled.img`
 
 const StartPage = () => {
   const { adminDriveConnected } = useContext(UsbContext)
-  const { election, electionGuardStatus } = useContext(AdminContext)
+  const { election, electionGuardStatus, tally } = useContext(AdminContext)
   const getElectionGuardStatus = () => {
     switch (electionGuardStatus) {
       case ElectionGuardStatus.KeyCeremony:
@@ -37,6 +37,9 @@ const StartPage = () => {
   if (!election || !adminDriveConnected) {
     return <LoadAdminDrive />
   }
+
+  const electionRequiresSetup =
+    electionGuardStatus !== ElectionGuardStatus.KeyCeremony
   return (
     <Screen>
       <Main>
@@ -63,8 +66,8 @@ const StartPage = () => {
       >
         <p>
           <LinkButton
-            primary={electionGuardStatus === ElectionGuardStatus.KeyCeremony}
-            disabled={electionGuardStatus !== ElectionGuardStatus.KeyCeremony}
+            primary={electionRequiresSetup}
+            disabled={!electionRequiresSetup}
             to="/setup-keys"
             id="setup"
             aria-label="Select Setup to Setup Election"
@@ -74,13 +77,13 @@ const StartPage = () => {
         </p>
         <p>
           <LinkButton
-            primary={electionGuardStatus === ElectionGuardStatus.TallyVotes}
-            disabled={electionGuardStatus !== ElectionGuardStatus.TallyVotes}
-            to="/trustees"
+            primary={!electionRequiresSetup}
+            disabled={electionRequiresSetup}
+            to={tally ? '/tally' : '/trustees'}
             id="tally"
-            aria-label="Select Tally to Tally Votes"
+            aria-label={`Select to ${tally ? 'Review Votes' : 'Tally Votes'}`}
           >
-            Tally Votes
+            {tally ? 'Review Votes' : 'Tally Votes'}
           </LinkButton>
         </p>
       </Sidebar>

@@ -7,10 +7,13 @@ import Screen from '../../components/Screen'
 import Sidebar from '../../components/Sidebar'
 import SidebarFooter from '../../components/SidebarFooter'
 import LinkButton from '../../components/LinkButton'
-import TallyContext from '../../contexts/tallyContext'
 import AdminContext from '../../contexts/adminContext'
-import { ElectionGuardStatus } from '../../config/types'
-import { Tally, CandidateVoteTally, YesNoVoteTally } from '../../electionguard'
+import {
+  Tally,
+  CandidateVoteTally,
+  YesNoVoteTally,
+  ElectionGuardStatus,
+} from '../../electionguard'
 
 const Header = styled.div`
   margin: 0 auto;
@@ -90,8 +93,9 @@ const renderContest = (
 }
 
 const TallyPage = () => {
-  const { election, setElectionGuardStatus } = useContext(AdminContext)
-  const { tally, setTally } = useContext(TallyContext)
+  const { election, setElectionGuardStatus, tally, setTally } = useContext(
+    AdminContext
+  )
 
   const tempTally: Tally = election.contests.map(contest => {
     // eslint-disable-next-line default-case
@@ -139,7 +143,13 @@ const TallyPage = () => {
           </LinkButton>
         </p>
         <p>
-          <LinkButton small to="/ballots" id="back" aria-label="Navigate Back">
+          <LinkButton
+            small
+            to="/ballots"
+            id="back"
+            aria-label="Navigate Back"
+            disabled
+          >
             Back
           </LinkButton>
         </p>

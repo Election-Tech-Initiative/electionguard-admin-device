@@ -11,8 +11,13 @@ import * as GLOBALS from '../src/config/globals'
 // typescript concludes that sealURL is required.
 import electionSampleNoSeal from '../src/data/electionSampleNoSeal.json'
 
-import { TextSizeSetting, ElectionGuardStatus } from '../src/config/types'
-import { ElectionGuardConfig, ElectionMap } from '../src/electionguard'
+import { TextSizeSetting } from '../src/config/types'
+import {
+  ElectionGuardConfig,
+  ElectionMap,
+  ElectionGuardStatus,
+  Tally,
+} from '../src/electionguard'
 import AdminContext from '../src/contexts/adminContext'
 
 export function render(
@@ -24,6 +29,8 @@ export function render(
     resetElection = jest.fn(),
     electionMap = {} as ElectionMap,
     setElectionMap = jest.fn(),
+    tally = (undefined as unknown) as Tally,
+    setTally = jest.fn(),
     electionGuardStatus = ElectionGuardStatus.KeyCeremony,
     setElectionGuardStatus = jest.fn(),
     history = createMemoryHistory({ initialEntries: [] }),
@@ -42,6 +49,8 @@ export function render(
           resetElection,
           electionMap,
           setElectionMap,
+          tally,
+          setTally,
           electionGuardStatus,
           setElectionGuardStatus,
           electionGuardConfig,

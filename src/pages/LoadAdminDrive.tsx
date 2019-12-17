@@ -5,12 +5,13 @@ import Prose from '../components/Prose'
 import Screen from '../components/Screen'
 import UsbContext from '../contexts/usbContext'
 import AdminContext from '../contexts/adminContext'
-import { ElectionGuardConfig, ElectionMap } from '../electionguard'
+import { ElectionGuardConfig, ElectionMap, Tally } from '../electionguard'
 import {
   adminDriveIndex,
   electionFile,
   configFile,
   mapFile,
+  tallyFile,
 } from '../components/UsbManager'
 
 const LoadAdminDrive = () => {
@@ -24,6 +25,8 @@ const LoadAdminDrive = () => {
     setElectionGuardConfig,
     electionMap,
     setElectionMap,
+    tally,
+    setTally,
     setElectionGuardStatus,
   } = useContext(AdminContext)
 
@@ -66,6 +69,15 @@ const LoadAdminDrive = () => {
         setElectionMap(currentMap)
       } catch (error) {
         setElectionMap({} as ElectionMap)
+      }
+    }
+
+    if (!tally) {
+      try {
+        const currentTally = await read<Tally>(adminDriveIndex, tallyFile)
+        setTally(currentTally)
+      } catch (error) {
+        setTally((undefined as unknown) as Tally)
       }
     }
   }

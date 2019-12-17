@@ -1,13 +1,14 @@
 import { createContext } from 'react'
 import { Election } from '@votingworks/ballot-encoder'
 import * as GLOBALS from '../config/globals'
-import { ElectionGuardConfig, ElectionMap } from '../electionguard'
-
 import {
-  AdminContextInterface,
-  TextSizeSetting,
+  ElectionGuardConfig,
+  ElectionMap,
+  Tally,
   ElectionGuardStatus,
-} from '../config/types'
+} from '../electionguard'
+
+import { AdminContextInterface, TextSizeSetting } from '../config/types'
 
 const context: AdminContextInterface = {
   election: (undefined as unknown) as Election,
@@ -15,6 +16,8 @@ const context: AdminContextInterface = {
   resetElection: () => undefined,
   electionMap: (undefined as unknown) as ElectionMap,
   setElectionMap: () => undefined,
+  tally: (undefined as unknown) as Tally,
+  setTally: () => undefined,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
   setElectionGuardStatus: () => undefined,
   electionGuardConfig: (undefined as unknown) as ElectionGuardConfig,
