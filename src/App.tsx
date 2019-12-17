@@ -12,11 +12,15 @@ import {
   PartialUserSettings,
   TextSizeSetting,
   UserSettings,
-  ElectionGuardStatus,
   OptionalElection,
 } from './config/types'
 
-import { ElectionGuardConfig, ElectionMap } from './electionguard'
+import {
+  ElectionGuardConfig,
+  ElectionMap,
+  ElectionGuardStatus,
+  Tally,
+} from './electionguard'
 
 import Layout from './pages/Layout'
 import AdminContext from './contexts/adminContext'
@@ -28,6 +32,7 @@ import UsbManager from './components/UsbManager'
 interface State {
   election: OptionalElection
   electionMap: ElectionMap
+  tally: Tally
   electionGuardStatus: ElectionGuardStatus
   electionGuardConfig: ElectionGuardConfig
   loadingElection: boolean
@@ -39,6 +44,7 @@ export const electionKey = 'election'
 const initialState = {
   election: undefined,
   electionMap: (undefined as unknown) as ElectionMap,
+  tally: (undefined as unknown) as Tally,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
   electionGuardConfig: (undefined as unknown) as ElectionGuardConfig,
   loadingElection: false,
@@ -116,6 +122,10 @@ export class App extends React.Component<RouteComponentProps, State> {
     this.setState({ electionMap })
   }
 
+  public setTally = (tally: Tally) => {
+    this.setState({ tally })
+  }
+
   public setElectionGuardConfig = (
     electionGuardConfig: ElectionGuardConfig
   ) => {
@@ -136,6 +146,7 @@ export class App extends React.Component<RouteComponentProps, State> {
     const {
       election,
       electionMap,
+      tally,
       electionGuardConfig,
       userSettings,
       electionGuardStatus,
@@ -148,6 +159,8 @@ export class App extends React.Component<RouteComponentProps, State> {
           resetElection: this.resetElection,
           electionMap,
           setElectionMap: this.setElectionMap,
+          tally,
+          setTally: this.setTally,
           electionGuardStatus,
           setElectionGuardStatus: this.setElectionGuardStatus,
           electionGuardConfig,

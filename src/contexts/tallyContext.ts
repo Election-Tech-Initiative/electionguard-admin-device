@@ -16,8 +16,6 @@ const context: TallyContextInterface = {
   recordBallots: () => Promise.resolve(undefined),
   castTrackers: [],
   spoiledTrackers: [],
-  tally: [],
-  setTally: () => undefined,
   tallyVotes: () => Promise.resolve(undefined),
 }
 

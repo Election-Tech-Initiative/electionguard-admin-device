@@ -13,6 +13,17 @@ export const mapFile = `data${GLOBALS.PATH_DELIMITER}election.map.json`
 export const spoiledBallotsFile = `data${GLOBALS.PATH_DELIMITER}spoiledBallots.json`
 export const castBallotsFile = `data${GLOBALS.PATH_DELIMITER}castBallots.json`
 export const encryptedBallotsFile = `data${GLOBALS.PATH_DELIMITER}encryptedBallots.json`
+export const tallyFile = `data${GLOBALS.PATH_DELIMITER}tally.json`
+
+export const fileNames = {
+  electionFile,
+  configFile,
+  mapFile,
+  spoiledBallotsFile,
+  castBallotsFile,
+  encryptedBallotsFile,
+  tallyFile,
+}
 
 const initialDriveState: UsbDrives = {
   0: false,

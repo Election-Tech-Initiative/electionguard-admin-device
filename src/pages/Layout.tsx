@@ -6,7 +6,7 @@ import TallyLayout from './Tally/TallyLayout'
 
 import StartPage from './StartPage'
 import NotFoundPage from './NotFoundPage'
-import { ElectionGuardStatus } from '../config/types'
+import { ElectionGuardStatus } from '../electionguard'
 
 const Layout = () => {
   const { electionGuardStatus } = useContext(AdminContext)

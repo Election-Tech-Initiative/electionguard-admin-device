@@ -19,7 +19,7 @@ import LoadCastBallotsPage from './LoadCastBallotsPage'
 import LoadSpoiledBallotsPage from './LoadSpoiledBallotsPage'
 import LoadEncryptedBallotsPage from './LoadEncryptedBallotsPage'
 import TrusteeAnnouncementPage from './TrusteeAnnouncementPage'
-import { electionGuardApi, Tally } from '../../electionguard'
+import { electionGuardApi } from '../../electionguard'
 import LoadCardScreen from './LoadCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
 
@@ -60,7 +60,9 @@ const trusteeReducer = (state: TrusteeKey[], action: Action) => {
 }
 
 const TallyLayout = () => {
-  const { electionGuardConfig, electionMap } = useContext(AdminContext)
+  const { electionGuardConfig, electionMap, setTally } = useContext(
+    AdminContext
+  )
   const { numberOfTrustees, threshold } = electionGuardConfig
   const [castIds, setCastIds] = useState([] as string[])
   const [spoiledIds, setSpoiledIds] = useState([] as string[])
@@ -75,7 +77,6 @@ const TallyLayout = () => {
     trusteeReducer,
     [] as TrusteeKey[]
   )
-  const [tally, setTally] = useState((undefined as unknown) as Tally)
 
   const recalculateThresholdStatus = (
     announcedTrustee: TrusteeKey,
@@ -189,8 +190,6 @@ const TallyLayout = () => {
         recordBallots,
         castTrackers,
         spoiledTrackers,
-        tally,
-        setTally,
         tallyVotes,
       }}
     >
