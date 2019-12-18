@@ -36,9 +36,12 @@ const BallotListButton = (
 
 const BallotRegistrationPage = (props: RouteComponentProps) => {
   const [isRecordingBallots, setIsRecordingBallots] = useState(false)
-  const { castIds, spoiledIds, encryptedBallots, recordBallots } = useContext(
-    TallyContext
-  )
+  const {
+    castIds,
+    spoiledIds,
+    encryptedBallots,
+    recordAndTallyBallots,
+  } = useContext(TallyContext)
   const ready = (): boolean => {
     return (
       castIds.length > 0 && spoiledIds.length > 0 && encryptedBallots.length > 0
@@ -49,10 +52,10 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
     props.history.push(to)
   }
 
-  const recordAndTallyBallots = async () => {
+  const tallyVotes = async () => {
     setIsRecordingBallots(true)
     try {
-      await recordBallots()
+      await recordAndTallyBallots()
       navigate('/tally')
     } catch (error) {
       setIsRecordingBallots(false)
@@ -94,7 +97,7 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
             primary={ready() && !isRecordingBallots}
             disabled={!ready() || isRecordingBallots}
             id="next"
-            onPress={recordAndTallyBallots}
+            onPress={tallyVotes}
           >
             Next
           </LinkButton>

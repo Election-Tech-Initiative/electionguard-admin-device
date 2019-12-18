@@ -68,9 +68,6 @@ const TallyLayout = () => {
   const [spoiledIds, setSpoiledIds] = useState([] as string[])
   const [castTrackers, setCastTrackers] = useState([] as string[])
   const [spoiledTrackers, setSpoiledTrackers] = useState([] as string[])
-  const [ballotsFileName, setBallotsFileName] = useState(
-    (undefined as unknown) as string
-  )
   const [encryptedBallots, setEncryptedBallots] = useState([] as string[])
   const [remainingThreshold, setRemainingThreshold] = useState(() => threshold)
   const [trustees, trusteesDispatch] = useReducer(
@@ -128,7 +125,21 @@ const TallyLayout = () => {
     trusteesDispatch(updateTrusteesAction(newTrustees))
   }
 
-  const recordBallots = async () => {
+  const normalizeTrustees = (
+    array: TrusteeKey[],
+    predicate?: (trustee: TrusteeKey) => boolean
+  ) => {
+    const normalizedObject: { [id: string]: string } = {}
+    for (let i = 0; i < array.length; i += 1) {
+      if (!predicate || predicate(array[i])) {
+        const key = array[i].id
+        normalizedObject[key] = array[i].data
+      }
+    }
+    return normalizedObject
+  }
+
+  const recordAndTallyBallots = async () => {
     try {
       const {
         encryptedBallotsFilename,
@@ -141,32 +152,19 @@ const TallyLayout = () => {
         spoiledIds
       )
 
-      setCastTrackers(castedBallotTrackers)
-      setSpoiledTrackers(spoiledBallotTrackers)
-      setBallotsFileName(encryptedBallotsFilename)
-    } catch (error) {
-      // eslint-disable-next-line no-empty
-    }
-  }
-
-  const normalizeArray = (array: TrusteeKey[]) => {
-    const normalizedObject: { [id: string]: string } = {}
-    for (let i = 0; i < array.length; i += 1) {
-      const key = array[i].id
-      normalizedObject[key] = array[i].data
-    }
-    return normalizedObject
-  }
-
-  const tallyVotes = async () => {
-    try {
+      const announcedTrusteeKeys = normalizeTrustees(trustees, trusteeKey => {
+        const didLoadTrusteeKey = !!trusteeKey.data
+        return didLoadTrusteeKey
+      })
       const tallyResult = await electionGuardApi.tallyVotes(
         electionGuardConfig,
         electionMap,
-        normalizeArray(trustees),
-        ballotsFileName
+        announcedTrusteeKeys,
+        encryptedBallotsFilename
       )
 
+      setCastTrackers(castedBallotTrackers)
+      setSpoiledTrackers(spoiledBallotTrackers)
       setTally(tallyResult)
     } catch (error) {
       // eslint-disable-next-line no-empty
@@ -187,10 +185,9 @@ const TallyLayout = () => {
         announceTrustee,
         encryptedBallots,
         setEncryptedBallots,
-        recordBallots,
+        recordAndTallyBallots,
         castTrackers,
         spoiledTrackers,
-        tallyVotes,
       }}
     >
       <Switch>

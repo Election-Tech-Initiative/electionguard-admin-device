@@ -102,10 +102,9 @@ export interface TallyContextInterface {
   trustees: TrusteeKey[]
   trusteesDispatch: (action: Action) => void
   announceTrustee: (trustee: TrusteeKey) => void
-  recordBallots: () => Promise<void>
+  recordAndTallyBallots: () => Promise<void>
   castTrackers: string[]
   spoiledTrackers: string[]
-  tallyVotes: () => Promise<void>
 }
 
 export interface SmartcardContextInterface {
