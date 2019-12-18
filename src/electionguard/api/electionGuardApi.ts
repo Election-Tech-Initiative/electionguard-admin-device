@@ -11,8 +11,9 @@ import {
 } from '../models'
 import fetchJSON from './fetchJSON'
 import { KeyMap } from '../models/KeyMap'
+import * as GLOBAL from '../../config/globals'
 
-export const DEFAULT_BALLOT_EXPORT_PATH = '~/election_results/ballots'
+export const DEFAULT_BALLOT_EXPORT_PATH = `.${GLOBAL.PATH_DELIMITER}election_results/ballots`
 export const DEFAULT_BALLOT_EXPORT_PREFIX = 'my_election_ballots'
 export const DEFAULT_TALLY_EXPORT_PATH = '~/election_results/tallies'
 export const DEFAULT_TALLY_EXPORT_PREFIX = 'my_election_tallies'
@@ -39,7 +40,7 @@ const recordBallots = (
   exportPath: string = DEFAULT_BALLOT_EXPORT_PATH,
   exportFileNamePrefix: string = DEFAULT_BALLOT_EXPORT_PREFIX
 ) => {
-  return fetchJSON<RecordBallotsResponse>('/election', {
+  return fetchJSON<RecordBallotsResponse>('/election/RecordBallots', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

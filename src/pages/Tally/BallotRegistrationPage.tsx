@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
 import Main, { MainChild } from '../../components/Main'
@@ -35,7 +35,10 @@ const BallotListButton = (
 }
 
 const BallotRegistrationPage = (props: RouteComponentProps) => {
-  const { castIds, spoiledIds, encryptedBallots } = useContext(TallyContext)
+  const [isRecordingBallots, setIsRecordingBallots] = useState(false)
+  const { castIds, spoiledIds, encryptedBallots, recordBallots } = useContext(
+    TallyContext
+  )
   const ready = (): boolean => {
     return (
       castIds.length > 0 && spoiledIds.length > 0 && encryptedBallots.length > 0
@@ -44,6 +47,17 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
 
   const navigate = (to: string) => {
     props.history.push(to)
+  }
+
+  const recordAndTallyBallots = async () => {
+    setIsRecordingBallots(true)
+    try {
+      await recordBallots()
+      navigate('/tally')
+    } catch (error) {
+      setIsRecordingBallots(false)
+      throw error
+    }
   }
 
   return (
@@ -77,10 +91,10 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
         <p>
           <LinkButton
             big
-            primary={ready()}
-            disabled={!ready()}
-            to="/tally"
+            primary={ready() && !isRecordingBallots}
+            disabled={!ready() || isRecordingBallots}
             id="next"
+            onPress={recordAndTallyBallots}
           >
             Next
           </LinkButton>
