@@ -15,7 +15,7 @@ import * as GLOBAL from '../../config/globals'
 
 export const DEFAULT_BALLOT_EXPORT_PATH = `.${GLOBAL.PATH_DELIMITER}election_results/ballots`
 export const DEFAULT_BALLOT_EXPORT_PREFIX = 'my_election_ballots'
-export const DEFAULT_TALLY_EXPORT_PATH = '~/election_results/tallies'
+export const DEFAULT_TALLY_EXPORT_PATH = `.${GLOBAL.PATH_DELIMITER}election_results/tallies`
 export const DEFAULT_TALLY_EXPORT_PREFIX = 'my_election_tallies'
 
 const createElection = (
@@ -62,7 +62,7 @@ const tallyVotes = (
   exportPath: string = DEFAULT_TALLY_EXPORT_PATH,
   exportFileNamePrefix: string = DEFAULT_TALLY_EXPORT_PREFIX
 ) => {
-  return fetchJSON<TallyVoteResponse>('/election', {
+  return fetchJSON<TallyVoteResponse>('/election/TallyVotes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

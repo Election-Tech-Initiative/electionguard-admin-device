@@ -13,10 +13,9 @@ const context: TallyContextInterface = {
   trustees: [],
   trusteesDispatch: () => undefined,
   announceTrustee: () => undefined,
-  recordBallots: () => Promise.resolve(undefined),
+  recordAndTallyBallots: () => Promise.resolve(undefined),
   castTrackers: [],
   spoiledTrackers: [],
-  tallyVotes: () => Promise.resolve(undefined),
 }
 
 const TallyContext = createContext(context)
