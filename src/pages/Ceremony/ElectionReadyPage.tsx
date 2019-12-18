@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import Main, { MainChild } from '../../components/Main'
 import Sidebar from '../../components/Sidebar'
@@ -24,14 +24,17 @@ const ElectionReadyPage = (props: RouteComponentProps) => {
     electionGuardConfig,
     setElectionGuardStatus,
   } = useContext(AdminContext)
-  const { adminDriveConnected, updateDriveStatus, write } = useContext(
+  const { adminDriveConnected, connect, disconnect, write } = useContext(
     UsbContext
   )
   const [savingElectionData, setSavingElectionData] = useState(false)
 
+  const startMonitoringDrives = useCallback(connect, [])
+  const stopMonitoringDrives = useCallback(disconnect, [])
   useEffect(() => {
-    updateDriveStatus()
-  }, [updateDriveStatus])
+    startMonitoringDrives()
+    return () => stopMonitoringDrives()
+  }, [startMonitoringDrives, stopMonitoringDrives])
 
   const completeElectionSetup = () => {
     setSavingElectionData(true)

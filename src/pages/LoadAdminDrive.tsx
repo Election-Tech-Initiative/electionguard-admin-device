@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useEffect, useCallback } from 'react'
 import { Election } from '@votingworks/ballot-encoder'
 import Main, { MainChild } from '../components/Main'
 import Prose from '../components/Prose'
@@ -6,7 +6,6 @@ import Screen from '../components/Screen'
 import UsbContext from '../contexts/usbContext'
 import AdminContext from '../contexts/adminContext'
 import { ElectionGuardConfig, ElectionMap } from '../config/types'
-import * as GLOBALS from '../config/globals'
 import {
   adminDriveIndex,
   electionFile,
@@ -15,8 +14,7 @@ import {
 } from '../components/UsbManager'
 
 const LoadAdminDrive = () => {
-  const [pollInterval, setPollInterval] = useState(0)
-  const { adminDriveConnected, updateDriveStatus, read } = useContext(
+  const { adminDriveConnected, connect, disconnect, read } = useContext(
     UsbContext
   )
   const {
@@ -28,18 +26,13 @@ const LoadAdminDrive = () => {
     setElectionMap,
     setElectionGuardStatus,
   } = useContext(AdminContext)
-  useEffect(() => {
-    if (!pollInterval) {
-      const interval = window.setInterval(async () => {
-        updateDriveStatus()
-      }, GLOBALS.USB_POLLING_INTERVAL)
-      setPollInterval(interval)
-    }
 
-    return () => {
-      window.clearInterval(pollInterval)
-    }
-  }, [pollInterval, setPollInterval, updateDriveStatus])
+  const startMonitoringDrives = useCallback(connect, [])
+  const stopMonitoringDrives = useCallback(disconnect, [])
+  useEffect(() => {
+    startMonitoringDrives()
+    return () => stopMonitoringDrives()
+  }, [startMonitoringDrives, stopMonitoringDrives])
 
   const loadFilesFromAdminDrive = async () => {
     if (!election) {
@@ -78,7 +71,6 @@ const LoadAdminDrive = () => {
   }
 
   if (adminDriveConnected) {
-    window.clearInterval(pollInterval)
     loadFilesFromAdminDrive().catch(error =>
       console.log(
         `Failed to load election files from drive ${adminDriveIndex}`,

@@ -9,10 +9,10 @@ import {
   UpdateTrusteeAction,
   updateTrusteesAction,
   UpdateTrusteesAction,
-  CompletionStatus,
   SetTrusteesAction,
   TrusteeKey,
   Tally,
+  CompletionStatus,
 } from '../../config/types'
 import AdminContext from '../../contexts/adminContext'
 import LoadTrusteePage from './LoadTrusteePage'
@@ -20,9 +20,11 @@ import LoadCastBallotsPage from './LoadCastBallotsPage'
 import LoadSpoiledBallotsPage from './LoadSpoiledBallotsPage'
 import LoadEncryptedBallotsPage from './LoadEncryptedBallotsPage'
 import TrusteeAnnouncementPage from './TrusteeAnnouncementPage'
+import api from '../../api/electionGuardApi'
 import LoadCardScreen from './LoadCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
 
+// TODO Move Reducer to seperate file
 const trusteeReducer = (state: TrusteeKey[], action: Action) => {
   switch (action.type) {
     case 'set-trustees': {
@@ -59,17 +61,20 @@ const trusteeReducer = (state: TrusteeKey[], action: Action) => {
 }
 
 const TallyLayout = () => {
-  const { electionGuardConfig } = useContext(AdminContext)
+  const { electionGuardConfig, electionMap } = useContext(AdminContext)
   const { numberOfTrustees, threshold } = electionGuardConfig
   const [castIds, setCastIds] = useState([] as string[])
   const [spoiledIds, setSpoiledIds] = useState([] as string[])
+  const [castTrackers, setCastTrackers] = useState([] as string[])
+  const [spoiledTrackers, setSpoiledTrackers] = useState([] as string[])
+  const [ballotsFileName, setBallotsFileName] = useState(
+    (undefined as unknown) as string
+  )
+  const [encryptedBallots, setEncryptedBallots] = useState([] as string[])
   const [remainingThreshold, setRemainingThreshold] = useState(() => threshold)
   const [trustees, trusteesDispatch] = useReducer(
     trusteeReducer,
     [] as TrusteeKey[]
-  )
-  const [encryptedBallotPaths, setEncryptedBallotPaths] = useState(
-    [] as string[]
   )
   const [tally, setTally] = useState((undefined as unknown) as Tally)
 
@@ -123,8 +128,49 @@ const TallyLayout = () => {
     trusteesDispatch(updateTrusteesAction(newTrustees))
   }
 
-  const addEncryptedBallotPath = (path: string) => {
-    setEncryptedBallotPaths([...encryptedBallotPaths, path])
+  const recordBallots = async () => {
+    try {
+      const {
+        encryptedBallotsFilename,
+        spoiledBallotTrackers,
+        castedBallotTrackers,
+      } = await api.recordBallots(
+        electionGuardConfig,
+        encryptedBallots,
+        castIds,
+        spoiledIds
+      )
+
+      setCastTrackers(castedBallotTrackers)
+      setSpoiledTrackers(spoiledBallotTrackers)
+      setBallotsFileName(encryptedBallotsFilename)
+    } catch (error) {
+      // eslint-disable-next-line no-empty
+    }
+  }
+
+  const normalizeArray = (array: TrusteeKey[]) => {
+    const normalizedObject: { [id: string]: string } = {}
+    for (let i = 0; i < array.length; i += 1) {
+      const key = array[i].id
+      normalizedObject[key] = array[i].data
+    }
+    return normalizedObject
+  }
+
+  const tallyVotes = async () => {
+    try {
+      const tallyResult = await api.tallyVotes(
+        electionGuardConfig,
+        electionMap,
+        normalizeArray(trustees),
+        ballotsFileName
+      )
+
+      setTally(tallyResult)
+    } catch (error) {
+      // eslint-disable-next-line no-empty
+    }
   }
 
   return (
@@ -139,10 +185,14 @@ const TallyLayout = () => {
         trustees,
         trusteesDispatch,
         announceTrustee,
-        encryptedBallotPaths,
-        addEncryptedBallotPath,
+        encryptedBallots,
+        setEncryptedBallots,
+        recordBallots,
+        castTrackers,
+        spoiledTrackers,
         tally,
         setTally,
+        tallyVotes,
       }}
     >
       <Switch>

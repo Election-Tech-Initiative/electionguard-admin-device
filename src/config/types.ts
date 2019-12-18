@@ -47,17 +47,6 @@ export interface ContestMap {
   nullVoteStartIndex: number
 }
 
-export interface ElectionRequest {
-  config: ElectionGuardConfig
-  election: Election
-}
-
-export interface ElectionResponse {
-  electionGuardConfig: ElectionGuardConfig
-  trusteeKeys: KeyMap
-  electionMap: ElectionMap
-}
-
 export interface KeyMap {
   [id: string]: string
 }
@@ -157,15 +146,19 @@ export interface TallyContextInterface {
   setCastIds: (castIds: string[]) => void
   spoiledIds: string[]
   setSpoiledIds: (spoiledIds: string[]) => void
-  encryptedBallotPaths: string[]
-  addEncryptedBallotPath: (path: string) => void
+  encryptedBallots: string[]
+  setEncryptedBallots: (encryptedBallots: string[]) => void
   numberOfTrustees: number
   threshold: number
   trustees: TrusteeKey[]
   trusteesDispatch: (action: Action) => void
   announceTrustee: (trustee: TrusteeKey) => void
+  recordBallots: () => Promise<void>
+  castTrackers: string[]
+  spoiledTrackers: string[]
   tally: Tally
   setTally: (tally: Tally) => void
+  tallyVotes: () => Promise<void>
 }
 
 export interface SmartcardContextInterface {
@@ -183,7 +176,8 @@ export interface SmartcardContextInterface {
 export interface UsbContextInterface {
   adminDriveConnected: boolean
   storageDriveConnected: boolean
-  updateDriveStatus: () => void
+  connect: () => void
+  disconnect: () => void
   read: <T>(driveId: number, file: string) => Promise<T>
   write: (
     driveId: number,

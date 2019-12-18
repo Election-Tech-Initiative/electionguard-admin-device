@@ -6,15 +6,19 @@ const context: TallyContextInterface = {
   setCastIds: () => undefined,
   spoiledIds: [],
   setSpoiledIds: () => undefined,
-  encryptedBallotPaths: [],
-  addEncryptedBallotPath: () => undefined,
+  encryptedBallots: [],
+  setEncryptedBallots: () => undefined,
   numberOfTrustees: 0,
   threshold: 0,
   trustees: [],
   trusteesDispatch: () => undefined,
   announceTrustee: () => undefined,
+  recordBallots: () => Promise.resolve(undefined),
+  castTrackers: [],
+  spoiledTrackers: [],
   tally: [],
   setTally: () => undefined,
+  tallyVotes: () => Promise.resolve(undefined),
 }
 
 const TallyContext = createContext(context)

@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import TallyContext from '../../contexts/tallyContext'
 import Main, { MainChild } from '../../components/Main'
 import Prose from '../../components/Prose'
@@ -6,14 +7,44 @@ import Screen from '../../components/Screen'
 import Sidebar from '../../components/Sidebar'
 import LinkButton from '../../components/LinkButton'
 import SidebarFooter from '../../components/SidebarFooter'
+import UsbContext from '../../contexts/usbContext'
+import {
+  storageDriveIndex,
+  spoiledBallotsFile,
+} from '../../components/UsbManager'
 
-const LoadSpoiledBallotsPage = () => {
+const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
   const { setSpoiledIds } = useContext(TallyContext)
-  const handleLoad = () => {
-    // TODO Load Trustee from card
-    const mockIds = ['1B', '2B', '3B', '4B', '5B']
-    setSpoiledIds(mockIds)
+  const [isWriting, setIsWriting] = useState(false)
+  const { storageDriveConnected, connect, disconnect, read } = useContext(
+    UsbContext
+  )
+  const handleLoad = async () => {
+    setIsWriting(true)
+
+    try {
+      const { history } = props
+      const spoiledBallots = await read<string[]>(
+        storageDriveIndex,
+        spoiledBallotsFile
+      )
+      setSpoiledIds(spoiledBallots)
+      history.goBack()
+    } catch (error) {
+      console.error(
+        'Failed to read spoiled ballots from the drive. They may not exist.',
+        error
+      )
+      throw error
+    }
   }
+
+  const startMonitoringDrives = useCallback(connect, [])
+  const stopMonitoringDrives = useCallback(disconnect, [])
+  useEffect(() => {
+    startMonitoringDrives()
+    return () => stopMonitoringDrives()
+  }, [startMonitoringDrives, stopMonitoringDrives])
 
   return (
     <Screen flexDirection="row-reverse" white>
@@ -21,9 +52,9 @@ const LoadSpoiledBallotsPage = () => {
         <p>
           <LinkButton
             big
-            primary
+            primary={storageDriveConnected && !isWriting}
+            disabled={!storageDriveConnected || isWriting}
             onPress={() => handleLoad()}
-            to="/ballots"
             id="load"
             aria-label="Load spoiled ballot ids from drive."
           >
@@ -50,4 +81,4 @@ const LoadSpoiledBallotsPage = () => {
   )
 }
 
-export default LoadSpoiledBallotsPage
+export default withRouter(LoadSpoiledBallotsPage)
