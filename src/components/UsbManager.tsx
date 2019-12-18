@@ -32,7 +32,6 @@ type UsbDrive = {
 }
 type UsbDrives = { [driveIndex: number]: boolean }
 
-// TODO Fill in implementation (poll, read, etc) for USB Manager
 const UsbManager: FC<Props> = (props: Props) => {
   const [usbDrives, setUsbDrives] = useState({
     ...initialDriveState,

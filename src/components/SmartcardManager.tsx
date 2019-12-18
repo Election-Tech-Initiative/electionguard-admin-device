@@ -20,7 +20,6 @@ interface Props {
 
 const DEFAULT_CHECK_INTERVAL = 1000
 
-// TODO Fill in implementation (poll, read, etc) for USB Manager
 const SmartcardManager: FC<Props> = (props: Props) => {
   const [isCardConnected, setIsCardConnected] = useState(false)
   const [isReadingCard, setIsReadingCard] = useState(false)

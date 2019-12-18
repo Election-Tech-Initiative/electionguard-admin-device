@@ -22,7 +22,6 @@ const SaveCardScreen = () => {
   }, [])
 
   if (done) {
-    // TODO: set progress based on actual request/response state
     return <Redirect to="/key/remove" />
   }
   return (

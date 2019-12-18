@@ -24,7 +24,6 @@ const LoadCardScreen = () => {
   }, [])
 
   if (done && !isReadingCard) {
-    // TODO: set progress based on actual request/response state
     return <Redirect to="/trustee/remove" />
   }
   return (
