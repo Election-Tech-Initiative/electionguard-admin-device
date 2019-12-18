@@ -1,4 +1,3 @@
-/* TODO Establish a typescript definition of a service worker to avoid dodging linting */
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 /* eslint-disable func-names */

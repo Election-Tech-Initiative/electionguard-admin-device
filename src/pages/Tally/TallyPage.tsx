@@ -120,7 +120,6 @@ const TallyPage = () => {
   }
 
   const onComplete = () => {
-    // TODO Save tally to drive
     setElectionGuardStatus(ElectionGuardStatus.Complete)
   }
 
