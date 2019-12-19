@@ -5,11 +5,16 @@ import Prose from '../components/Prose'
 import Screen from '../components/Screen'
 import UsbContext from '../contexts/usbContext'
 import AdminContext from '../contexts/adminContext'
-import { ElectionGuardConfig, ElectionMap, Tally } from '../electionguard'
+import {
+  ElectionGuardConfig,
+  ElectionGuardState,
+  ElectionMap,
+  Tally,
+} from '../electionguard'
 import {
   adminDriveIndex,
   electionFile,
-  configFile,
+  stateFile,
   mapFile,
   tallyFile,
 } from '../components/UsbManager'
@@ -48,13 +53,13 @@ const LoadAdminDrive = () => {
 
     if (!electionGuardConfig) {
       try {
-        const currentConfig = await read<ElectionGuardConfig>(
+        const currentState = await read<ElectionGuardState>(
           adminDriveIndex,
-          configFile
+          stateFile
         )
-        setElectionGuardConfig(currentConfig)
+        setElectionGuardConfig(currentState)
 
-        const { status } = currentConfig as any
+        const { status } = currentState
         if (status !== undefined) {
           setElectionGuardStatus(status)
         }
