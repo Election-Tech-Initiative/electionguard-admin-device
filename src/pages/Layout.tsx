@@ -15,6 +15,7 @@ const Layout = () => {
       case ElectionGuardStatus.KeyCeremony:
         return CeremonyLayout
       case ElectionGuardStatus.TallyVotes:
+      case ElectionGuardStatus.Complete:
         return TallyLayout
       default:
         return NotFoundPage

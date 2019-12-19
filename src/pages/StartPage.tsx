@@ -39,7 +39,7 @@ const StartPage = () => {
   }
 
   const electionRequiresSetup =
-    electionGuardStatus !== ElectionGuardStatus.KeyCeremony
+    electionGuardStatus === ElectionGuardStatus.KeyCeremony
   return (
     <Screen>
       <Main>
