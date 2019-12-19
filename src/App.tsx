@@ -92,8 +92,7 @@ export class App extends React.Component<RouteComponentProps, State> {
       : ((undefined as unknown) as Election)
   }
 
-  public setElection = (electionConfigFile: Election) => {
-    const election = electionConfigFile
+  public setElection = (election: Election) => {
     this.setState({ election })
     window.localStorage.setItem(electionKey, JSON.stringify(election))
   }

@@ -8,7 +8,7 @@ import UseInterval from '../hooks/useInterval'
 export const adminDriveIndex = 0
 export const storageDriveIndex = 1
 export const electionFile = `data${GLOBALS.PATH_DELIMITER}election.json`
-export const configFile = `data${GLOBALS.PATH_DELIMITER}election.config.json`
+export const stateFile = `data${GLOBALS.PATH_DELIMITER}election.state.json`
 export const mapFile = `data${GLOBALS.PATH_DELIMITER}election.map.json`
 export const spoiledBallotsFile = `data${GLOBALS.PATH_DELIMITER}spoiledBallots.json`
 export const castBallotsFile = `data${GLOBALS.PATH_DELIMITER}castBallots.json`
@@ -17,7 +17,7 @@ export const tallyFile = `data${GLOBALS.PATH_DELIMITER}tally.json`
 
 export const fileNames = {
   electionFile,
-  configFile,
+  stateFile,
   mapFile,
   spoiledBallotsFile,
   castBallotsFile,

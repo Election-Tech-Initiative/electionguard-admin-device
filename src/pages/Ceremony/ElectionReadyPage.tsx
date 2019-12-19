@@ -6,14 +6,14 @@ import AdminContext from '../../contexts/adminContext'
 import Screen from '../../components/Screen'
 import LinkButton from '../../components/LinkButton'
 import Prose from '../../components/Prose'
-import { ElectionGuardStatus } from '../../electionguard'
+import { ElectionGuardStatus, ElectionGuardState } from '../../electionguard'
 import SidebarFooter from '../../components/SidebarFooter'
 import LoadAdminDrive from '../LoadAdminDrive'
 import UsbContext from '../../contexts/usbContext'
 import {
   adminDriveIndex,
   electionFile,
-  configFile,
+  stateFile,
   mapFile,
 } from '../../components/UsbManager'
 
@@ -51,10 +51,10 @@ const ElectionReadyPage = (props: RouteComponentProps) => {
         throw new Error('failed to write election data')
       }
 
-      result = await write(adminDriveIndex, configFile, {
+      result = await write(adminDriveIndex, stateFile, {
         ...electionGuardConfig,
         status: ElectionGuardStatus.TallyVotes,
-      })
+      } as ElectionGuardState)
       if (!result.success) {
         throw new Error('failed to write election configuration data')
       }
