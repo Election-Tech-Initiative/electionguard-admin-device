@@ -2,117 +2,26 @@
 
 exports[`renders TallyPage 1`] = `
 <div
-  class="sc-bxivhb gnazdg"
+  class="sc-bxivhb fOSwuN"
 >
-  <nav
-    class="sc-bZQynM ezCrug"
-  >
-    <div
-      class="sc-htoDjs bpVrxz"
-    >
-      <p>
-        <button
-          aria-label="Tally complete return to start."
-          class="sc-cSHVUG eMtrKY"
-          id="start"
-          role="option"
-          type="button"
-        >
-          Complete
-        </button>
-      </p>
-      <p>
-        <button
-          aria-label="Navigate Back"
-          class="sc-cSHVUG jbZltu"
-          disabled=""
-          id="back"
-          role="option"
-          type="button"
-        >
-          Back
-        </button>
-      </p>
-    </div>
-    <div
-      class="sc-dnqmqq ffCjDY"
-    >
-      <hr />
-      <div
-        aria-hidden="true"
-        class="sc-VigVT gbgFAa"
-        data-testid="election-info"
-      >
-        <div
-          class="sc-jTzLTM gIFeXt"
-        >
-          <div
-            aria-hidden="true"
-            class="sc-iwsKbI bGZlwR"
-          />
-          <div
-            class="sc-htpNat jFlhLj"
-          >
-            <h5
-              aria-label=" General Election."
-            >
-               General Election
-            </h5>
-            <p
-              class="sc-ifAKCX bAJDwL"
-            >
-              November 3, 2020
-              <br />
-              <span
-                class="sc-EHOje asQWf"
-              >
-                Franklin County
-                ,
-              </span>
-               
-              <span
-                class="sc-EHOje asQWf"
-              >
-                State of Hamilton
-              </span>
-            </p>
-            <p
-              class="sc-ifAKCX kFheIt"
-            >
-               
-            </p>
-          </div>
-        </div>
-      </div>
-      <hr />
-      <img
-        alt="Election Guard Logo"
-        class="sc-fjdhpX dLKeAP"
-        src="/images/electionguard.svg"
-      />
-    </div>
-  </nav>
   <main
     class="sc-bdVaJa iiFDUH"
   >
     <div
-      class="sc-bwzfXH cJzayE"
+      class="sc-bwzfXH jAEsws"
     >
       <div
-        class="sc-htpNat feTyaj"
-        id="audiofocus"
+        class="sc-htpNat chxRAJ"
       >
-        <div
-          class="sc-chPdSV dAbUGJ"
+        <h1
+          aria-hidden="true"
         >
-          <h1>
-            Tally Results
-          </h1>
-        </div>
+          Insert Admin Drive
+        </h1>
+        <p>
+          Insert designated ElectionGuard admin drive.
+        </p>
       </div>
-      <div
-        class="sc-kGXeez bHuiXT"
-      />
     </div>
   </main>
 </div>

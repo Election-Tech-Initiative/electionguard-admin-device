@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { CandidateContest, YesNoContest } from '@votingworks/ballot-encoder'
 import Main, { MainChild } from '../../components/Main'
@@ -9,11 +9,18 @@ import SidebarFooter from '../../components/SidebarFooter'
 import LinkButton from '../../components/LinkButton'
 import AdminContext from '../../contexts/adminContext'
 import {
-  Tally,
   CandidateVoteTally,
   YesNoVoteTally,
   ElectionGuardStatus,
+  ElectionGuardState,
 } from '../../electionguard'
+import {
+  adminDriveIndex,
+  stateFile,
+  tallyFile,
+} from '../../components/UsbManager'
+import UsbContext from '../../contexts/usbContext'
+import LoadAdminDrive from '../LoadAdminDrive'
 
 const Header = styled.div`
   margin: 0 auto;
@@ -93,38 +100,46 @@ const renderContest = (
 }
 
 const TallyPage = () => {
-  const { election, setElectionGuardStatus, tally, setTally } = useContext(
-    AdminContext
+  const {
+    election,
+    electionGuardConfig,
+    setElectionGuardStatus,
+    tally,
+  } = useContext(AdminContext)
+  const { connect, disconnect, write, adminDriveConnected } = useContext(
+    UsbContext
   )
 
-  const tempTally: Tally = election.contests.map(contest => {
-    // eslint-disable-next-line default-case
-    switch (contest.type) {
-      case 'candidate':
-        return {
-          candidates: contest.candidates.map(() => 5),
-          writeIns: [
-            {
-              name: 'writein',
-              tally: 5,
-            },
-          ],
-        } as CandidateVoteTally
-      case 'yesno':
-        return {
-          yes: 4,
-          no: 2,
-        } as YesNoVoteTally
-    }
-    return {} as YesNoVoteTally
-  })
+  const startMonitoringDrives = useCallback(connect, [])
+  const stopMonitoringDrives = useCallback(disconnect, [])
+  useEffect(() => {
+    startMonitoringDrives()
+    return () => stopMonitoringDrives()
+  }, [startMonitoringDrives, stopMonitoringDrives])
 
-  if (!tally) {
-    setTally(tempTally)
+  const writeFilesToAdminDrive = async () => {
+    let result = await write(adminDriveIndex, stateFile, {
+      ...electionGuardConfig,
+      status: ElectionGuardStatus.Complete,
+    } as ElectionGuardState)
+    if (!result.success) {
+      throw new Error('failed to write status')
+    }
+
+    result = await write(adminDriveIndex, tallyFile, tally)
+    if (!result.success) {
+      throw new Error('failed to write tallied ballots')
+    }
   }
 
   const onComplete = () => {
-    setElectionGuardStatus(ElectionGuardStatus.Complete)
+    writeFilesToAdminDrive().then(() =>
+      setElectionGuardStatus(ElectionGuardStatus.Complete)
+    )
+  }
+
+  if (!adminDriveConnected) {
+    return <LoadAdminDrive />
   }
 
   return (
