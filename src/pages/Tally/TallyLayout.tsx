@@ -23,7 +23,6 @@ import { electionGuardApi } from '../../electionguard'
 import LoadCardScreen from './LoadCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
 
-// TODO Move Reducer to seperate file
 const trusteeReducer = (state: TrusteeKey[], action: Action) => {
   switch (action.type) {
     case 'set-trustees': {
