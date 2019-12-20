@@ -12,7 +12,7 @@ export interface BallotStyleMap {
 }
 
 export interface ContestMap {
-  contest: Contest // TODO Change to id reference
+  contest: Contest
   selectionMap: Map<string, number>
   numberOfSelections: number
   expectedNumberOfSelected: number
