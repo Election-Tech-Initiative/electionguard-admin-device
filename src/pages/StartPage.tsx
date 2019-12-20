@@ -38,8 +38,9 @@ const StartPage = () => {
     return <LoadAdminDrive />
   }
 
-  const electionRequiresSetup =
-    electionGuardStatus === ElectionGuardStatus.KeyCeremony
+  const tallyComplete =
+    tally && electionGuardStatus === ElectionGuardStatus.Complete
+
   return (
     <Screen>
       <Main>
@@ -66,8 +67,8 @@ const StartPage = () => {
       >
         <p>
           <LinkButton
-            primary={electionRequiresSetup}
-            disabled={!electionRequiresSetup}
+            primary={electionGuardStatus === ElectionGuardStatus.KeyCeremony}
+            disabled={electionGuardStatus !== ElectionGuardStatus.KeyCeremony}
             to="/setup-keys"
             id="setup"
             aria-label="Select Setup to Setup Election"
@@ -77,13 +78,21 @@ const StartPage = () => {
         </p>
         <p>
           <LinkButton
-            primary={!electionRequiresSetup}
-            disabled={electionRequiresSetup}
-            to={tally ? '/tally' : '/trustees'}
+            primary={
+              electionGuardStatus === ElectionGuardStatus.TallyVotes ||
+              electionGuardStatus === ElectionGuardStatus.Complete
+            }
+            disabled={
+              electionGuardStatus !== ElectionGuardStatus.TallyVotes &&
+              electionGuardStatus !== ElectionGuardStatus.Complete
+            }
+            to={tallyComplete ? '/tally' : '/trustees'}
             id="tally"
-            aria-label={`Select to ${tally ? 'Review Votes' : 'Tally Votes'}`}
+            aria-label={`Select to ${
+              tallyComplete ? 'Review Votes' : 'Tally Votes'
+            }`}
           >
-            {tally ? 'Review Votes' : 'Tally Votes'}
+            {tallyComplete ? 'Review Votes' : 'Tally Votes'}
           </LinkButton>
         </p>
       </Sidebar>
