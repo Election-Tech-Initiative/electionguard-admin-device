@@ -5,11 +5,7 @@ import TallyPage from './TallyPage'
 import NotFoundPage from '../NotFoundPage'
 import TallyContext from '../../contexts/tallyContext'
 import {
-  Action,
-  UpdateTrusteeAction,
   updateTrusteesAction,
-  UpdateTrusteesAction,
-  SetTrusteesAction,
   TrusteeKey,
   CompletionStatus,
 } from '../../config/types'
@@ -22,41 +18,7 @@ import TrusteeAnnouncementPage from './TrusteeAnnouncementPage'
 import { electionGuardApi } from '../../electionguard'
 import LoadCardScreen from './LoadCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
-
-const trusteeReducer = (state: TrusteeKey[], action: Action) => {
-  switch (action.type) {
-    case 'set-trustees': {
-      const { payload } = action as SetTrusteesAction
-      return payload
-    }
-    case 'update-trustee': {
-      const { payload } = action as UpdateTrusteeAction
-      const index = state.findIndex(i => i.id === payload.id)
-      const item = { ...state[index] }
-      item.data = payload.data
-      item.status = payload.status
-
-      const items = Object.assign([], state)
-      items.splice(index, 1, item)
-      return items
-    }
-    case 'update-trustees': {
-      const { payload } = action as UpdateTrusteesAction
-      const items = Object.assign([], state)
-      payload.forEach(member => {
-        const index = state.findIndex(i => i.id === member.id)
-        const item = { ...state[index] }
-        item.data = member.data
-        item.status = member.status
-        items.splice(index, 1, item)
-      })
-      return items
-    }
-    default: {
-      return state
-    }
-  }
-}
+import trusteeReducer from '../../reducers/trusteeReducer'
 
 const TallyLayout = () => {
   const { electionGuardConfig, electionMap, setTally } = useContext(
