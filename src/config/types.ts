@@ -132,10 +132,15 @@ export interface UsbContextInterface {
     file: string,
     data: object
   ) => Promise<UsbWriteResult>
-  eject: (driveId: string) => void
+  eject: (driveId: number) => Promise<void>
 }
 
 export interface UsbWriteResult {
+  success: boolean
+  message: string
+}
+
+export interface UsbUnmountResult {
   success: boolean
   message: string
 }

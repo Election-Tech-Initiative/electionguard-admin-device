@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useState } from 'react'
 import UsbContext from '../contexts/usbContext'
 import { fetchJSON } from '../electionguard'
-import { UsbWriteResult } from '../config/types'
+import { UsbWriteResult, UsbUnmountResult } from '../config/types'
 import * as GLOBALS from '../config/globals'
 import UseInterval from '../hooks/useInterval'
 
@@ -108,7 +108,18 @@ const UsbManager: FC<Props> = (props: Props) => {
     setIsRunning(true)
   }
 
-  const eject = () => {}
+  const eject = async (driveId: number) => {
+    const unmountResult = await fetchJSON<UsbUnmountResult>(
+      `/usb/${driveId}/unmount`,
+      {
+        method: 'POST',
+      }
+    )
+
+    if (!unmountResult.success) {
+      throw new Error(unmountResult.message)
+    }
+  }
 
   return (
     <UsbContext.Provider
