@@ -24,7 +24,7 @@ const ElectionReadyPage = (props: RouteComponentProps) => {
     electionGuardConfig,
     setElectionGuardStatus,
   } = useContext(AdminContext)
-  const { adminDriveConnected, connect, disconnect, write } = useContext(
+  const { adminDriveMounted, connect, disconnect, write } = useContext(
     UsbContext
   )
   const [savingElectionData, setSavingElectionData] = useState(false)
@@ -40,11 +40,11 @@ const ElectionReadyPage = (props: RouteComponentProps) => {
     setSavingElectionData(true)
   }
 
-  if (savingElectionData && !adminDriveConnected) {
+  if (savingElectionData && !adminDriveMounted) {
     return <LoadAdminDrive />
   }
 
-  if (savingElectionData && adminDriveConnected) {
+  if (savingElectionData && adminDriveMounted) {
     const writeFilesToAdminDrive = async () => {
       let result = await write(adminDriveIndex, electionFile, election)
       if (!result.success) {

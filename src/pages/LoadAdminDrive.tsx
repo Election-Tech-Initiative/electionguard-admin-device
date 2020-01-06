@@ -20,7 +20,7 @@ import {
 } from '../components/UsbManager'
 
 const LoadAdminDrive = () => {
-  const { adminDriveConnected, connect, disconnect, read } = useContext(
+  const { adminDriveMounted, connect, disconnect, read } = useContext(
     UsbContext
   )
   const {
@@ -87,7 +87,7 @@ const LoadAdminDrive = () => {
     }
   }
 
-  if (adminDriveConnected) {
+  if (adminDriveMounted) {
     loadFilesFromAdminDrive().catch(error =>
       console.log(
         `Failed to load election files from drive ${adminDriveIndex}`,

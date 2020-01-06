@@ -25,11 +25,6 @@ export const fileNames = {
   tallyFile,
 }
 
-const initialDriveState: UsbDrives = {
-  0: false,
-  1: false,
-}
-
 interface Props {
   children?: ReactNode
   test?: boolean
@@ -41,15 +36,24 @@ type UsbDrive = {
   path: string
   mountpoints: string[]
 }
-type UsbDrives = { [driveIndex: number]: boolean }
+type DriveAvailability = {
+  present: boolean
+  mounted: boolean
+}
+type UsbDrives = { [driveIndex: number]: DriveAvailability }
 
 const UsbManager: FC<Props> = (props: Props) => {
   const [usbDrives, setUsbDrives] = useState({
-    ...initialDriveState,
+    0: { present: false, mounted: false },
+    1: { present: false, mounted: false },
   } as UsbDrives)
   const [isRunning, setIsRunning] = useState(false)
-  const adminDriveConnected = usbDrives[adminDriveIndex] || !!props.test
-  const storageDriveConnected = usbDrives[storageDriveIndex] || !!props.test
+  const adminDriveConnected = usbDrives[adminDriveIndex].present || !!props.test
+  const adminDriveMounted = usbDrives[adminDriveIndex].mounted || !!props.test
+  const storageDriveConnected =
+    usbDrives[storageDriveIndex].present || !!props.test
+  const storageDriveMounted =
+    usbDrives[storageDriveIndex].mounted || !!props.test
   const read = async <T extends unknown>(
     driveId: number,
     file: string
@@ -72,17 +76,23 @@ const UsbManager: FC<Props> = (props: Props) => {
     async () => {
       try {
         const availableDrives = (await fetchJSON<UsbDrive[]>('/usb')) || []
-
-        const currentDrives: UsbDrives = { ...initialDriveState }
+        const currentDrives: UsbDrives = {
+          0: { present: false, mounted: false },
+          1: { present: false, mounted: false },
+        }
         availableDrives.forEach((drive, index) => {
-          const driveIsMounted = drive.mountpoints && drive.mountpoints.length
-          currentDrives[index] = !!driveIsMounted
+          currentDrives[index].present = true
+          currentDrives[index].mounted =
+            drive.mountpoints && drive.mountpoints.length > 0
         })
 
         const keys = Object.keys(currentDrives)
         for (let i = 0; i < keys.length; i += 1) {
           const key = +keys[i]
-          if (currentDrives[key] !== usbDrives[key]) {
+          const driveStateChanged =
+            currentDrives[key].mounted !== usbDrives[key].mounted ||
+            currentDrives[key].present !== usbDrives[key].present
+          if (driveStateChanged) {
             setUsbDrives(currentDrives)
             break
           }
@@ -104,7 +114,9 @@ const UsbManager: FC<Props> = (props: Props) => {
     <UsbContext.Provider
       value={{
         adminDriveConnected,
+        adminDriveMounted,
         storageDriveConnected,
+        storageDriveMounted,
         read,
         write,
         connect,

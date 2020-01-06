@@ -20,7 +20,7 @@ const LogoImage = styled.img`
 `
 
 const StartPage = () => {
-  const { adminDriveConnected } = useContext(UsbContext)
+  const { adminDriveMounted } = useContext(UsbContext)
   const { election, electionGuardStatus, tally } = useContext(AdminContext)
   const getElectionGuardStatus = () => {
     switch (electionGuardStatus) {
@@ -34,7 +34,7 @@ const StartPage = () => {
         return 'Election Error.'
     }
   }
-  if (!election || !adminDriveConnected) {
+  if (!election || !adminDriveMounted) {
     return <LoadAdminDrive />
   }
 
