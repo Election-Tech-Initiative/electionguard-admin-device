@@ -59,6 +59,19 @@ dependencies and set up any settings (for example, API keys and output folders).
 This project was bootstrapped with
 [Create React App](https://github.com/facebook/create-react-app).
 
+This project can be run in two configurations.
+
+1. Full Hardware Demo
+   - **OS:** Linux (Unbuntu)
+   - **Hardware:** Card reader, smart card, and usb stick
+   - **Reference Implementation APIs:**
+     - [Usb stick Api](https://github.com/InfernoRed/module-usbstick)
+     - [Smart Card Api](https://github.com/InfernoRed/module-smartcards)
+     - [ElectionGuard Api](https://github.com/microsoft/ElectionGuard-SDK-DotNetCore-Reference-Web-API)
+2. Mock Demo
+   - To demo, create a `.env.local` and enable the mocks shown in the `.env`
+     file.
+
 ### `yarn start`
 
 Runs the app in the development mode.<br /> Open

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 0,
+    "description": "Generic Flash_Disk (/media/username/166C-E025)",
+    "device": "/dev/sdd",
+    "path": "/dev/disk/by-path/pci-0000:00:14.0-usb-0:4.4:1.0-scsi-0:0:0:0",
+    "mountpoints": [
+      "/media/username/166C-E025"
+    ]
+  },
+  {
+    "id": 1,
+    "description": "Generic Flash_Disk (/media/username/F496-9B3E)",
+    "device": "/dev/sde",
+    "path": "/dev/disk/by-path/pci-0000:00:14.0-usb-0:4.3:1.0-scsi-0:0:0:0",
+    "mountpoints": [
+      "/media/username/F496-9B3E"
+    ]
+  }
+]

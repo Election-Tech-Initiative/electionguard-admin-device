@@ -11,6 +11,8 @@
     "@types/react-router-dom": "^5.1.2",
     "@types/styled-components": "^4.4.0",
     "@votingworks/ballot-encoder": "^1.2.0",
+    "dotenv": "^8.2.0",
+    "fetch-mock": "^8.2.0-beta.2",
     "history": "^4.10.1",
     "http-proxy-middleware": "^0.20.0",
     "normalize.css": "^8.0.1",
