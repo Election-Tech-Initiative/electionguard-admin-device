@@ -1,8 +1,19 @@
-import React, { useContext, useCallback, useEffect } from 'react'
+/* eslint-disable react/prefer-stateless-function */
+import React, {
+  Component,
+  useContext,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react'
 import styled from 'styled-components'
-import { CandidateContest, YesNoContest } from '@votingworks/ballot-encoder'
-import Main, { MainChild } from '../../components/Main'
-import Prose from '../../components/Prose'
+import {
+  CandidateContest,
+  YesNoContest,
+  Election,
+} from '@votingworks/ballot-encoder'
+import ReactToPrint from 'react-to-print'
+import Main from '../../components/Main'
 import Screen from '../../components/Screen'
 import Sidebar from '../../components/Sidebar'
 import SidebarFooter from '../../components/SidebarFooter'
@@ -13,6 +24,7 @@ import {
   YesNoVoteTally,
   ElectionGuardStatus,
   ElectionGuardState,
+  Tally,
 } from '../../electionguard'
 import {
   adminDriveIndex,
@@ -21,40 +33,77 @@ import {
 } from '../../components/UsbManager'
 import UsbContext from '../../contexts/usbContext'
 import LoadAdminDrive from '../LoadAdminDrive'
+import ElectionInfo from '../../components/ElectionInfo'
 
 const Header = styled.div`
   margin: 0 auto;
   text-align: center;
 `
 
+const Title = styled.h1`
+  font-size: 1.2rem;
+`
+
+const ReportDate = styled.p`
+  margin: 0;
+  font-size: 0.8rem;
+`
+
 const ContestTitle = styled.h2`
   margin: 0;
   line-height: 1.3;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
 `
 
 const TallyContainer = styled.div`
   padding: 0.5rem 0.5rem;
 `
 
-const ContestContainer = styled.div`
+const BorderContainer = styled.div`
   margin: 0.5rem;
   border: 1px solid rgb(38, 50, 56);
   padding: 0.5rem;
+  font-size: 0.8rem;
 `
 
 const Selection = styled.li`
   margin-bottom: 0.25rem;
 `
 
+const StyledButton = styled.button`
+  margin: 20px auto;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 0 0 0 rgba(71, 167, 75, 1);
+  box-sizing: border-box;
+  background: rgb(71, 167, 75);
+  cursor: pointer;
+  width: 400px;
+  padding: 1rem 1.5rem;
+  line-height: 1.25;
+  color: #ffffff;
+  font-size: 1.25rem;
+  touch-action: manipulation;
+`
+
+const SignatureLine = styled.div`
+  display: flex;
+  margin: 10px 0;
+  border-bottom: 1px solid #000000;
+  width: 60%;
+  height: 1.1em;
+`
+
 const renderYesNoTally = (contest: YesNoContest, tally: YesNoVoteTally) => {
   return (
     <>
       <ContestTitle>{contest.title}</ContestTitle>
-      <ul>
-        <Selection>Yes: {tally.yes}</Selection>
-        <Selection>No: {tally.no}</Selection>
-      </ul>
+      <p>
+        <ul>
+          <Selection>Yes: {tally.yes}</Selection>
+          <Selection>No: {tally.no}</Selection>
+        </ul>
+      </p>
     </>
   )
 }
@@ -66,18 +115,20 @@ const renderCandidateTally = (
   return (
     <>
       <ContestTitle>{contest.title}</ContestTitle>
-      <ul>
-        {contest.candidates.map((candidate, index) => (
-          <Selection key={candidate.id}>
-            {candidate.name} : {tally.candidates[index]}
-          </Selection>
-        ))}
-        {contest.allowWriteIns ? (
-          <Selection>Write Ins: {tally.writeIns[0].tally}</Selection>
-        ) : (
-          <></>
-        )}
-      </ul>
+      <p>
+        <ul>
+          {contest.candidates.map((candidate, index) => (
+            <Selection key={candidate.id}>
+              {candidate.name} : {tally.candidates[index]}
+            </Selection>
+          ))}
+          {contest.allowWriteIns ? (
+            <Selection>Write Ins: {tally.writeIns[0].tally}</Selection>
+          ) : (
+            <></>
+          )}
+        </ul>
+      </p>
     </>
   )
 }
@@ -99,6 +150,73 @@ const renderContest = (
   }
 }
 
+const renderSignatureBlock = () => {
+  return (
+    <BorderContainer>
+      <p>
+        <b>Certification Signatures</b>
+        <br />
+        <br />
+        We, the undersigned, do hereby certify the election was conducted in
+        accordance with the laws of the state.
+      </p>
+      <SignatureLine>X</SignatureLine>
+      <SignatureLine>X</SignatureLine>
+      <SignatureLine>X</SignatureLine>
+    </BorderContainer>
+  )
+}
+
+interface PrintableTallyProps {
+  tally: Tally
+  election: Election
+  printing?: boolean
+}
+
+const printDate = () => {
+  const options = {
+    dateStyle: 'long',
+    timeStyle: 'long',
+    hour12: false,
+  }
+  return new Date().toLocaleDateString('en-US', options)
+}
+
+class PrintableTallyPage extends Component<PrintableTallyProps> {
+  render() {
+    const { tally, election, printing } = this.props
+    return (
+      <div>
+        {election && printing ? (
+          <ElectionInfo election={election} precinctId="" horizontal />
+        ) : (
+          <></>
+        )}
+        <Header>
+          <Title>ElectionGuard Tally Results</Title>
+          {printing ? (
+            <ReportDate>{`Report Printed at: ${printDate()}`}</ReportDate>
+          ) : (
+            <></>
+          )}
+        </Header>
+        <TallyContainer>
+          {tally && tally.length === election.contests.length ? (
+            election.contests.map((contest, index) => (
+              <BorderContainer key={contest.id}>
+                {renderContest(contest, tally[index])}{' '}
+              </BorderContainer>
+            ))
+          ) : (
+            <></>
+          )}
+          {printing ? renderSignatureBlock() : <></>}
+        </TallyContainer>
+      </div>
+    )
+  }
+}
+
 const TallyPage = () => {
   const {
     election,
@@ -109,6 +227,8 @@ const TallyPage = () => {
   const { connect, disconnect, write, adminDriveConnected } = useContext(
     UsbContext
   )
+
+  const tallyDisplayRef = useRef(null) // eslint-disable-line
 
   const startMonitoringDrives = useCallback(connect, [])
   const stopMonitoringDrives = useCallback(disconnect, [])
@@ -170,24 +290,19 @@ const TallyPage = () => {
         </p>
       </Sidebar>
       <Main>
-        <MainChild>
-          <Prose id="audiofocus">
-            <Header>
-              <h1>Tally Results</h1>
-            </Header>
-          </Prose>
-          <TallyContainer>
-            {tally && tally.length === election.contests.length ? (
-              election.contests.map((contest, index) => (
-                <ContestContainer key={contest.id}>
-                  {renderContest(contest, tally[index])}{' '}
-                </ContestContainer>
-              ))
-            ) : (
-              <></>
-            )}
-          </TallyContainer>
-        </MainChild>
+        <ReactToPrint
+          trigger={() => <StyledButton>Print Results</StyledButton>}
+          content={() => tallyDisplayRef.current!}
+        />
+        <div style={{ display: 'none' }}>
+          <PrintableTallyPage
+            ref={tallyDisplayRef}
+            printing
+            tally={tally}
+            election={election}
+          />
+        </div>
+        <PrintableTallyPage tally={tally} election={election} />
       </Main>
     </Screen>
   )
