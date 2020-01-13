@@ -15,6 +15,10 @@ tar --exclude=.git \
     --exclude=.gitignore \
     --exclude=Dockerfile \
     --exclude=Makefile \
-    -zcvf electionguard-admin.tar.gz electionguard-admin.service run.sh ../
+    -zcvf \
+      electionguard-admin.tar.gz \
+      electionguard-admin.service \
+      run_chromium_kiosk.sh \
+      ../
 
 echo "packaging complete"

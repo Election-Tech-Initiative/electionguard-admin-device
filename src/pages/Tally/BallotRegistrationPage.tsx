@@ -73,7 +73,7 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
             </Header>
           </Prose>
           <Prose textCenter>
-            <p aria-label="Select trustee to announce">
+            <p aria-label="Select artifact to upload">
               <b>Select artifact to upload</b>
             </p>
             <StatusButtonGrid>
