@@ -140,6 +140,11 @@ export interface UsbWriteResult {
   message: string
 }
 
+export interface UsbMountResult {
+  success: boolean
+  message: string
+}
+
 export interface UsbUnmountResult {
   success: boolean
   message: string

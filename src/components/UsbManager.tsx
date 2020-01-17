@@ -1,7 +1,11 @@
 import React, { FC, ReactNode, useState } from 'react'
 import UsbContext from '../contexts/usbContext'
 import { fetchJSON } from '../electionguard'
-import { UsbWriteResult, UsbUnmountResult } from '../config/types'
+import {
+  UsbWriteResult,
+  UsbMountResult,
+  UsbUnmountResult,
+} from '../config/types'
 import * as GLOBALS from '../config/globals'
 import UseInterval from '../hooks/useInterval'
 
@@ -37,15 +41,28 @@ type UsbDrive = {
   mountpoints: string[]
 }
 type DriveAvailability = {
+  id: number
   present: boolean
   mounted: boolean
+  label: string
 }
+
 type UsbDrives = { [driveIndex: number]: DriveAvailability }
 
 const UsbManager: FC<Props> = (props: Props) => {
   const [usbDrives, setUsbDrives] = useState({
-    0: { present: false, mounted: false },
-    1: { present: false, mounted: false },
+    0: {
+      id: 0,
+      present: false,
+      mounted: false,
+      label: 'admin_drive',
+    },
+    1: {
+      id: 1,
+      present: false,
+      mounted: false,
+      label: 'storage_drive',
+    },
   } as UsbDrives)
   const [isRunning, setIsRunning] = useState(false)
   const adminDriveConnected = usbDrives[adminDriveIndex].present || !!props.test
@@ -68,8 +85,22 @@ const UsbManager: FC<Props> = (props: Props) => {
     })
   }
 
+  const connect = () => {
+    setIsRunning(true)
+  }
+
   const disconnect = () => {
     setIsRunning(false)
+  }
+
+  const mount = async (driveId: number, label: string): Promise<boolean> => {
+    const mountResult = await fetchJSON<UsbMountResult>(
+      `usb/${driveId}/mount?label=${label}`,
+      {
+        method: 'POST',
+      }
+    )
+    return mountResult.success
   }
 
   UseInterval(
@@ -77,16 +108,43 @@ const UsbManager: FC<Props> = (props: Props) => {
       try {
         const availableDrives = (await fetchJSON<UsbDrive[]>('/usb')) || []
         const currentDrives: UsbDrives = {
-          0: { present: false, mounted: false },
-          1: { present: false, mounted: false },
+          0: {
+            id: 0,
+            present: false,
+            mounted: false,
+            label: 'admin_drive',
+          },
+          1: {
+            id: 1,
+            present: false,
+            mounted: false,
+            label: 'storage_drive',
+          },
         }
+
         availableDrives.forEach((drive, index) => {
+          currentDrives[index].id = drive.id
           currentDrives[index].present = true
           currentDrives[index].mounted =
             drive.mountpoints && drive.mountpoints.length > 0
         })
 
         const keys = Object.keys(currentDrives)
+
+        keys.forEach(async key => {
+          const driveKey = +key
+          if (
+            !usbDrives[driveKey].present &&
+            currentDrives[driveKey].present &&
+            !currentDrives[driveKey].mounted
+          ) {
+            await mount(
+              currentDrives[driveKey].id,
+              currentDrives[driveKey].label
+            )
+          }
+        })
+
         for (let i = 0; i < keys.length; i += 1) {
           const key = +keys[i]
           const driveStateChanged =
@@ -104,10 +162,6 @@ const UsbManager: FC<Props> = (props: Props) => {
     isRunning ? GLOBALS.USB_POLLING_INTERVAL : undefined
   )
 
-  const connect = () => {
-    setIsRunning(true)
-  }
-
   const eject = async (driveId: number) => {
     const unmountResult = await fetchJSON<UsbUnmountResult>(
       `/usb/${driveId}/unmount`,
@@ -119,6 +173,14 @@ const UsbManager: FC<Props> = (props: Props) => {
     if (!unmountResult.success) {
       throw new Error(unmountResult.message)
     }
+
+    setUsbDrives({
+      ...usbDrives,
+      [driveId]: {
+        ...usbDrives[driveId],
+        mounted: false,
+      },
+    })
   }
 
   return (
