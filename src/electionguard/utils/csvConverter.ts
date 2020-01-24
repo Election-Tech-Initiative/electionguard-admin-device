@@ -4,24 +4,22 @@ import {
   YesNoContest,
   CandidateContest,
 } from '@votingworks/ballot-encoder'
-import { BallotStatus } from '../models/BallotStatus'
-import { ElectionResult } from '../models/ElectionResult'
+import { BallotStatus, BallotStatusesFile } from '../models/BallotStatus'
+import { ElectionResult, ElectionResultsFile } from '../models/ElectionResult'
 import { Tally, YesNoVoteTally, CandidateVoteTally } from '../models'
+import { Json2CsvOptions } from '../models/CsvAsJson'
 
 const approximateCastTime = process.env.REACT_APP_POLLING_DATE || '01/01/2020'
 const location = process.env.REACT_APP_POLLING_LOCATION || 'Location'
-const seperator = '|'
-const newLine = '\n'
 
-const exportCsv = (csvFile: string): string => {
-  return `data:text/csv;charset=utf-8,${csvFile}`
+const defaultCsvOptions: Json2CsvOptions = {
+  fields: [],
+  delimiter: '|',
+  quote: '', // Removes quotes
+  header: false,
 }
 
-const trackerToRow = (ballotStatus: BallotStatus) => {
-  return `${ballotStatus.trackingId}${seperator}${ballotStatus.approximateCastTime}${seperator}${ballotStatus.location}`
-}
-
-export const exportTrackerCsv = (trackers: string[]): string => {
+export const exportTrackerCsv = (trackers: string[]): BallotStatusesFile => {
   const statuses: BallotStatus[] = trackers.map(
     (tracker: string): BallotStatus => ({
       trackingId: tracker,
@@ -29,12 +27,13 @@ export const exportTrackerCsv = (trackers: string[]): string => {
       location,
     })
   )
-  const rows = statuses.map(status => trackerToRow(status)).join(newLine)
-  return exportCsv(rows)
-}
-
-const resultToRow = (result: ElectionResult) => {
-  return `${result.contestId}${seperator}${result.contestTitle}${seperator}${result.selectionId}${seperator}${result.selectionName}${seperator}${result.party}${seperator}${result.voteCount}`
+  return {
+    options: {
+      ...defaultCsvOptions,
+      fields: ['trackingId', 'approximateCastTime', 'location'],
+    },
+    data: statuses,
+  }
 }
 
 const getCandidateLines = (
@@ -98,7 +97,7 @@ const getYesNoLines = (
 export const exportElectionResultsCsv = (
   tally: Tally,
   election: Election
-): string => {
+): ElectionResultsFile => {
   const parties = election.parties.reduce(
     (dictionary: { [id: string]: Party }, party: Party) => {
       // eslint-disable-next-line no-param-reassign
@@ -131,6 +130,19 @@ export const exportElectionResultsCsv = (
         break
     }
   })
-  const rows = results.map(result => resultToRow(result)).join(newLine)
-  return exportCsv(rows)
+
+  return {
+    options: {
+      ...defaultCsvOptions,
+      fields: [
+        'contestId',
+        'contestTitle',
+        'selectionId',
+        'selectionName',
+        'party',
+        'voteCount',
+      ],
+    },
+    data: results,
+  }
 }

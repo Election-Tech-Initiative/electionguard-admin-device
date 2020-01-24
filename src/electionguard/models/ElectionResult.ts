@@ -1,3 +1,5 @@
+import { CsvAsJson } from './CsvAsJson'
+
 export interface ElectionResult {
   contestId: string
   contestTitle: string
@@ -5,4 +7,8 @@ export interface ElectionResult {
   selectionName: string
   party: string
   voteCount: number
+}
+
+export interface ElectionResultsFile extends CsvAsJson {
+  data: ElectionResult[]
 }
