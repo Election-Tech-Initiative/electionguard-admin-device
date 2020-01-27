@@ -2,7 +2,7 @@
 
 exports[`renders TallyPage 1`] = `
 <div
-  class="sc-bxivhb fOSwuN"
+  class="sc-htpNat ipvAhE"
 >
   <main
     class="sc-bdVaJa iiFDUH"
@@ -11,7 +11,7 @@ exports[`renders TallyPage 1`] = `
       class="sc-bwzfXH jAEsws"
     >
       <div
-        class="sc-htpNat chxRAJ"
+        class="sc-bxivhb ggQYUR"
       >
         <h1
           aria-hidden="true"
