@@ -121,7 +121,9 @@ export interface SmartcardContextInterface {
 
 export interface UsbContextInterface {
   adminDriveConnected: boolean
+  adminDriveMounted: boolean
   storageDriveConnected: boolean
+  storageDriveMounted: boolean
   connect: () => void
   disconnect: () => void
   read: <T>(driveId: number, file: string) => Promise<T>
@@ -130,10 +132,20 @@ export interface UsbContextInterface {
     file: string,
     data: object | string
   ) => Promise<UsbWriteResult>
-  eject: (driveId: string) => void
+  eject: (driveId: number) => Promise<void>
 }
 
 export interface UsbWriteResult {
+  success: boolean
+  message: string
+}
+
+export interface UsbMountResult {
+  success: boolean
+  message: string
+}
+
+export interface UsbUnmountResult {
   success: boolean
   message: string
 }

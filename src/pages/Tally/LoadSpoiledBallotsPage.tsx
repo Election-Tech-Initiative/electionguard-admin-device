@@ -16,7 +16,7 @@ import {
 const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
   const { setSpoiledIds } = useContext(TallyContext)
   const [isWriting, setIsWriting] = useState(false)
-  const { storageDriveConnected, connect, disconnect, read } = useContext(
+  const { storageDriveMounted, connect, disconnect, read } = useContext(
     UsbContext
   )
   const handleLoad = async () => {
@@ -52,8 +52,8 @@ const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
         <p>
           <LinkButton
             big
-            primary={storageDriveConnected && !isWriting}
-            disabled={!storageDriveConnected || isWriting}
+            primary={storageDriveMounted && !isWriting}
+            disabled={!storageDriveMounted || isWriting}
             onPress={() => handleLoad()}
             id="load"
             aria-label="Load spoiled ballot ids from drive."

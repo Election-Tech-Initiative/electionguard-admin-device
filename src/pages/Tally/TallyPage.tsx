@@ -236,7 +236,7 @@ const TallyPage = () => {
     setElectionGuardStatus,
     tally,
   } = useContext(AdminContext)
-  const { connect, disconnect, write, adminDriveConnected } = useContext(
+  const { connect, disconnect, write, adminDriveMounted } = useContext(
     UsbContext
   )
 
@@ -284,7 +284,7 @@ const TallyPage = () => {
     )
   }
 
-  if (!adminDriveConnected) {
+  if (!adminDriveMounted) {
     return <LoadAdminDrive />
   }
 
