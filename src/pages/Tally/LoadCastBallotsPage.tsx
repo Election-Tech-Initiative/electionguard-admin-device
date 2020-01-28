@@ -13,7 +13,7 @@ import { storageDriveIndex, castBallotsFile } from '../../components/UsbManager'
 const LoadCastBallotsPage = (props: RouteComponentProps) => {
   const { setCastIds } = useContext(TallyContext)
   const [isWriting, setIsWriting] = useState(false)
-  const { storageDriveConnected, connect, disconnect, read } = useContext(
+  const { storageDriveMounted, connect, disconnect, read } = useContext(
     UsbContext
   )
   const handleLoad = async () => {
@@ -48,8 +48,8 @@ const LoadCastBallotsPage = (props: RouteComponentProps) => {
         <p>
           <LinkButton
             big
-            primary={storageDriveConnected && !isWriting}
-            disabled={!storageDriveConnected || isWriting}
+            primary={storageDriveMounted && !isWriting}
+            disabled={!storageDriveMounted || isWriting}
             onPress={() => handleLoad()}
             id="load"
             aria-label="Load cast ballot ids from drive."

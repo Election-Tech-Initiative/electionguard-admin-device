@@ -1,38 +1,93 @@
-import React, { useEffect, useState } from 'react'
-import { Redirect } from 'react-router-dom'
-
+import React, { useContext, useState, useCallback, useEffect } from 'react'
+import { RouteComponentProps } from 'react-router-dom'
+import CeremonyContext from '../../contexts/ceremonyContext'
 import Main, { MainChild } from '../../components/Main'
-import ProgressBar from '../../components/ProgressBar'
 import Prose from '../../components/Prose'
 import Screen from '../../components/Screen'
-import Loading from '../../components/Loading'
+import Sidebar from '../../components/Sidebar'
+import LinkButton from '../../components/LinkButton'
+import SidebarFooter from '../../components/SidebarFooter'
+import UsbContext from '../../contexts/usbContext'
+import { storageDriveIndex, stateFile } from '../../components/UsbManager'
+import AdminContext from '../../contexts/adminContext'
 
-const SaveDriveScreen = () => {
-  const saveDelay = 2500
-  const [progress, setProgress] = useState(0)
-  const [done, setDone] = useState(false)
+interface EncrypterParams {
+  encrypterId: string
+}
 
-  useEffect(() => {
-    setTimeout(() => {
-      setProgress(1)
-    }, 1)
-    setTimeout(() => {
-      setDone(true)
-    }, saveDelay)
-  }, [])
+const SaveDriveScreen = (props: RouteComponentProps<EncrypterParams>) => {
+  const [isWriting, setIsWriting] = useState(false)
+  const { electionGuardConfig } = useContext(AdminContext)
+  const { storageDriveMounted, connect, disconnect, eject, write } = useContext(
+    UsbContext
+  )
+  const { encrypterId } = props.match.params
+  const { claimEncrypterDrive } = useContext(CeremonyContext)
 
-  if (done) {
-    return <Redirect to="/encrypter/remove" />
+  const handleWrite = async (id: string) => {
+    setIsWriting(true)
+
+    try {
+      const { history } = props
+      const result = await write(
+        storageDriveIndex,
+        stateFile,
+        electionGuardConfig
+      )
+      if (!result.success) {
+        throw new Error(result.message)
+      }
+
+      eject(storageDriveIndex)
+      claimEncrypterDrive(id)
+      history.push('/encrypter/remove')
+    } catch (error) {
+      setIsWriting(false)
+      console.error('Failed to write election config to encryptor drive', error)
+      throw error
+    }
   }
+
+  const startMonitoringDrives = useCallback(connect, [])
+  const stopMonitoringDrives = useCallback(disconnect, [])
+  useEffect(() => {
+    startMonitoringDrives()
+    return () => stopMonitoringDrives()
+  }, [startMonitoringDrives, stopMonitoringDrives])
+
   return (
-    <Screen white>
+    <Screen flexDirection="row-reverse" white>
+      <Sidebar footer={<SidebarFooter />}>
+        <p>
+          <LinkButton
+            big
+            primary={storageDriveMounted && !isWriting}
+            disabled={!storageDriveMounted || isWriting}
+            onPress={() => handleWrite(encrypterId)}
+            id="save"
+            aria-label="Save encryter to drive."
+          >
+            Save
+          </LinkButton>
+        </p>
+        <p>
+          <LinkButton
+            small
+            to="/encrypters"
+            id="encrypters"
+            aria-label="Return to encrypter distribution."
+          >
+            Back
+          </LinkButton>
+        </p>
+      </Sidebar>
       <Main>
-        <MainChild centerVertical maxWidth={false}>
-          <Prose textCenter id="audiofocus">
-            <ProgressBar progress={progress} duration={saveDelay} />
-            <h1>
-              <Loading>Saving encrypter to drive</Loading>
-            </h1>
+        <MainChild center>
+          <Prose textCenter>
+            <>
+              <h1 aria-hidden>Insert Drive</h1>
+              <p>Insert drive for encrypter.</p>
+            </>
           </Prose>
         </MainChild>
       </Main>

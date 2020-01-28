@@ -7,7 +7,6 @@ import SaveCardScreen from './SaveCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
 import SetupEncryptersPage from './SetupEncryptersPage'
 import EncrypterDistributionPage from './EncrypterDistributionPage'
-import InsertDriveScreen from './InsertDriveScreen'
 import SaveDriveScreen from './SaveDriveScreen'
 import RemoveDriveScreen from './RemoveDriveScreen'
 import ElectionReadyPage from './ElectionReadyPage'
@@ -119,9 +118,8 @@ const CeremonyLayout = () => {
         <Route
           path="/encrypters/:encrypterId"
           exact
-          component={InsertDriveScreen}
+          component={SaveDriveScreen}
         />
-        <Route path="/encrypter/save" exact component={SaveDriveScreen} />
         <Route path="/encrypter/remove" exact component={RemoveDriveScreen} />
         <Route path="/ready" exact component={ElectionReadyPage} />
         <Route path="/:path" component={NotFoundPage} />

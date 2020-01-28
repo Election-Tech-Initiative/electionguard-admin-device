@@ -16,7 +16,7 @@ import {
 const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
   const { setEncryptedBallots } = useContext(TallyContext)
   const [isWriting, setIsWriting] = useState(false)
-  const { storageDriveConnected, connect, disconnect, read } = useContext(
+  const { storageDriveMounted, connect, disconnect, read } = useContext(
     UsbContext
   )
   const handleLoad = async () => {
@@ -51,8 +51,8 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
         <p>
           <LinkButton
             big
-            primary={storageDriveConnected && !isWriting}
-            disabled={!storageDriveConnected || isWriting}
+            primary={storageDriveMounted && !isWriting}
+            disabled={!storageDriveMounted || isWriting}
             onPress={() => handleLoad()}
             id="load"
             aria-label="Load encrypted ballots."

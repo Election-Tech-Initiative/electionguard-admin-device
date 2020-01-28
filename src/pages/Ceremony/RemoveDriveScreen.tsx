@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useCallback, useContext } from 'react'
 import { Redirect } from 'react-router-dom'
 import Main, { MainChild } from '../../components/Main'
 import Prose from '../../components/Prose'
 import Screen from '../../components/Screen'
+import UsbContext from '../../contexts/usbContext'
 
 const RemoveDriveScreen = () => {
-  const saveDelay = 2500
-  const [done, setDone] = useState(false)
-
+  const { storageDriveConnected, connect, disconnect } = useContext(UsbContext)
+  const startMonitoringDrives = useCallback(connect, [])
+  const stopMonitoringDrives = useCallback(disconnect, [])
   useEffect(() => {
-    setTimeout(() => {
-      setDone(true)
-    }, saveDelay)
-  }, [])
+    startMonitoringDrives()
+    return () => stopMonitoringDrives()
+  }, [startMonitoringDrives, stopMonitoringDrives])
 
-  if (done) {
+  if (!storageDriveConnected) {
     return <Redirect to="/encrypters" />
   }
   return (
