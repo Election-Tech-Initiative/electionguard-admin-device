@@ -11,6 +11,7 @@ import {
   CandidateContest,
   YesNoContest,
   Election,
+  Parties,
 } from '@votingworks/ballot-encoder'
 import ReactToPrint from 'react-to-print'
 import Main from '../../components/Main'
@@ -30,10 +31,17 @@ import {
   adminDriveIndex,
   stateFile,
   tallyFile,
+  trackersFile,
+  electionResultsFile,
 } from '../../components/UsbManager'
 import UsbContext from '../../contexts/usbContext'
 import LoadAdminDrive from '../LoadAdminDrive'
 import ElectionInfo from '../../components/ElectionInfo'
+import {
+  exportTrackerCsv,
+  exportElectionResultsCsv,
+} from '../../electionguard/utils/csvConverter'
+import TallyContext from '../../contexts/tallyContext'
 
 const Header = styled.div`
   margin: 0 auto;
@@ -98,50 +106,53 @@ const renderYesNoTally = (contest: YesNoContest, tally: YesNoVoteTally) => {
   return (
     <>
       <ContestTitle>{contest.title}</ContestTitle>
-      <p>
-        <ul>
-          <Selection>Yes: {tally.yes}</Selection>
-          <Selection>No: {tally.no}</Selection>
-        </ul>
-      </p>
+      <ul>
+        <Selection>Yes: {tally.yes}</Selection>
+        <Selection>No: {tally.no}</Selection>
+      </ul>
     </>
   )
 }
 
 const renderCandidateTally = (
   contest: CandidateContest,
-  tally: CandidateVoteTally
+  tally: CandidateVoteTally,
+  parties: Parties
 ) => {
   return (
     <>
       <ContestTitle>{contest.title}</ContestTitle>
-      <p>
-        <ul>
-          {contest.candidates.map((candidate, index) => (
-            <Selection key={candidate.id}>
-              {candidate.name} : {tally.candidates[index]}
-            </Selection>
-          ))}
-          {contest.allowWriteIns ? (
-            <Selection>Write Ins: {tally.writeIns[0].tally}</Selection>
-          ) : (
-            <></>
-          )}
-        </ul>
-      </p>
+      <ul>
+        {contest.candidates.map((candidate, index) => (
+          <Selection key={candidate.id}>
+            {candidate.name}(
+            {parties
+              ? parties.filter(x => x.id === candidate.partyId)[0].name
+              : ''}
+            ) : {tally.candidates[index]}
+          </Selection>
+        ))}
+        {contest.allowWriteIns ? (
+          <Selection>Write Ins: {tally.writeIns[0].tally}</Selection>
+        ) : (
+          <></>
+        )}
+      </ul>
     </>
   )
 }
 
 const renderContest = (
   contest: CandidateContest | YesNoContest,
-  tally: CandidateVoteTally | YesNoVoteTally
+  tally: CandidateVoteTally | YesNoVoteTally,
+  parties: Parties
 ) => {
   switch (contest.type) {
     case 'candidate':
       return renderCandidateTally(
         contest as CandidateContest,
-        tally as CandidateVoteTally
+        tally as CandidateVoteTally,
+        parties
       )
     case 'yesno':
       return renderYesNoTally(contest as YesNoContest, tally as YesNoVoteTally)
@@ -185,6 +196,7 @@ const printDate = () => {
 class PrintableTallyPage extends Component<PrintableTallyProps> {
   render() {
     const { tally, election, printing } = this.props
+    const parties = election ? election.parties : []
     return (
       <div>
         {election && printing ? (
@@ -204,7 +216,7 @@ class PrintableTallyPage extends Component<PrintableTallyProps> {
           {tally && tally.length === election.contests.length ? (
             election.contests.map((contest, index) => (
               <BorderContainer key={contest.id}>
-                {renderContest(contest, tally[index])}{' '}
+                {renderContest(contest, tally[index], parties)}{' '}
               </BorderContainer>
             ))
           ) : (
@@ -228,6 +240,8 @@ const TallyPage = () => {
     UsbContext
   )
 
+  const { castTrackers } = useContext(TallyContext)
+
   const tallyDisplayRef = useRef(null) // eslint-disable-line
 
   const startMonitoringDrives = useCallback(connect, [])
@@ -249,6 +263,18 @@ const TallyPage = () => {
     result = await write(adminDriveIndex, tallyFile, tally)
     if (!result.success) {
       throw new Error('failed to write tallied ballots')
+    }
+
+    const trackers = exportTrackerCsv(castTrackers)
+    result = await write(adminDriveIndex, trackersFile, trackers)
+    if (!result.success) {
+      throw new Error('failed to write trackers')
+    }
+
+    const electionResults = exportElectionResultsCsv(tally, election)
+    result = await write(adminDriveIndex, electionResultsFile, electionResults)
+    if (!result.success) {
+      throw new Error('failed to write election results')
     }
   }
 

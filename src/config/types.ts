@@ -130,7 +130,7 @@ export interface UsbContextInterface {
   write: (
     driveId: number,
     file: string,
-    data: object
+    data: object | string
   ) => Promise<UsbWriteResult>
   eject: (driveId: number) => Promise<void>
 }

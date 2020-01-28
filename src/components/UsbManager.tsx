@@ -18,6 +18,8 @@ export const spoiledBallotsFile = `data${GLOBALS.PATH_DELIMITER}spoiledBallots.j
 export const castBallotsFile = `data${GLOBALS.PATH_DELIMITER}castBallots.json`
 export const encryptedBallotsFile = `data${GLOBALS.PATH_DELIMITER}encryptedBallots.json`
 export const tallyFile = `data${GLOBALS.PATH_DELIMITER}tally.json`
+export const trackersFile = `data${GLOBALS.PATH_DELIMITER}trackers.csv`
+export const electionResultsFile = `data${GLOBALS.PATH_DELIMITER}results.csv`
 
 export const fileNames = {
   electionFile,
@@ -27,6 +29,8 @@ export const fileNames = {
   castBallotsFile,
   encryptedBallotsFile,
   tallyFile,
+  trackersFile,
+  electionResultsFile,
 }
 
 interface Props {
@@ -77,7 +81,18 @@ const UsbManager: FC<Props> = (props: Props) => {
   ): Promise<T> => {
     return fetchJSON<T>(`/usb/${driveId}/file?path=${file}`)
   }
-  const write = async (driveId: number, file: string, data: object) => {
+  const write = async (
+    driveId: number,
+    file: string,
+    data: object | string
+  ) => {
+    if (typeof data === 'string') {
+      return fetchJSON<UsbWriteResult>(`/usb/${driveId}/file?path=${file}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/csv' },
+        body: (data as unknown) as string,
+      })
+    }
     return fetchJSON<UsbWriteResult>(`/usb/${driveId}/file?path=${file}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

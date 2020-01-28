@@ -112,6 +112,16 @@ export const mockUsbApi = () => {
     storageDriveConnected = false // Not reality but to simulate pulling drive
     return postSuccess
   })
+
+  fetchMock.post(`/usb/${drives[0].id}/file?path=data/trackers.csv`, {
+    success: true,
+    body: JSON.stringify(election),
+  })
+
+  fetchMock.post(`/usb/${drives[0].id}/file?path=data/results.csv`, {
+    success: true,
+    body: JSON.stringify(election),
+  })
 }
 
 export default mockUsbApi
