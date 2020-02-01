@@ -8,7 +8,10 @@ import Sidebar from '../../components/Sidebar'
 import LinkButton from '../../components/LinkButton'
 import SidebarFooter from '../../components/SidebarFooter'
 import UsbContext from '../../contexts/usbContext'
-import { storageDriveIndex, stateFile } from '../../components/UsbManager'
+import {
+  storageDriveIndex,
+  electionConfigFile,
+} from '../../components/UsbManager'
 import AdminContext from '../../contexts/adminContext'
 
 interface EncrypterParams {
@@ -31,7 +34,7 @@ const SaveDriveScreen = (props: RouteComponentProps<EncrypterParams>) => {
       const { history } = props
       const result = await write(
         storageDriveIndex,
-        stateFile,
+        electionConfigFile,
         electionGuardConfig
       )
       if (!result.success) {
