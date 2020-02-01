@@ -21,7 +21,12 @@ const LogoImage = styled.img`
 
 const StartPage = () => {
   const { adminDriveMounted } = useContext(UsbContext)
-  const { election, electionGuardStatus, tally } = useContext(AdminContext)
+  const {
+    election,
+    electionGuardStatus,
+    existingElectionGuardConfig,
+    tally,
+  } = useContext(AdminContext)
   const getElectionGuardStatus = () => {
     switch (electionGuardStatus) {
       case ElectionGuardStatus.KeyCeremony:
@@ -78,13 +83,13 @@ const StartPage = () => {
         </p>
         <p>
           <LinkButton
-            primary={electionGuardStatus === ElectionGuardStatus.KeyCeremony}
-            disabled={electionGuardStatus !== ElectionGuardStatus.KeyCeremony}
-            to="/setup-keys"
-            id="setup"
-            aria-label="Select Continue to Continue and Election In Progress"
+            primary={existingElectionGuardConfig !== undefined}
+            disabled={existingElectionGuardConfig === undefined}
+            to="/setup-encrypters"
+            id="encrypters"
+            aria-label="Load an Existing Election"
           >
-            Continue Election
+            Load Election
           </LinkButton>
         </p>
         <p>

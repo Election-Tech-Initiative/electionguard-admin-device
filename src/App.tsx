@@ -35,6 +35,7 @@ interface State {
   tally: Tally
   electionGuardStatus: ElectionGuardStatus
   electionGuardConfig: ElectionGuardConfig
+  existingElectionGuardConfig: ElectionGuardConfig | undefined
   loadingElection: boolean
   userSettings: UserSettings
 }
@@ -47,6 +48,7 @@ const initialState = {
   tally: (undefined as unknown) as Tally,
   electionGuardStatus: ElectionGuardStatus.KeyCeremony,
   electionGuardConfig: (undefined as unknown) as ElectionGuardConfig,
+  existingElectionGuardConfig: undefined,
   loadingElection: false,
   userSettings: { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
 }
@@ -131,6 +133,12 @@ export class App extends React.Component<RouteComponentProps, State> {
     this.setState({ electionGuardConfig })
   }
 
+  public setExistingElectionGuardConfig = (
+    existingElectionGuardConfig: ElectionGuardConfig | undefined
+  ) => {
+    this.setState({ existingElectionGuardConfig })
+  }
+
   public setElectionGuardStatus = (status: ElectionGuardStatus) => {
     this.setState({
       electionGuardStatus: status,
@@ -147,6 +155,7 @@ export class App extends React.Component<RouteComponentProps, State> {
       electionMap,
       tally,
       electionGuardConfig,
+      existingElectionGuardConfig,
       userSettings,
       electionGuardStatus,
     } = this.state
@@ -164,6 +173,8 @@ export class App extends React.Component<RouteComponentProps, State> {
           setElectionGuardStatus: this.setElectionGuardStatus,
           electionGuardConfig,
           setElectionGuardConfig: this.setElectionGuardConfig,
+          existingElectionGuardConfig,
+          setExistingElectionGuardConfig: this.setExistingElectionGuardConfig,
           setUserSettings: this.setUserSettings,
           userSettings,
         }}

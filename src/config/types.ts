@@ -72,6 +72,10 @@ export interface AdminContextInterface {
   setElectionGuardStatus: (status: ElectionGuardStatus) => void
   electionGuardConfig: ElectionGuardConfig
   setElectionGuardConfig: (electionGuardConfig: ElectionGuardConfig) => void
+  existingElectionGuardConfig: ElectionGuardConfig | undefined
+  setExistingElectionGuardConfig: (
+    existingElectionGuardConfig: ElectionGuardConfig | undefined
+  ) => void
   userSettings: UserSettings
   setUserSettings: (partial: PartialUserSettings) => void
 }

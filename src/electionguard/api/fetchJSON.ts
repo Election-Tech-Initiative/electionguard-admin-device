@@ -11,6 +11,7 @@ export async function fetchJSON<T>(
   })
 
   if (!response.ok) {
+    console.error(response)
     throw new Error('fetch response is not ok')
   }
 
