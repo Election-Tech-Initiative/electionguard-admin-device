@@ -1,4 +1,4 @@
-export const USB_POLLING_INTERVAL = 200
+export const USB_POLLING_INTERVAL = 1000
 export const USB_LONG_VALUE_WRITE_DELAY = 1000
 export const CHECK_ICON = '✓'
 export const KEY_ICON = '🔑'
