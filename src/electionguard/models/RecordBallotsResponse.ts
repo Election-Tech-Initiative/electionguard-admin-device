@@ -1,5 +1,5 @@
 export interface RecordBallotsResponse {
-  registerdBallotsFileName: string
+  registeredBallotsFileName: string
   castedBallotTrackers: string[]
   spoiledBallotTrackers: string[]
 }

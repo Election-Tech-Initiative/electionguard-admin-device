@@ -46,30 +46,29 @@ const initializeEncryption = (
   exportPath: string = DEFAULT_EXPORT_PATH,
   exportFileName: string = DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX
 ) => {
-  return fetchJSON<InitializeEncryptionResponse>('/electionguard', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      election,
-      electionGuardConfig,
-      exportPath,
-      exportFileName,
-    } as InitializeEncryptionRequest),
-  })
+  return fetchJSON<InitializeEncryptionResponse>(
+    '/electionguard/InitializeEncryption',
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        election,
+        electionGuardConfig,
+        exportPath,
+        exportFileName,
+      } as InitializeEncryptionRequest),
+    }
+  )
 }
 
-const deleteBallotFile = (
-  election: Election,
-  electionGuardConfig: ElectionGuardConfig
-) => {
-  return fetchJSON<CreateElectionResponse>('/electionguard', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      election,
-      config: electionGuardConfig,
-    } as CreateElectionRequest),
-  })
+const deleteBallotFile = (path: string, fileName: string) => {
+  return fetchJSON<CreateElectionResponse>(
+    `/electionguard/BallotFile?path=${path}&fileName=${fileName}`,
+    {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    }
+  )
 }
 
 const loadBallots = (
@@ -77,7 +76,7 @@ const loadBallots = (
   count: number,
   importFileName: string
 ) => {
-  return fetchJSON<LoadBallotsResponse>('/electionguard', {
+  return fetchJSON<LoadBallotsResponse>('/electionguard/LoadBallots', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -93,7 +92,7 @@ const recordBallots = (
   ballots: EncryptedBallot[] = [],
   castBallotIds: string[] = [],
   spoildBallotIds: string[] = [],
-  exportPath: string = DEFAULT_BALLOT_EXPORT_PATH,
+  exportPath: string | undefined = undefined,
   exportFileNamePrefix: string = DEFAULT_BALLOT_EXPORT_PREFIX
 ) => {
   return fetchJSON<RecordBallotsResponse>('/electionguard/RecordBallots', {
@@ -115,7 +114,7 @@ const tallyVotes = (
   electionMap: ElectionMap,
   trusteeKeys: KeyMap,
   registeredBallotsFileName: string,
-  exportPath: string = DEFAULT_TALLY_EXPORT_PATH,
+  exportPath: string | undefined = undefined,
   exportFileNamePrefix: string = DEFAULT_TALLY_EXPORT_PREFIX
 ) => {
   return fetchJSON<TallyVoteResponse>('/electionguard/TallyVotes', {

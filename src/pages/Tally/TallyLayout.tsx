@@ -1,5 +1,6 @@
 import React, { useState, useContext, useReducer } from 'react'
 import { Route, Switch } from 'react-router-dom'
+import * as GLOBALS from '../../config/globals'
 import BallotRegistrationPage from './BallotRegistrationPage'
 import TallyPage from './TallyPage'
 import NotFoundPage from '../NotFoundPage'
@@ -20,12 +21,23 @@ import { electionGuardApi } from '../../electionguard'
 import LoadCardScreen from './LoadCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
 import trusteeReducer from '../../reducers/trusteeReducer'
+import UsbContext from '../../contexts/usbContext'
+import { defaultExportPath } from '../../components/UsbManager'
 
 const TallyLayout = () => {
   const { electionGuardConfig, electionMap, setTally } = useContext(
     AdminContext
   )
   const { numberOfTrustees, threshold } = electionGuardConfig
+  const {
+    adminDriveMounted,
+    adminDriveMountpoint,
+    connect,
+    disconnect,
+  } = useContext(UsbContext)
+
+  const exportPath = `${adminDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}`
+
   const [castIds, setCastIds] = useState([] as string[])
   const [spoiledIds, setSpoiledIds] = useState([] as string[])
   const [castTrackers, setCastTrackers] = useState([] as string[])
@@ -106,32 +118,40 @@ const TallyLayout = () => {
   const recordAndTallyBallots = async () => {
     try {
       const {
-        registerdBallotsFileName: encryptedBallotsFilename,
+        registeredBallotsFileName,
         spoiledBallotTrackers,
         castedBallotTrackers,
       } = await electionGuardApi.recordBallots(
         electionGuardConfig,
         encryptedBallots,
         castIds,
-        spoiledIds
+        spoiledIds,
+        exportPath
       )
+
+      if (registeredBallotsFileName === undefined) {
+        throw Error('registerdBallotsFileName is undefined')
+      }
 
       const announcedTrusteeKeys = normalizeTrustees(trustees, trusteeKey => {
         const didLoadTrusteeKey = !!trusteeKey.data
         return didLoadTrusteeKey
       })
-      const tallyResult = await electionGuardApi.tallyVotes(
+      const { tallyResults } = await electionGuardApi.tallyVotes(
         electionGuardConfig,
         electionMap,
         announcedTrusteeKeys,
-        encryptedBallotsFilename
+        registeredBallotsFileName,
+        exportPath
       )
 
       setCastTrackers(castedBallotTrackers)
       setSpoiledTrackers(spoiledBallotTrackers)
-      setTally(tallyResult)
+      setTally(tallyResults)
     } catch (error) {
+      console.error('error casting and tallying', error)
       // eslint-disable-next-line no-empty
+      throw error
     }
   }
 

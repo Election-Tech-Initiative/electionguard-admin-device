@@ -7,6 +7,6 @@ export interface TallyVotesRequest {
   electionMap: ElectionMap
   trusteeKeys: KeyMap
   registeredBallotsFileName: string
-  exportPath: string
+  exportPath: string | undefined
   exportFileNamePrefix: string
 }

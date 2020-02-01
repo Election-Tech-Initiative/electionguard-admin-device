@@ -29,13 +29,8 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
 
     try {
       const { history } = props
-      // const encryptedBallots = await read<string[]>(
-      //   storageDriveIndex,
-      //   encryptedBallotsFile
-      // )
-
       const now = new Date()
-      const ballotFileName = `${DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX}${now.getFullYear()}_${now.getMonth()}_${now.getDay()}`
+      const ballotFileName = `${DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX}${now.getFullYear()}_${now.getMonth()}_${now.getDate()}`
       const encryptedBallots = await electionGuardApi.loadBallots(
         0,
         1000,

@@ -6,6 +6,6 @@ export interface RecordBallotsRequest {
   castBallotIds: string[]
   spoildBallotIds: string[]
   electionGuardConfig: ElectionGuardConfig
-  exportPath: string
+  exportPath: string | undefined
   exportFileNamePrefix: string
 }
