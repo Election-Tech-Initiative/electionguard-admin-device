@@ -6,6 +6,8 @@ import {
   ElectionGuardStatus,
 } from '../electionguard'
 
+import { EncryptedBallot } from '../electionguard/models/EncryptedBallot'
+
 // ElectionGuard
 export enum CompletionStatus {
   Warning = -2,
@@ -95,8 +97,8 @@ export interface TallyContextInterface {
   setCastIds: (castIds: string[]) => void
   spoiledIds: string[]
   setSpoiledIds: (spoiledIds: string[]) => void
-  encryptedBallots: string[]
-  setEncryptedBallots: (encryptedBallots: string[]) => void
+  encryptedBallots: EncryptedBallot[]
+  setEncryptedBallots: (encryptedBallots: EncryptedBallot[]) => void
   numberOfTrustees: number
   threshold: number
   trustees: TrusteeKey[]
@@ -122,8 +124,10 @@ export interface SmartcardContextInterface {
 export interface UsbContextInterface {
   adminDriveConnected: boolean
   adminDriveMounted: boolean
+  adminDriveMountpoint: string | undefined
   storageDriveConnected: boolean
   storageDriveMounted: boolean
+  storageDriveMountpoint: string | undefined
   connect: () => void
   disconnect: () => void
   read: <T>(driveId: number, file: string) => Promise<T>

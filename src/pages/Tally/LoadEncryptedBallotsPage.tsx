@@ -8,31 +8,46 @@ import Sidebar from '../../components/Sidebar'
 import LinkButton from '../../components/LinkButton'
 import SidebarFooter from '../../components/SidebarFooter'
 import UsbContext from '../../contexts/usbContext'
+import * as GLOBALS from '../../config/globals'
 import {
-  storageDriveIndex,
-  encryptedBallotsFile,
-} from '../../components/UsbManager'
+  electionGuardApi,
+  DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX,
+} from '../../electionguard'
+import { defaultExportPath } from '../../components/UsbManager'
 
 const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
   const { setEncryptedBallots } = useContext(TallyContext)
   const [isWriting, setIsWriting] = useState(false)
-  const { storageDriveMounted, connect, disconnect, read } = useContext(
-    UsbContext
-  )
+  const {
+    storageDriveMounted,
+    storageDriveMountpoint,
+    connect,
+    disconnect,
+  } = useContext(UsbContext)
   const handleLoad = async () => {
     setIsWriting(true)
 
     try {
       const { history } = props
-      const encryptedBallots = await read<string[]>(
-        storageDriveIndex,
-        encryptedBallotsFile
+      // const encryptedBallots = await read<string[]>(
+      //   storageDriveIndex,
+      //   encryptedBallotsFile
+      // )
+
+      const now = new Date()
+      const ballotFileName = `${DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX}${now.getFullYear()}_${now.getMonth()}_${now.getDay()}`
+      const encryptedBallots = await electionGuardApi.loadBallots(
+        0,
+        1000,
+        `${storageDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}${GLOBALS.PATH_DELIMITER}${ballotFileName}`
       )
+
       setEncryptedBallots(encryptedBallots)
       history.goBack()
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(
-        'Failed to read cast ballots from the drive. They may not exist.',
+        'Failed to read encrypted ballots from the drive. They may not exist.',
         error
       )
     }

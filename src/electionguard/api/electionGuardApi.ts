@@ -12,17 +12,25 @@ import {
 import fetchJSON from './fetchJSON'
 import { KeyMap } from '../models/KeyMap'
 import * as GLOBAL from '../../config/globals'
+// todfo follow the pattern above
+import { InitializeEncryptionResponse } from '../models/InitializeEncryptionResponse'
+import { InitializeEncryptionRequest } from '../models/InitializeEncryptionRequest'
+import { LoadBallotsRequest } from '../models/LoadBallotsRequest'
+import { LoadBallotsResponse } from '../models/LoadBallotsResponse'
+import { EncryptedBallot } from '../models/EncryptedBallot'
 
-export const DEFAULT_BALLOT_EXPORT_PATH = `.${GLOBAL.PATH_DELIMITER}election_results/ballots`
-export const DEFAULT_BALLOT_EXPORT_PREFIX = 'my_election_ballots'
-export const DEFAULT_TALLY_EXPORT_PATH = `.${GLOBAL.PATH_DELIMITER}election_results/tallies`
-export const DEFAULT_TALLY_EXPORT_PREFIX = 'my_election_tallies'
+export const DEFAULT_EXPORT_PATH = `.${GLOBAL.PATH_DELIMITER}data${GLOBAL.PATH_DELIMITER}election_results`
+export const DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX = 'encrypted-ballots_'
+export const DEFAULT_BALLOT_EXPORT_PATH = `${DEFAULT_EXPORT_PATH}${GLOBAL.PATH_DELIMITER}ballots`
+export const DEFAULT_BALLOT_EXPORT_PREFIX = 'registered-ballots'
+export const DEFAULT_TALLY_EXPORT_PATH = `${DEFAULT_EXPORT_PATH}${GLOBAL.PATH_DELIMITER}tallies`
+export const DEFAULT_TALLY_EXPORT_PREFIX = 'tallies'
 
 const createElection = (
   election: Election,
   electionGuardConfig: ElectionGuardConfig
 ) => {
-  return fetchJSON<CreateElectionResponse>('/election', {
+  return fetchJSON<CreateElectionResponse>('/electionguard', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -32,22 +40,70 @@ const createElection = (
   })
 }
 
-const recordBallots = (
+const initializeEncryption = (
+  election: Election,
   electionGuardConfig: ElectionGuardConfig,
-  encryptedBallots: string[] = [],
-  castBallotIndicies: string[] = [],
-  spoiledBallotIndicies: string[] = [],
-  exportPath: string = DEFAULT_BALLOT_EXPORT_PATH,
-  exportFileNamePrefix: string = DEFAULT_BALLOT_EXPORT_PREFIX
+  exportPath: string = DEFAULT_EXPORT_PATH,
+  exportFileName: string = DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX
 ) => {
-  return fetchJSON<RecordBallotsResponse>('/election/RecordBallots', {
+  return fetchJSON<InitializeEncryptionResponse>('/electionguard', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      election,
+      electionGuardConfig,
+      exportPath,
+      exportFileName,
+    } as InitializeEncryptionRequest),
+  })
+}
+
+const deleteBallotFile = (
+  election: Election,
+  electionGuardConfig: ElectionGuardConfig
+) => {
+  return fetchJSON<CreateElectionResponse>('/electionguard', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
+      election,
+      config: electionGuardConfig,
+    } as CreateElectionRequest),
+  })
+}
+
+const loadBallots = (
+  startIndex: number,
+  count: number,
+  importFileName: string
+) => {
+  return fetchJSON<LoadBallotsResponse>('/electionguard', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      startIndex,
+      count,
+      importFileName,
+    } as LoadBallotsRequest),
+  })
+}
+
+const recordBallots = (
+  electionGuardConfig: ElectionGuardConfig,
+  ballots: EncryptedBallot[] = [],
+  castBallotIds: string[] = [],
+  spoildBallotIds: string[] = [],
+  exportPath: string = DEFAULT_BALLOT_EXPORT_PATH,
+  exportFileNamePrefix: string = DEFAULT_BALLOT_EXPORT_PREFIX
+) => {
+  return fetchJSON<RecordBallotsResponse>('/electionguard/RecordBallots', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ballots,
+      castBallotIds,
+      spoildBallotIds,
       electionGuardConfig,
-      encryptedBallots,
-      castBallotIndicies,
-      spoiledBallotIndicies,
       exportPath,
       exportFileNamePrefix,
     } as RecordBallotsRequest),
@@ -58,18 +114,18 @@ const tallyVotes = (
   electionGuardConfig: ElectionGuardConfig,
   electionMap: ElectionMap,
   trusteeKeys: KeyMap,
-  encryptedBallotsFileName: string,
+  registeredBallotsFileName: string,
   exportPath: string = DEFAULT_TALLY_EXPORT_PATH,
   exportFileNamePrefix: string = DEFAULT_TALLY_EXPORT_PREFIX
 ) => {
-  return fetchJSON<TallyVoteResponse>('/election/TallyVotes', {
+  return fetchJSON<TallyVoteResponse>('/electionguard/TallyVotes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       electionGuardConfig,
       electionMap,
       trusteeKeys,
-      encryptedBallotsFileName,
+      registeredBallotsFileName,
       exportPath,
       exportFileNamePrefix,
     } as TallyVotesRequest),
@@ -78,6 +134,9 @@ const tallyVotes = (
 
 export const electionGuardApi = {
   createElection,
+  initializeEncryption,
+  deleteBallotFile,
+  loadBallots,
   recordBallots,
   tallyVotes,
 }

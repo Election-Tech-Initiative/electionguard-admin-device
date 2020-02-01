@@ -6,7 +6,7 @@ export interface TallyVotesRequest {
   electionGuardConfig: ElectionGuardConfig
   electionMap: ElectionMap
   trusteeKeys: KeyMap
-  encryptedBallotsFileName: string
+  registeredBallotsFileName: string
   exportPath: string
   exportFileNamePrefix: string
 }

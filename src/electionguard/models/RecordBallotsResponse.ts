@@ -1,5 +1,5 @@
 export interface RecordBallotsResponse {
-  encryptedBallotsFilename: string
+  registerdBallotsFileName: string
   castedBallotTrackers: string[]
   spoiledBallotTrackers: string[]
 }

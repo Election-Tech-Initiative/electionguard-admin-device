@@ -11,15 +11,18 @@ import UseInterval from '../hooks/useInterval'
 
 export const adminDriveIndex = 0
 export const storageDriveIndex = 1
+export const defaultExportPath = `data${GLOBALS.PATH_DELIMITER}election_results`
 export const electionFile = `data${GLOBALS.PATH_DELIMITER}election.json`
+export const electionConfigFile = `data${GLOBALS.PATH_DELIMITER}election.config.json`
 export const stateFile = `data${GLOBALS.PATH_DELIMITER}election.state.json`
 export const mapFile = `data${GLOBALS.PATH_DELIMITER}election.map.json`
+// todo: remove these? or make the cast/spoil box export in the right format?
 export const spoiledBallotsFile = `data${GLOBALS.PATH_DELIMITER}spoiledBallots.json`
 export const castBallotsFile = `data${GLOBALS.PATH_DELIMITER}castBallots.json`
 export const encryptedBallotsFile = `data${GLOBALS.PATH_DELIMITER}encryptedBallots.json`
-export const tallyFile = `data${GLOBALS.PATH_DELIMITER}tally.json`
-export const trackersFile = `data${GLOBALS.PATH_DELIMITER}trackers.csv`
-export const electionResultsFile = `data${GLOBALS.PATH_DELIMITER}results.csv`
+export const tallyFile = `${defaultExportPath}${GLOBALS.PATH_DELIMITER}tally.json`
+export const trackersFile = `${defaultExportPath}${GLOBALS.PATH_DELIMITER}trackers.csv`
+export const electionResultsFile = `${defaultExportPath}${GLOBALS.PATH_DELIMITER}results.csv`
 
 export const fileNames = {
   electionFile,
@@ -49,6 +52,7 @@ type DriveAvailability = {
   present: boolean
   mounted: boolean
   label: string
+  mountpoint: string | undefined
 }
 
 type UsbDrives = { [driveIndex: number]: DriveAvailability }
@@ -60,21 +64,25 @@ const UsbManager: FC<Props> = (props: Props) => {
       present: false,
       mounted: false,
       label: 'admin_drive',
+      mountpoint: undefined,
     },
     1: {
       id: 1,
       present: false,
       mounted: false,
       label: 'storage_drive',
+      mountpoint: undefined,
     },
   } as UsbDrives)
   const [isRunning, setIsRunning] = useState(false)
   const adminDriveConnected = usbDrives[adminDriveIndex].present || !!props.test
   const adminDriveMounted = usbDrives[adminDriveIndex].mounted || !!props.test
+  const adminDriveMountpoint = usbDrives[adminDriveIndex].mountpoint
   const storageDriveConnected =
     usbDrives[storageDriveIndex].present || !!props.test
   const storageDriveMounted =
     usbDrives[storageDriveIndex].mounted || !!props.test
+  const storageDriveMountpoint = usbDrives[storageDriveIndex].mountpoint
   const read = async <T extends unknown>(
     driveId: number,
     file: string
@@ -128,12 +136,14 @@ const UsbManager: FC<Props> = (props: Props) => {
             present: false,
             mounted: false,
             label: 'admin_drive',
+            mountpoint: undefined,
           },
           1: {
             id: 1,
             present: false,
             mounted: false,
             label: 'storage_drive',
+            mountpoint: undefined,
           },
         }
 
@@ -142,6 +152,10 @@ const UsbManager: FC<Props> = (props: Props) => {
           currentDrives[index].present = true
           currentDrives[index].mounted =
             drive.mountpoints && drive.mountpoints.length > 0
+          currentDrives[index].mountpoint =
+            drive.mountpoints && drive.mountpoints.length > 0
+              ? drive.mountpoints[0]
+              : undefined
         })
 
         const keys = Object.keys(currentDrives)
@@ -164,7 +178,8 @@ const UsbManager: FC<Props> = (props: Props) => {
           const key = +keys[i]
           const driveStateChanged =
             currentDrives[key].mounted !== usbDrives[key].mounted ||
-            currentDrives[key].present !== usbDrives[key].present
+            currentDrives[key].present !== usbDrives[key].present ||
+            currentDrives[key].mountpoint !== usbDrives[key].mountpoint
           if (driveStateChanged) {
             setUsbDrives(currentDrives)
             break
@@ -194,6 +209,7 @@ const UsbManager: FC<Props> = (props: Props) => {
       [driveId]: {
         ...usbDrives[driveId],
         mounted: false,
+        mountpoint: undefined,
       },
     })
   }
@@ -203,8 +219,10 @@ const UsbManager: FC<Props> = (props: Props) => {
       value={{
         adminDriveConnected,
         adminDriveMounted,
+        adminDriveMountpoint,
         storageDriveConnected,
         storageDriveMounted,
+        storageDriveMountpoint,
         read,
         write,
         connect,

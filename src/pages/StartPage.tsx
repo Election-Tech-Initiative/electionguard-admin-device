@@ -78,6 +78,17 @@ const StartPage = () => {
         </p>
         <p>
           <LinkButton
+            primary={electionGuardStatus === ElectionGuardStatus.KeyCeremony}
+            disabled={electionGuardStatus !== ElectionGuardStatus.KeyCeremony}
+            to="/setup-keys"
+            id="setup"
+            aria-label="Select Continue to Continue and Election In Progress"
+          >
+            Continue Election
+          </LinkButton>
+        </p>
+        <p>
+          <LinkButton
             primary={
               electionGuardStatus === ElectionGuardStatus.TallyVotes ||
               electionGuardStatus === ElectionGuardStatus.Complete

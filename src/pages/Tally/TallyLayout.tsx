@@ -9,6 +9,7 @@ import {
   TrusteeKey,
   CompletionStatus,
 } from '../../config/types'
+import { EncryptedBallot } from '../../electionguard/models/EncryptedBallot'
 import AdminContext from '../../contexts/adminContext'
 import LoadTrusteePage from './LoadTrusteePage'
 import LoadCastBallotsPage from './LoadCastBallotsPage'
@@ -29,7 +30,9 @@ const TallyLayout = () => {
   const [spoiledIds, setSpoiledIds] = useState([] as string[])
   const [castTrackers, setCastTrackers] = useState([] as string[])
   const [spoiledTrackers, setSpoiledTrackers] = useState([] as string[])
-  const [encryptedBallots, setEncryptedBallots] = useState([] as string[])
+  const [encryptedBallots, setEncryptedBallots] = useState(
+    [] as EncryptedBallot[]
+  )
   const [remainingThreshold, setRemainingThreshold] = useState(() => threshold)
   const [trustees, trusteesDispatch] = useReducer(
     trusteeReducer,
@@ -103,7 +106,7 @@ const TallyLayout = () => {
   const recordAndTallyBallots = async () => {
     try {
       const {
-        encryptedBallotsFilename,
+        registerdBallotsFileName: encryptedBallotsFilename,
         spoiledBallotTrackers,
         castedBallotTrackers,
       } = await electionGuardApi.recordBallots(
