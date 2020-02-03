@@ -49,6 +49,11 @@ const StartPage = (props: RouteComponentProps) => {
   const tallyComplete =
     tally && electionGuardStatus === ElectionGuardStatus.Complete
 
+  const setupElection = () => {
+    setElectionGuardStatus(ElectionGuardStatus.KeyCeremony)
+    props.history.push('/setup-keys')
+  }
+
   const loadElectionConfig = () => {
     setElectionGuardConfig(existingElectionGuardConfig)
     setElectionGuardStatus(ElectionGuardStatus.KeyCeremony)
@@ -81,9 +86,8 @@ const StartPage = (props: RouteComponentProps) => {
       >
         <p>
           <LinkButton
-            primary={electionGuardStatus === ElectionGuardStatus.KeyCeremony}
-            disabled={electionGuardStatus !== ElectionGuardStatus.KeyCeremony}
-            to="/setup-keys"
+            primary
+            onPress={setupElection}
             id="setup"
             aria-label="Select Setup to Setup Election"
           >
