@@ -1,6 +1,7 @@
 import fetchMock from 'fetch-mock'
 import drives from './responses/drives.json'
 import election from './responses/election.json'
+import config from './responses/election.config.json'
 import castBallots from './responses/castBallots.json'
 import spoiledBallots from './responses/spoiledBallots.json'
 import encryptedBallots from './responses/encryptedBallots.json'
@@ -26,18 +27,10 @@ export const mockUsbApi = () => {
     return JSON.stringify(result)
   })
 
+  // Admin Drive
   fetchMock.post(`/usb/${drives[0].id}/mount?label=admin_drive`, () => {
     adminDriveMounted = true
-    return {
-      success: true,
-    }
-  })
-
-  fetchMock.post(`/usb/${drives[1].id}/mount?label=storage_drive`, () => {
-    storageDriveMounted = true
-    return {
-      success: true,
-    }
+    return postSuccess
   })
 
   fetchMock.get(`/usb/${drives[0].id}/file?path=data/election.json`, () => {
@@ -70,29 +63,6 @@ export const mockUsbApi = () => {
     postSuccess
   )
 
-  fetchMock.post(
-    `/usb/${drives[1].id}/file?path=data/election.state.json`,
-    postSuccess
-  )
-
-  fetchMock.get(
-    `/usb/${drives[1].id}/file?path=data/encryptedBallots.json`,
-    () => {
-      return JSON.stringify(encryptedBallots)
-    }
-  )
-
-  fetchMock.get(
-    `/usb/${drives[1].id}/file?path=data/spoiledBallots.json`,
-    () => {
-      return JSON.stringify(spoiledBallots)
-    }
-  )
-
-  fetchMock.get(`/usb/${drives[1].id}/file?path=data/castBallots.json`, () => {
-    return JSON.stringify(castBallots)
-  })
-
   fetchMock.get(`/usb/${drives[0].id}/file?path=data/tally.json`, () => {
     return JSON.stringify(tally)
   })
@@ -104,12 +74,6 @@ export const mockUsbApi = () => {
 
   fetchMock.post(`/usb/${drives[0].id}/unmount`, () => {
     adminDriveMounted = false
-    return postSuccess
-  })
-
-  fetchMock.post(`/usb/${drives[1].id}/unmount`, () => {
-    storageDriveMounted = false
-    storageDriveConnected = false // Not reality but to simulate pulling drive
     return postSuccess
   })
 
@@ -128,17 +92,55 @@ export const mockUsbApi = () => {
     {}
   )
 
-  fetchMock.get(`/usb/${drives[0].id}/file?path=data/election.config.json`, {})
-
-  fetchMock.post(
-    `/usb/${drives[1].id}/file?path=data/election.config.json`,
-    postSuccess
+  fetchMock.get(
+    `/usb/${drives[0].id}/file?path=data/election.config.json`,
+    JSON.stringify(config)
   )
+
+  // Storage Drive
+  fetchMock.post(`/usb/${drives[1].id}/mount?label=storage_drive`, () => {
+    storageDriveMounted = true
+    return postSuccess
+  })
+
+  fetchMock.post(`/usb/${drives[1].id}/file?path=data/election.config.json`, {
+    success: true,
+    body: JSON.stringify(config),
+  })
 
   fetchMock.post(
     `/usb/${drives[1].id}/path=data/election.config.json`,
     postSuccess
   )
+
+  fetchMock.post(
+    `/usb/${drives[1].id}/file?path=data/election.state.json`,
+    postSuccess
+  )
+
+  fetchMock.get(
+    `/usb/${drives[1].id}/file?path=data/spoiledBallots.json`,
+    () => {
+      return JSON.stringify(spoiledBallots)
+    }
+  )
+
+  fetchMock.get(`/usb/${drives[1].id}/file?path=data/castBallots.json`, () => {
+    return JSON.stringify(castBallots)
+  })
+
+  fetchMock.get(
+    `/usb/${drives[1].id}/file?path=data/encryptedBallots.json`,
+    () => {
+      return JSON.stringify(encryptedBallots)
+    }
+  )
+
+  fetchMock.post(`/usb/${drives[1].id}/unmount`, () => {
+    storageDriveMounted = false
+    storageDriveConnected = false // Not reality but to simulate pulling drive
+    return postSuccess
+  })
 }
 
 export default mockUsbApi

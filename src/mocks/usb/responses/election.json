@@ -27,8 +27,8 @@
   "parties": [
     {
       "id": "0",
-      "name": "",
-      "abbrev": "J"
+      "name": "FAKE",
+      "abbrev": "F"
     }
   ],
   "contests": [
@@ -48,7 +48,7 @@
         {
           "id": "hildebrand",
           "name": "Ashley Hildebrand",
-          "partyId": "0"
+          "partyId": "1"
         },
         {
           "id": "locke",

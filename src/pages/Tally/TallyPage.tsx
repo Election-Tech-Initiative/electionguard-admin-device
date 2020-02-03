@@ -125,11 +125,11 @@ const renderCandidateTally = (
       <ul>
         {contest.candidates.map((candidate, index) => (
           <Selection key={candidate.id}>
-            {candidate.name}(
-            {parties
-              ? parties.filter(x => x.id === candidate.partyId)[0].name
+            {candidate.name}
+            {parties.filter(x => x.id === candidate.partyId).length > 0
+              ? `(${parties.filter(x => x.id === candidate.partyId)[0].name})`
               : ''}
-            ) : {tally.candidates[index]}
+            : {tally.candidates[index]}
           </Selection>
         ))}
         {contest.allowWriteIns ? (

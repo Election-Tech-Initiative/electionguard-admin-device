@@ -125,7 +125,7 @@ const TallyLayout = () => {
       )
 
       if (registeredBallotsFileName === undefined) {
-        throw Error('registerdBallotsFileName is undefined')
+        throw Error('registeredBallotsFileName is undefined')
       }
 
       const announcedTrusteeKeys = normalizeTrustees(trustees, trusteeKey => {
@@ -139,6 +139,10 @@ const TallyLayout = () => {
         registeredBallotsFileName,
         exportPath
       )
+
+      if (tallyResults === undefined) {
+        throw Error('tallyResults is undefined')
+      }
 
       setCastTrackers(castedBallotTrackers)
       setSpoiledTrackers(spoiledBallotTrackers)

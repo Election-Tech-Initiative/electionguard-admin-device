@@ -1,5 +1,6 @@
 import fetchMock, { MockOptionsMethodPost } from 'fetch-mock'
 import createElectionResponse from './responses/create_election_response.json'
+import loadBallotsResponse from './responses/load_ballots_response.json'
 import recordBallotsResponse from './responses/record_ballots_response.json'
 import tallyVotesResponse from './responses/tally_votes_response.json'
 import { ElectionGuardConfig } from '../../electionguard'
@@ -27,6 +28,10 @@ export const mockElectionGuardApi = () => {
       config.numberOfTrustees
     )
     return JSON.stringify({ ...createElectionResponse, trusteeKeys: newKeys })
+  })
+
+  fetchMock.post('/electionguard/LoadBallots', () => {
+    return JSON.stringify(loadBallotsResponse)
   })
 
   fetchMock.post('/electionguard/RecordBallots', () => {
