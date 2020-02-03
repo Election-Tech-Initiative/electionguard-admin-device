@@ -13,7 +13,10 @@ import {
   electionGuardApi,
   DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX,
 } from '../../electionguard'
-import { defaultExportPath } from '../../components/UsbManager'
+import {
+  defaultExportPath,
+  storageDriveIndex,
+} from '../../components/UsbManager'
 
 const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
   const { setEncryptedBallots } = useContext(TallyContext)
@@ -23,6 +26,7 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
     storageDriveMountpoint,
     connect,
     disconnect,
+    eject,
   } = useContext(UsbContext)
   const handleLoad = async () => {
     setIsWriting(true)
@@ -38,6 +42,7 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
       )
 
       setEncryptedBallots(encryptedBallots)
+      await eject(storageDriveIndex)
       history.goBack()
     } catch (error) {
       // eslint-disable-next-line no-console

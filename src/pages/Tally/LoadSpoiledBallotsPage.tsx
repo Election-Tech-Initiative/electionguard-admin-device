@@ -16,7 +16,7 @@ import {
 const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
   const { setSpoiledIds } = useContext(TallyContext)
   const [isWriting, setIsWriting] = useState(false)
-  const { storageDriveMounted, connect, disconnect, read } = useContext(
+  const { storageDriveMounted, connect, disconnect, read, eject } = useContext(
     UsbContext
   )
   const handleLoad = async () => {
@@ -29,8 +29,10 @@ const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
         spoiledBallotsFile
       )
       setSpoiledIds(spoiledBallots)
+      await eject(storageDriveIndex)
       history.goBack()
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(
         'Failed to read spoiled ballots from the drive. They may not exist.',
         error
