@@ -29,12 +29,7 @@ const TallyLayout = () => {
     AdminContext
   )
   const { numberOfTrustees, threshold } = electionGuardConfig
-  const {
-    adminDriveMounted,
-    adminDriveMountpoint,
-    connect,
-    disconnect,
-  } = useContext(UsbContext)
+  const { adminDriveMountpoint } = useContext(UsbContext)
 
   const exportPath = `${adminDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}`
 
@@ -149,6 +144,7 @@ const TallyLayout = () => {
       setSpoiledTrackers(spoiledBallotTrackers)
       setTally(tallyResults)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('error casting and tallying', error)
       // eslint-disable-next-line no-empty
       throw error
