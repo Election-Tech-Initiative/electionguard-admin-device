@@ -33,7 +33,7 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
       const ballotFileName = `${DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX}${now.getFullYear()}_${now.getMonth()}_${now.getDate()}`
       const encryptedBallots = await electionGuardApi.loadBallots(
         0,
-        1000,
+        GLOBALS.MAX_BALLOT_PAYLOAD,
         `${storageDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}${GLOBALS.PATH_DELIMITER}${ballotFileName}`
       )
 
