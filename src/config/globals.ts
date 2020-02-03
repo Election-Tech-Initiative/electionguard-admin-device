@@ -7,6 +7,7 @@ export const LOCKED_ICON = '🔒'
 export const WARNING_ICON = '⚠️'
 export const MAX_TRUSTEES = 5
 export const MAX_ENCRYPTERS = 5
+export const MAX_BALLOT_PAYLOAD = 1628
 export const FONT_SIZES = [22, 30, 36, 48]
 export const DEFAULT_FONT_SIZE = 1
 export const LARGE_DISPLAY_FONT_SIZE = 3
