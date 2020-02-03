@@ -75,16 +75,8 @@ export class App extends React.Component<RouteComponentProps, State> {
     this.props.history.push('/')
   }
 
-  public resetElection = (path = '/') => {
-    this.setState(
-      {
-        ...initialState,
-        election: this.getElection(),
-      },
-      () => {
-        this.props.history.push(path)
-      }
-    )
+  public resetElection = () => {
+    this.reset()
   }
 
   public getElection = (): OptionalElection => {

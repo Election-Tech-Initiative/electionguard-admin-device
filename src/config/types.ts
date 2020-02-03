@@ -63,7 +63,7 @@ export type EventTargetFunction = (event: React.FormEvent<EventTarget>) => void
 export interface AdminContextInterface {
   readonly election: Election
   setElection: (election: Election) => void
-  resetElection: (path?: string) => void
+  resetElection: () => void
   readonly electionMap: ElectionMap
   setElectionMap: (electionMap: ElectionMap) => void
   tally: Tally
