@@ -122,6 +122,23 @@ export const mockUsbApi = () => {
     success: true,
     body: JSON.stringify(election),
   })
+
+  fetchMock.get(
+    `/usb/${drives[0].id}/file?path=data/election_results/tally.json`,
+    {}
+  )
+
+  fetchMock.get(`/usb/${drives[0].id}/file?path=data/election.config.json`, {})
+
+  fetchMock.post(
+    `/usb/${drives[1].id}/file?path=data/election.config.json`,
+    postSuccess
+  )
+
+  fetchMock.post(
+    `/usb/${drives[1].id}/path=data/election.config.json`,
+    postSuccess
+  )
 }
 
 export default mockUsbApi

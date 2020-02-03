@@ -16,7 +16,7 @@ const removeNumberValues = (object: { [key: string]: string }, max: number) => {
 }
 
 export const mockElectionGuardApi = () => {
-  fetchMock.post('/election', (url, options: MockOptionsMethodPost) => {
+  fetchMock.post('/electionguard', (url, options: MockOptionsMethodPost) => {
     const request = JSON.parse((options.body as unknown) as string)
     const config = request.config as ElectionGuardConfig
     createElectionResponse.electionGuardConfig.numberOfTrustees =
@@ -29,11 +29,11 @@ export const mockElectionGuardApi = () => {
     return JSON.stringify({ ...createElectionResponse, trusteeKeys: newKeys })
   })
 
-  fetchMock.post('/election/RecordBallots', () => {
+  fetchMock.post('/electionguard/RecordBallots', () => {
     return JSON.stringify(recordBallotsResponse)
   })
 
-  fetchMock.post('/election/TallyVotes', () => {
+  fetchMock.post('/electionguard/TallyVotes', () => {
     return JSON.stringify(tallyVotesResponse)
   })
 }
