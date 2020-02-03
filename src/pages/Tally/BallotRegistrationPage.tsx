@@ -18,18 +18,26 @@ const Header = styled.div`
 `
 
 const BallotListButton = (
-  list: string[],
   label: string,
-  onPress: () => void
+  onPress: () => void,
+  list?: string[]
 ) => {
-  const empty = list.length <= 0
+  const warning = list === undefined || list.length <= 0
+  let status = CompletionStatus.Error
+  if (list !== undefined) {
+    status = CompletionStatus.Warning
+    if (!warning) {
+      status = CompletionStatus.Complete
+    }
+  }
+
   return (
     <StatusButton
       onPress={() => onPress()}
-      icon={empty ? WARNING_ICON : CHECK_ICON}
+      icon={warning ? WARNING_ICON : CHECK_ICON}
       statusLabel={label}
       actionLabel="Upload"
-      status={empty ? CompletionStatus.Error : CompletionStatus.Complete}
+      status={status}
     />
   )
 }
@@ -42,9 +50,24 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
     encryptedBallots,
     recordAndTallyBallots,
   } = useContext(TallyContext)
-  const ready = (): boolean => {
+
+  const disable = (): boolean => {
     return (
-      // todo check cast + spoil = ballots
+      castIds === undefined ||
+      spoiledIds === undefined ||
+      encryptedBallots === undefined
+    )
+  }
+
+  const complete = (): boolean => {
+    if (
+      castIds === undefined ||
+      spoiledIds === undefined ||
+      encryptedBallots === undefined
+    ) {
+      return false
+    }
+    return (
       castIds.length > 0 && spoiledIds.length > 0 && encryptedBallots.length > 0
     )
   }
@@ -79,15 +102,19 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
             </p>
             <StatusButtonGrid>
               {BallotListButton(
-                encryptedBallots.map(i => i.id),
                 'Encrypted Ballots',
-                () => navigate('/encrypted')
+                () => navigate('/encrypted'),
+                encryptedBallots ? encryptedBallots.map(i => i.id) : undefined
               )}
-              {BallotListButton(castIds, 'Cast Ballot Ids', () =>
-                navigate('/cast')
+              {BallotListButton(
+                'Cast Ballot Ids',
+                () => navigate('/cast'),
+                castIds
               )}
-              {BallotListButton(spoiledIds, 'Spoiled Ballot Ids', () =>
-                navigate('/spoiled')
+              {BallotListButton(
+                'Spoiled Ballot Ids',
+                () => navigate('/spoiled'),
+                spoiledIds
               )}
             </StatusButtonGrid>
           </Prose>
@@ -97,8 +124,8 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
         <p>
           <LinkButton
             big
-            primary={ready() && !isRecordingBallots}
-            disabled={!ready() || isRecordingBallots}
+            primary={complete() && !isRecordingBallots}
+            disabled={disable() || isRecordingBallots}
             id="next"
             onPress={tallyVotes}
           >

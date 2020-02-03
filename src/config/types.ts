@@ -97,11 +97,11 @@ export interface CeremonyContextInterface {
 }
 
 export interface TallyContextInterface {
-  castIds: string[]
+  castIds?: string[]
   setCastIds: (castIds: string[]) => void
-  spoiledIds: string[]
+  spoiledIds?: string[]
   setSpoiledIds: (spoiledIds: string[]) => void
-  encryptedBallots: EncryptedBallot[]
+  encryptedBallots?: EncryptedBallot[]
   setEncryptedBallots: (encryptedBallots: EncryptedBallot[]) => void
   numberOfTrustees: number
   threshold: number

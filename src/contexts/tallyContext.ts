@@ -2,11 +2,11 @@ import { createContext } from 'react'
 import { TallyContextInterface } from '../config/types'
 
 const context: TallyContextInterface = {
-  castIds: [],
+  castIds: undefined,
   setCastIds: () => undefined,
-  spoiledIds: [],
+  spoiledIds: undefined,
   setSpoiledIds: () => undefined,
-  encryptedBallots: [],
+  encryptedBallots: undefined,
   setEncryptedBallots: () => undefined,
   numberOfTrustees: 0,
   threshold: 0,

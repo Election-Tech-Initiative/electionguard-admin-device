@@ -33,12 +33,14 @@ const TallyLayout = () => {
 
   const exportPath = `${adminDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}`
 
-  const [castIds, setCastIds] = useState([] as string[])
-  const [spoiledIds, setSpoiledIds] = useState([] as string[])
+  const [castIds, setCastIds] = useState((undefined as unknown) as string[])
+  const [spoiledIds, setSpoiledIds] = useState(
+    (undefined as unknown) as string[]
+  )
   const [castTrackers, setCastTrackers] = useState([] as string[])
   const [spoiledTrackers, setSpoiledTrackers] = useState([] as string[])
   const [encryptedBallots, setEncryptedBallots] = useState(
-    [] as EncryptedBallot[]
+    (undefined as unknown) as EncryptedBallot[]
   )
   const [remainingThreshold, setRemainingThreshold] = useState(() => threshold)
   const [trustees, trusteesDispatch] = useReducer(
