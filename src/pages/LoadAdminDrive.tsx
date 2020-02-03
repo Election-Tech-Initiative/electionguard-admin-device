@@ -79,7 +79,9 @@ const LoadAdminDrive = () => {
         )
         setExistingElectionGuardConfig(currentState)
       } catch (error) {
-        setExistingElectionGuardConfig(undefined)
+        setExistingElectionGuardConfig(
+          (undefined as unknown) as ElectionGuardConfig
+        )
       }
     }
 

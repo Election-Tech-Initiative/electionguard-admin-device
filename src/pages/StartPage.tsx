@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext } from 'react'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import AdminContext from '../contexts/adminContext'
 import Main, { MainChild } from '../components/Main'
@@ -19,12 +20,14 @@ const LogoImage = styled.img`
   max-width: 12rem;
 `
 
-const StartPage = () => {
+const StartPage = (props: RouteComponentProps) => {
   const { adminDriveMounted } = useContext(UsbContext)
   const {
     election,
     electionGuardStatus,
+    setElectionGuardConfig,
     existingElectionGuardConfig,
+    setElectionGuardStatus,
     tally,
   } = useContext(AdminContext)
   const getElectionGuardStatus = () => {
@@ -45,6 +48,12 @@ const StartPage = () => {
 
   const tallyComplete =
     tally && electionGuardStatus === ElectionGuardStatus.Complete
+
+  const loadElectionConfig = () => {
+    setElectionGuardConfig(existingElectionGuardConfig)
+    setElectionGuardStatus(ElectionGuardStatus.KeyCeremony)
+    props.history.push('/setup-encrypters')
+  }
 
   return (
     <Screen>
@@ -85,8 +94,8 @@ const StartPage = () => {
           <LinkButton
             primary={existingElectionGuardConfig !== undefined}
             disabled={existingElectionGuardConfig === undefined}
-            to="/setup-encrypters"
-            id="encrypters"
+            onPress={loadElectionConfig}
+            id="load"
             aria-label="Load an Existing Election"
           >
             Load Election
@@ -116,4 +125,4 @@ const StartPage = () => {
   )
 }
 
-export default StartPage
+export default withRouter(StartPage)

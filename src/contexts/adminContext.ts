@@ -22,7 +22,7 @@ const context: AdminContextInterface = {
   setElectionGuardStatus: () => undefined,
   electionGuardConfig: (undefined as unknown) as ElectionGuardConfig,
   setElectionGuardConfig: () => undefined,
-  existingElectionGuardConfig: undefined,
+  existingElectionGuardConfig: (undefined as unknown) as ElectionGuardConfig,
   setExistingElectionGuardConfig: () => undefined,
   userSettings: { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
   setUserSettings: () => undefined,
