@@ -115,7 +115,7 @@ const UsbManager: FC<Props> = (props: Props) => {
     directory: string
   ): Promise<void> => {
     await fetchJSON<UsbDirectoryResult>(
-      `usb/${driveId}/directory?path=${directory}`,
+      `/usb/${driveId}/directory?path=${directory}`,
       {
         method: 'POST',
       }
@@ -132,7 +132,7 @@ const UsbManager: FC<Props> = (props: Props) => {
 
   const mount = async (driveId: number, label: string): Promise<boolean> => {
     const mountResult = await fetchJSON<UsbMountResult>(
-      `usb/${driveId}/mount?label=${label}`,
+      `/usb/${driveId}/mount?label=${label}`,
       {
         method: 'POST',
       }
