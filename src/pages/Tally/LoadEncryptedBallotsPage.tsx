@@ -38,7 +38,7 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
       const encryptedBallots = await electionGuardApi.loadBallots(
         0,
         GLOBALS.MAX_BALLOT_PAYLOAD,
-        `${storageDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}${GLOBALS.PATH_DELIMITER}${ballotFileName}`
+        `${storageDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}${ballotFileName}`
       )
 
       setEncryptedBallots(encryptedBallots)
