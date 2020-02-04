@@ -141,6 +141,7 @@ export interface UsbContextInterface {
     data: object | string
   ) => Promise<UsbWriteResult>
   eject: (driveId: number) => Promise<void>
+  createDirectory: (driveId: number, directory: string) => Promise<void>
 }
 
 export interface UsbWriteResult {
@@ -154,6 +155,11 @@ export interface UsbMountResult {
 }
 
 export interface UsbUnmountResult {
+  success: boolean
+  message: string
+}
+
+export interface UsbDirectoryResult {
   success: boolean
   message: string
 }

@@ -9,6 +9,7 @@ import LinkButton from '../../components/LinkButton'
 import SidebarFooter from '../../components/SidebarFooter'
 import UsbContext from '../../contexts/usbContext'
 import {
+  defaultDirectory,
   storageDriveIndex,
   electionConfigFile,
   electionFile,
@@ -22,9 +23,14 @@ interface EncrypterParams {
 const SaveDriveScreen = (props: RouteComponentProps<EncrypterParams>) => {
   const [isWriting, setIsWriting] = useState(false)
   const { election, electionGuardConfig } = useContext(AdminContext)
-  const { storageDriveMounted, connect, disconnect, eject, write } = useContext(
-    UsbContext
-  )
+  const {
+    storageDriveMounted,
+    connect,
+    disconnect,
+    eject,
+    write,
+    createDirectory,
+  } = useContext(UsbContext)
   const { encrypterId } = props.match.params
   const { claimEncrypterDrive } = useContext(CeremonyContext)
 
@@ -42,6 +48,8 @@ const SaveDriveScreen = (props: RouteComponentProps<EncrypterParams>) => {
         console.log(JSON.stringify(configResult))
         throw new Error(configResult.message)
       }
+
+      await createDirectory(storageDriveIndex, defaultDirectory)
 
       const electionResult = await write(
         storageDriveIndex,

@@ -5,6 +5,7 @@ import {
   UsbWriteResult,
   UsbMountResult,
   UsbUnmountResult,
+  UsbDirectoryResult,
 } from '../config/types'
 import * as GLOBALS from '../config/globals'
 import UseInterval from '../hooks/useInterval'
@@ -107,6 +108,18 @@ const UsbManager: FC<Props> = (props: Props) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
+  }
+
+  const createDirectory = async (
+    driveId: number,
+    directory: string
+  ): Promise<void> => {
+    await fetchJSON<UsbDirectoryResult>(
+      `usb/${driveId}/directory?path=${directory}`,
+      {
+        method: 'POST',
+      }
+    )
   }
 
   const connect = () => {
@@ -229,6 +242,7 @@ const UsbManager: FC<Props> = (props: Props) => {
         connect,
         disconnect,
         eject,
+        createDirectory,
       }}
     >
       {props.children}

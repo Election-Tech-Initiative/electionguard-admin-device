@@ -13,6 +13,7 @@ const context: UsbContextInterface = {
   read: <T>() => Promise.resolve({} as T),
   write: () => Promise.resolve({} as UsbWriteResult),
   eject: async () => {},
+  createDirectory: async () => {},
 }
 
 const UsbContext = createContext(context)
