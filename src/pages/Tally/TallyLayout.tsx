@@ -22,7 +22,7 @@ import LoadCardScreen from './LoadCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
 import trusteeReducer from '../../reducers/trusteeReducer'
 import UsbContext from '../../contexts/usbContext'
-import { defaultExportPath } from '../../components/UsbManager'
+import { defaultExportPathNoDelimeter } from '../../components/UsbManager'
 
 const TallyLayout = () => {
   const { electionGuardConfig, electionMap, setTally } = useContext(
@@ -31,7 +31,7 @@ const TallyLayout = () => {
   const { numberOfTrustees, threshold } = electionGuardConfig
   const { adminDriveMountpoint } = useContext(UsbContext)
 
-  const exportPath = `${adminDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}`
+  const exportPath = `${adminDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPathNoDelimeter}`
 
   const [castIds, setCastIds] = useState((undefined as unknown) as string[])
   const [spoiledIds, setSpoiledIds] = useState(

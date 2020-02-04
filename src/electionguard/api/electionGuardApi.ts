@@ -74,7 +74,9 @@ const deleteBallotFile = (path: string, fileName: string) => {
 const loadBallots = (
   startIndex: number,
   count: number,
-  importFileName: string
+  importFileName: string,
+  electionGuardConfig: ElectionGuardConfig,
+  importPath: string
 ) => {
   return fetchJSON<LoadBallotsResponse>('/electionguard/LoadBallots', {
     method: 'POST',
@@ -83,6 +85,8 @@ const loadBallots = (
       startIndex,
       count,
       importFileName,
+      electionGuardConfig,
+      importPath,
     } as LoadBallotsRequest),
   })
 }

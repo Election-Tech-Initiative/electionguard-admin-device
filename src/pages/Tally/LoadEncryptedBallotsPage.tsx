@@ -14,12 +14,14 @@ import {
   DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX,
 } from '../../electionguard'
 import {
-  defaultExportPath,
+  defaultExportPathNoDelimeter,
   storageDriveIndex,
 } from '../../components/UsbManager'
+import AdminContext from '../../contexts/adminContext'
 
 const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
   const { setEncryptedBallots } = useContext(TallyContext)
+  const { electionGuardConfig } = useContext(AdminContext)
   const [isWriting, setIsWriting] = useState(false)
   const {
     storageDriveMounted,
@@ -34,12 +36,14 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
     try {
       const { history } = props
       const now = new Date()
-      const ballotFileName = `${DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX}${now.getFullYear()}_${now.getMonth() +
-        1}_${now.getDate()}`
+      const realMonth = now.getMonth() + 1
+      const ballotFileName = `${DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX}${now.getFullYear()}_${realMonth}_${now.getDate()}`
       const encryptedBallots = await electionGuardApi.loadBallots(
         0,
         GLOBALS.MAX_BALLOT_PAYLOAD,
-        `${storageDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPath}${ballotFileName}`
+        `${ballotFileName}`,
+        electionGuardConfig,
+        `${storageDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPathNoDelimeter}`
       )
 
       setEncryptedBallots(encryptedBallots)

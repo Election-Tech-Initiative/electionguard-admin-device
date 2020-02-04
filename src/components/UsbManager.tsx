@@ -15,6 +15,7 @@ export const storageDriveIndex = 1
 export const defaultDirectory = 'data'
 export const delimitedPath = `${defaultDirectory}${GLOBALS.PATH_DELIMITER}`
 export const defaultExportPath = `${delimitedPath}election_results${GLOBALS.PATH_DELIMITER}`
+export const defaultExportPathNoDelimeter = `${delimitedPath}election_results`
 export const electionFile = `${delimitedPath}election.json`
 export const electionConfigFile = `${delimitedPath}election.config.json`
 export const stateFile = `${delimitedPath}election.state.json`
