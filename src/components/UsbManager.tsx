@@ -11,18 +11,19 @@ import UseInterval from '../hooks/useInterval'
 
 export const adminDriveIndex = 0
 export const storageDriveIndex = 1
-export const defaultExportPath = `data${GLOBALS.PATH_DELIMITER}election_results`
-export const electionFile = `data${GLOBALS.PATH_DELIMITER}election.json`
-export const electionConfigFile = `data${GLOBALS.PATH_DELIMITER}election.config.json`
-export const stateFile = `data${GLOBALS.PATH_DELIMITER}election.state.json`
-export const mapFile = `data${GLOBALS.PATH_DELIMITER}election.map.json`
-// todo: remove these? or make the cast/spoil box export in the right format?
-export const spoiledBallotsFile = `data${GLOBALS.PATH_DELIMITER}spoiledBallots.json`
-export const castBallotsFile = `data${GLOBALS.PATH_DELIMITER}castBallots.json`
-export const encryptedBallotsFile = `data${GLOBALS.PATH_DELIMITER}encryptedBallots.json`
-export const tallyFile = `${defaultExportPath}${GLOBALS.PATH_DELIMITER}tally.json`
-export const trackersFile = `${defaultExportPath}${GLOBALS.PATH_DELIMITER}trackers.csv`
-export const electionResultsFile = `${defaultExportPath}${GLOBALS.PATH_DELIMITER}results.csv`
+export const defaultDirectory = 'data'
+export const delimitedPath = `${defaultDirectory}${GLOBALS.PATH_DELIMITER}`
+export const defaultExportPath = `${delimitedPath}election_results${GLOBALS.PATH_DELIMITER}`
+export const electionFile = `${delimitedPath}election.json`
+export const electionConfigFile = `${delimitedPath}election.config.json`
+export const stateFile = `${delimitedPath}election.state.json`
+export const mapFile = `${delimitedPath}election.map.json`
+export const spoiledBallotsFile = `${delimitedPath}spoiledBallots.json`
+export const castBallotsFile = `${delimitedPath}castBallots.json`
+export const encryptedBallotsFile = `${delimitedPath}encryptedBallots.json`
+export const tallyFile = `${defaultExportPath}tally.json`
+export const trackersFile = `${defaultExportPath}trackers.csv`
+export const electionResultsFile = `${defaultExportPath}results.csv`
 
 export const fileNames = {
   electionFile,
