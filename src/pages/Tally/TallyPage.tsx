@@ -147,13 +147,16 @@ const renderContest = (
   tally: CandidateVoteTally | YesNoVoteTally,
   parties: Parties
 ) => {
-  switch (contest.type) {
+  const contestType = contest.type.toString().toLowerCase()
+  switch (contestType) {
+    case '1':
     case 'candidate':
       return renderCandidateTally(
         contest as CandidateContest,
         tally as CandidateVoteTally,
         parties
       )
+    case '2':
     case 'yesno':
       return renderYesNoTally(contest as YesNoContest, tally as YesNoVoteTally)
     default:
