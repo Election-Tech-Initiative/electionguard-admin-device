@@ -93,14 +93,8 @@ const EncryptionDistributionPage = (props: RouteComponentProps) => {
       </Main>
       <Sidebar footer={<SidebarFooter />}>
         <p>
-          <LinkButton
-            big
-            primary={allClaimed}
-            disabled={!allClaimed}
-            to="/ready"
-            id="next"
-          >
-            Next
+          <LinkButton big primary={allClaimed} to="/ready" id="next">
+            {allClaimed ? 'Next' : 'Skip'}
           </LinkButton>
         </p>
         <p>

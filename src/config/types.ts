@@ -6,6 +6,8 @@ import {
   ElectionGuardStatus,
 } from '../electionguard'
 
+import { EncryptedBallot } from '../electionguard/models/EncryptedBallot'
+
 // ElectionGuard
 export enum CompletionStatus {
   Warning = -2,
@@ -61,7 +63,7 @@ export type EventTargetFunction = (event: React.FormEvent<EventTarget>) => void
 export interface AdminContextInterface {
   readonly election: Election
   setElection: (election: Election) => void
-  resetElection: (path?: string) => void
+  resetElection: () => void
   readonly electionMap: ElectionMap
   setElectionMap: (electionMap: ElectionMap) => void
   tally: Tally
@@ -70,6 +72,10 @@ export interface AdminContextInterface {
   setElectionGuardStatus: (status: ElectionGuardStatus) => void
   electionGuardConfig: ElectionGuardConfig
   setElectionGuardConfig: (electionGuardConfig: ElectionGuardConfig) => void
+  existingElectionGuardConfig: ElectionGuardConfig
+  setExistingElectionGuardConfig: (
+    existingElectionGuardConfig: ElectionGuardConfig
+  ) => void
   userSettings: UserSettings
   setUserSettings: (partial: PartialUserSettings) => void
 }
@@ -91,12 +97,12 @@ export interface CeremonyContextInterface {
 }
 
 export interface TallyContextInterface {
-  castIds: string[]
+  castIds?: string[]
   setCastIds: (castIds: string[]) => void
-  spoiledIds: string[]
+  spoiledIds?: string[]
   setSpoiledIds: (spoiledIds: string[]) => void
-  encryptedBallots: string[]
-  setEncryptedBallots: (encryptedBallots: string[]) => void
+  encryptedBallots?: EncryptedBallot[]
+  setEncryptedBallots: (encryptedBallots: EncryptedBallot[]) => void
   numberOfTrustees: number
   threshold: number
   trustees: TrusteeKey[]
@@ -122,8 +128,10 @@ export interface SmartcardContextInterface {
 export interface UsbContextInterface {
   adminDriveConnected: boolean
   adminDriveMounted: boolean
+  adminDriveMountpoint: string | undefined
   storageDriveConnected: boolean
   storageDriveMounted: boolean
+  storageDriveMountpoint: string | undefined
   connect: () => void
   disconnect: () => void
   read: <T>(driveId: number, file: string) => Promise<T>
@@ -133,6 +141,7 @@ export interface UsbContextInterface {
     data: object | string
   ) => Promise<UsbWriteResult>
   eject: (driveId: number) => Promise<void>
+  createDirectory: (driveId: number, directory: string) => Promise<void>
 }
 
 export interface UsbWriteResult {
@@ -146,6 +155,11 @@ export interface UsbMountResult {
 }
 
 export interface UsbUnmountResult {
+  success: boolean
+  message: string
+}
+
+export interface UsbDirectoryResult {
   success: boolean
   message: string
 }

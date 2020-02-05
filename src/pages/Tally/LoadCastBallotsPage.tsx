@@ -13,7 +13,7 @@ import { storageDriveIndex, castBallotsFile } from '../../components/UsbManager'
 const LoadCastBallotsPage = (props: RouteComponentProps) => {
   const { setCastIds } = useContext(TallyContext)
   const [isWriting, setIsWriting] = useState(false)
-  const { storageDriveMounted, connect, disconnect, read } = useContext(
+  const { storageDriveMounted, connect, disconnect, read, eject } = useContext(
     UsbContext
   )
   const handleLoad = async () => {
@@ -26,8 +26,10 @@ const LoadCastBallotsPage = (props: RouteComponentProps) => {
         castBallotsFile
       )
       setCastIds(castBallotIds)
+      await eject(storageDriveIndex)
       history.goBack()
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(
         'Failed to read cast ballots from the drive. They may not exist.',
         error

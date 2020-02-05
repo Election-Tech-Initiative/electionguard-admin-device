@@ -125,11 +125,11 @@ const renderCandidateTally = (
       <ul>
         {contest.candidates.map((candidate, index) => (
           <Selection key={candidate.id}>
-            {candidate.name}(
-            {parties
-              ? parties.filter(x => x.id === candidate.partyId)[0].name
+            {candidate.name}
+            {parties.filter(x => x.id === candidate.partyId).length > 0
+              ? `(${parties.filter(x => x.id === candidate.partyId)[0].name})`
               : ''}
-            ) : {tally.candidates[index]}
+            : {tally.candidates[index]}
           </Selection>
         ))}
         {contest.allowWriteIns ? (
@@ -147,13 +147,16 @@ const renderContest = (
   tally: CandidateVoteTally | YesNoVoteTally,
   parties: Parties
 ) => {
-  switch (contest.type) {
+  const contestType = contest.type.toString().toLowerCase()
+  switch (contestType) {
+    case '1':
     case 'candidate':
       return renderCandidateTally(
         contest as CandidateContest,
         tally as CandidateVoteTally,
         parties
       )
+    case '2':
     case 'yesno':
       return renderYesNoTally(contest as YesNoContest, tally as YesNoVoteTally)
     default:

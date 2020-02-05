@@ -14,6 +14,7 @@ import {
 import {
   adminDriveIndex,
   electionFile,
+  electionConfigFile,
   stateFile,
   mapFile,
   tallyFile,
@@ -28,6 +29,8 @@ const LoadAdminDrive = () => {
     setElection,
     electionGuardConfig,
     setElectionGuardConfig,
+    existingElectionGuardConfig,
+    setExistingElectionGuardConfig,
     electionMap,
     setElectionMap,
     tally,
@@ -68,6 +71,20 @@ const LoadAdminDrive = () => {
       }
     }
 
+    if (!existingElectionGuardConfig) {
+      try {
+        const currentState = await read<ElectionGuardConfig>(
+          adminDriveIndex,
+          electionConfigFile
+        )
+        setExistingElectionGuardConfig(currentState)
+      } catch (error) {
+        setExistingElectionGuardConfig(
+          (undefined as unknown) as ElectionGuardConfig
+        )
+      }
+    }
+
     if (!electionMap) {
       try {
         const currentMap = await read<ElectionMap>(adminDriveIndex, mapFile)
@@ -89,6 +106,7 @@ const LoadAdminDrive = () => {
 
   if (adminDriveMounted) {
     loadFilesFromAdminDrive().catch(error =>
+      // eslint-disable-next-line no-console
       console.log(
         `Failed to load election files from drive ${adminDriveIndex}`,
         error

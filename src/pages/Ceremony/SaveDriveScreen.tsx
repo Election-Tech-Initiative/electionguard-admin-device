@@ -8,7 +8,12 @@ import Sidebar from '../../components/Sidebar'
 import LinkButton from '../../components/LinkButton'
 import SidebarFooter from '../../components/SidebarFooter'
 import UsbContext from '../../contexts/usbContext'
-import { storageDriveIndex, stateFile } from '../../components/UsbManager'
+import {
+  defaultDirectory,
+  storageDriveIndex,
+  electionConfigFile,
+  electionFile,
+} from '../../components/UsbManager'
 import AdminContext from '../../contexts/adminContext'
 
 interface EncrypterParams {
@@ -17,10 +22,15 @@ interface EncrypterParams {
 
 const SaveDriveScreen = (props: RouteComponentProps<EncrypterParams>) => {
   const [isWriting, setIsWriting] = useState(false)
-  const { electionGuardConfig } = useContext(AdminContext)
-  const { storageDriveMounted, connect, disconnect, eject, write } = useContext(
-    UsbContext
-  )
+  const { election, electionGuardConfig } = useContext(AdminContext)
+  const {
+    storageDriveMounted,
+    connect,
+    disconnect,
+    eject,
+    write,
+    createDirectory,
+  } = useContext(UsbContext)
   const { encrypterId } = props.match.params
   const { claimEncrypterDrive } = useContext(CeremonyContext)
 
@@ -29,13 +39,26 @@ const SaveDriveScreen = (props: RouteComponentProps<EncrypterParams>) => {
 
     try {
       const { history } = props
-      const result = await write(
+      const configResult = await write(
         storageDriveIndex,
-        stateFile,
+        electionConfigFile,
         electionGuardConfig
       )
-      if (!result.success) {
-        throw new Error(result.message)
+      if (!configResult.success) {
+        console.log(JSON.stringify(configResult))
+        throw new Error(configResult.message)
+      }
+
+      await createDirectory(storageDriveIndex, defaultDirectory)
+
+      const electionResult = await write(
+        storageDriveIndex,
+        electionFile,
+        election
+      )
+      if (!electionResult.success) {
+        console.log(JSON.stringify(configResult))
+        throw new Error(configResult.message)
       }
 
       eject(storageDriveIndex)
@@ -43,6 +66,7 @@ const SaveDriveScreen = (props: RouteComponentProps<EncrypterParams>) => {
       history.push('/encrypter/remove')
     } catch (error) {
       setIsWriting(false)
+      // eslint-disable-next-line no-console
       console.error('Failed to write election config to encryptor drive', error)
       throw error
     }

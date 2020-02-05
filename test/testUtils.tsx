@@ -36,6 +36,8 @@ export function render(
     history = createMemoryHistory({ initialEntries: [] }),
     electionGuardConfig = {} as ElectionGuardConfig,
     setElectionGuardConfig = jest.fn(),
+    existingElectionGuardConfig = {} as ElectionGuardConfig,
+    setExistingElectionGuardConfig = jest.fn(),
     userSettings = { textSize: GLOBALS.TEXT_SIZE as TextSizeSetting },
     setUserSettings = jest.fn(),
   } = {}
@@ -55,6 +57,8 @@ export function render(
           setElectionGuardStatus,
           electionGuardConfig,
           setElectionGuardConfig,
+          existingElectionGuardConfig,
+          setExistingElectionGuardConfig,
           setUserSettings,
           userSettings,
         }}

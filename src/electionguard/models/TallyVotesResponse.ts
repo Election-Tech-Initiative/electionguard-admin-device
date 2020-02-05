@@ -1,3 +1,6 @@
 import { Tally } from './Tally'
 
-export type TallyVoteResponse = Tally
+export interface TallyVoteResponse {
+  encryptedTallyFilename: string
+  tallyResults: Tally
+}

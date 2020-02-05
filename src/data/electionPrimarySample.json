@@ -1,9 +1,9 @@
 {
   "title": "Primary Election",
-  "state": "State of Wisconsin",
+  "state": "State of Hamilton",
   "county": {
-    "id": "rock",
-    "name": "Rock County"
+    "id": "boulder-cty-demo",
+    "name": "Boulder County"
   },
   "date": "December 18, 2020",
   "districts": [

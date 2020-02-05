@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext } from 'react'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import AdminContext from '../contexts/adminContext'
 import Main, { MainChild } from '../components/Main'
@@ -19,9 +20,16 @@ const LogoImage = styled.img`
   max-width: 12rem;
 `
 
-const StartPage = () => {
+const StartPage = (props: RouteComponentProps) => {
   const { adminDriveMounted } = useContext(UsbContext)
-  const { election, electionGuardStatus, tally } = useContext(AdminContext)
+  const {
+    election,
+    electionGuardStatus,
+    setElectionGuardConfig,
+    existingElectionGuardConfig,
+    setElectionGuardStatus,
+    tally,
+  } = useContext(AdminContext)
   const getElectionGuardStatus = () => {
     switch (electionGuardStatus) {
       case ElectionGuardStatus.KeyCeremony:
@@ -40,6 +48,17 @@ const StartPage = () => {
 
   const tallyComplete =
     tally && electionGuardStatus === ElectionGuardStatus.Complete
+
+  const setupElection = () => {
+    setElectionGuardStatus(ElectionGuardStatus.KeyCeremony)
+    props.history.push('/setup-keys')
+  }
+
+  const loadElectionConfig = () => {
+    setElectionGuardConfig(existingElectionGuardConfig)
+    setElectionGuardStatus(ElectionGuardStatus.KeyCeremony)
+    props.history.push('/setup-encrypters')
+  }
 
   return (
     <Screen>
@@ -67,13 +86,23 @@ const StartPage = () => {
       >
         <p>
           <LinkButton
-            primary={electionGuardStatus === ElectionGuardStatus.KeyCeremony}
-            disabled={electionGuardStatus !== ElectionGuardStatus.KeyCeremony}
-            to="/setup-keys"
+            primary
+            onPress={setupElection}
             id="setup"
             aria-label="Select Setup to Setup Election"
           >
             Setup Election
+          </LinkButton>
+        </p>
+        <p>
+          <LinkButton
+            primary={existingElectionGuardConfig !== undefined}
+            disabled={existingElectionGuardConfig === undefined}
+            onPress={loadElectionConfig}
+            id="load"
+            aria-label="Load an Existing Election"
+          >
+            Load Election
           </LinkButton>
         </p>
         <p>
@@ -100,4 +129,4 @@ const StartPage = () => {
   )
 }
 
-export default StartPage
+export default withRouter(StartPage)

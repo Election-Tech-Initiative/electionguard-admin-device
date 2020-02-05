@@ -108,7 +108,9 @@ export const exportElectionResultsCsv = (
   )
   const results: ElectionResult[] = []
   election.contests.forEach((contest, index) => {
-    switch (contest.type) {
+    const contestType = contest.type.toString().toLowerCase()
+    switch (contestType) {
+      case '1':
       case 'candidate':
         results.push(
           ...getCandidateLines(
@@ -118,6 +120,7 @@ export const exportElectionResultsCsv = (
           )
         )
         break
+      case '2':
       case 'yesno':
         results.push(
           ...getYesNoLines(

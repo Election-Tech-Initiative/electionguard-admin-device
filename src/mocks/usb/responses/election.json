@@ -1,10 +1,10 @@
 {
-  "title": "2020 Fulton Judicial Election Demo",
+  "title": "2020 Franklin Judicial Election Demo",
   "demo": true,
-  "state": "State of Wisconsin",
+  "state": "State of Hamilton",
   "county": {
-    "id": "rockcty-demo",
-    "name": "Rock County"
+    "id": "boulder-cty-demo",
+    "name": "Boulder County"
   },
   "date": "Tuesday, December 17, 2019",
   "ballotTrackerConfig": {
@@ -15,20 +15,20 @@
   "districts": [
     {
       "id": "district-1",
-      "name": "Fulton"
+      "name": "Franklin"
     }
   ],
   "precincts": [
     {
       "id": "1",
-      "name": "Fulton"
+      "name": "Franklin"
     }
   ],
   "parties": [
     {
       "id": "0",
-      "name": "",
-      "abbrev": "J"
+      "name": "FAKE",
+      "abbrev": "F"
     }
   ],
   "contests": [
@@ -48,7 +48,7 @@
         {
           "id": "hildebrand",
           "name": "Ashley Hildebrand",
-          "partyId": "0"
+          "partyId": "1"
         },
         {
           "id": "locke",

@@ -10,6 +10,6 @@ const proxy = require('http-proxy-middleware')
 
 module.exports = function(app) {
   app.use(proxy('/card', { target: 'http://localhost:3001/' }))
-  app.use(proxy('/election', { target: 'http://localhost:5000/' }))
+  app.use(proxy('/electionguard', { target: 'http://localhost:5000/' }))
   app.use(proxy('/usb', { target: 'http://localhost:3004/' }))
 }

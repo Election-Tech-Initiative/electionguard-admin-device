@@ -21,6 +21,7 @@ const Layout = () => {
         return NotFoundPage
     }
   }
+
   return (
     <Switch>
       <Redirect exact path="/" to="/start" />

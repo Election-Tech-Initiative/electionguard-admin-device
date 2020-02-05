@@ -8,31 +8,51 @@ import Sidebar from '../../components/Sidebar'
 import LinkButton from '../../components/LinkButton'
 import SidebarFooter from '../../components/SidebarFooter'
 import UsbContext from '../../contexts/usbContext'
+import * as GLOBALS from '../../config/globals'
 import {
+  electionGuardApi,
+  DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX,
+} from '../../electionguard'
+import {
+  defaultExportPathNoDelimeter,
   storageDriveIndex,
-  encryptedBallotsFile,
 } from '../../components/UsbManager'
+import AdminContext from '../../contexts/adminContext'
 
 const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
   const { setEncryptedBallots } = useContext(TallyContext)
+  const { electionGuardConfig } = useContext(AdminContext)
   const [isWriting, setIsWriting] = useState(false)
-  const { storageDriveMounted, connect, disconnect, read } = useContext(
-    UsbContext
-  )
+  const {
+    storageDriveMounted,
+    storageDriveMountpoint,
+    connect,
+    disconnect,
+    eject,
+  } = useContext(UsbContext)
   const handleLoad = async () => {
     setIsWriting(true)
 
     try {
       const { history } = props
-      const encryptedBallots = await read<string[]>(
-        storageDriveIndex,
-        encryptedBallotsFile
+      const now = new Date()
+      const realMonth = now.getMonth() + 1
+      const ballotFileName = `${DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX}${now.getFullYear()}_${realMonth}_${now.getDate()}`
+      const encryptedBallots = await electionGuardApi.loadBallots(
+        0,
+        GLOBALS.MAX_BALLOT_PAYLOAD,
+        `${ballotFileName}`,
+        electionGuardConfig,
+        `${storageDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPathNoDelimeter}`
       )
+
       setEncryptedBallots(encryptedBallots)
+      await eject(storageDriveIndex)
       history.goBack()
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(
-        'Failed to read cast ballots from the drive. They may not exist.',
+        'Failed to read encrypted ballots from the drive. They may not exist.',
         error
       )
     }

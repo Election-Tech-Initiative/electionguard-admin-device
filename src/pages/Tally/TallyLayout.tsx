@@ -1,5 +1,6 @@
 import React, { useState, useContext, useReducer } from 'react'
 import { Route, Switch } from 'react-router-dom'
+import * as GLOBALS from '../../config/globals'
 import BallotRegistrationPage from './BallotRegistrationPage'
 import TallyPage from './TallyPage'
 import NotFoundPage from '../NotFoundPage'
@@ -9,6 +10,7 @@ import {
   TrusteeKey,
   CompletionStatus,
 } from '../../config/types'
+import { EncryptedBallot } from '../../electionguard/models/EncryptedBallot'
 import AdminContext from '../../contexts/adminContext'
 import LoadTrusteePage from './LoadTrusteePage'
 import LoadCastBallotsPage from './LoadCastBallotsPage'
@@ -19,17 +21,27 @@ import { electionGuardApi } from '../../electionguard'
 import LoadCardScreen from './LoadCardScreen'
 import RemoveCardScreen from './RemoveCardScreen'
 import trusteeReducer from '../../reducers/trusteeReducer'
+import UsbContext from '../../contexts/usbContext'
+import { defaultExportPathNoDelimeter } from '../../components/UsbManager'
 
 const TallyLayout = () => {
   const { electionGuardConfig, electionMap, setTally } = useContext(
     AdminContext
   )
   const { numberOfTrustees, threshold } = electionGuardConfig
-  const [castIds, setCastIds] = useState([] as string[])
-  const [spoiledIds, setSpoiledIds] = useState([] as string[])
+  const { adminDriveMountpoint } = useContext(UsbContext)
+
+  const exportPath = `${adminDriveMountpoint}${GLOBALS.PATH_DELIMITER}${defaultExportPathNoDelimeter}`
+
+  const [castIds, setCastIds] = useState((undefined as unknown) as string[])
+  const [spoiledIds, setSpoiledIds] = useState(
+    (undefined as unknown) as string[]
+  )
   const [castTrackers, setCastTrackers] = useState([] as string[])
   const [spoiledTrackers, setSpoiledTrackers] = useState([] as string[])
-  const [encryptedBallots, setEncryptedBallots] = useState([] as string[])
+  const [encryptedBallots, setEncryptedBallots] = useState(
+    (undefined as unknown) as EncryptedBallot[]
+  )
   const [remainingThreshold, setRemainingThreshold] = useState(() => threshold)
   const [trustees, trusteesDispatch] = useReducer(
     trusteeReducer,
@@ -103,32 +115,45 @@ const TallyLayout = () => {
   const recordAndTallyBallots = async () => {
     try {
       const {
-        encryptedBallotsFilename,
+        registeredBallotsFileName,
         spoiledBallotTrackers,
         castedBallotTrackers,
       } = await electionGuardApi.recordBallots(
         electionGuardConfig,
         encryptedBallots,
         castIds,
-        spoiledIds
+        spoiledIds,
+        exportPath
       )
+
+      if (registeredBallotsFileName === undefined) {
+        throw Error('registeredBallotsFileName is undefined')
+      }
 
       const announcedTrusteeKeys = normalizeTrustees(trustees, trusteeKey => {
         const didLoadTrusteeKey = !!trusteeKey.data
         return didLoadTrusteeKey
       })
-      const tallyResult = await electionGuardApi.tallyVotes(
+      const { tallyResults } = await electionGuardApi.tallyVotes(
         electionGuardConfig,
         electionMap,
         announcedTrusteeKeys,
-        encryptedBallotsFilename
+        registeredBallotsFileName,
+        exportPath
       )
+
+      if (tallyResults === undefined) {
+        throw Error('tallyResults is undefined')
+      }
 
       setCastTrackers(castedBallotTrackers)
       setSpoiledTrackers(spoiledBallotTrackers)
-      setTally(tallyResult)
+      setTally(tallyResults)
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('error casting and tallying', error)
       // eslint-disable-next-line no-empty
+      throw error
     }
   }
 

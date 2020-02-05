@@ -66,7 +66,13 @@ const SetupEncryptersPage = () => {
       </Main>
       <Sidebar footer={<SidebarFooter />}>
         <p>
-          <LinkButton big primary to="/encrypters" id="next">
+          <LinkButton
+            big
+            primary={numberOfEncrypters !== undefined}
+            disabled={numberOfEncrypters === undefined}
+            to="/encrypters"
+            id="next"
+          >
             <TextIcon arrowRight white>
               Next
             </TextIcon>
