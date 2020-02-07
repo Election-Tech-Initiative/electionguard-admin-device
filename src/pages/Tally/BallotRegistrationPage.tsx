@@ -11,6 +11,7 @@ import StatusButton, { StatusButtonGrid } from '../../components/StatusButton'
 import { CompletionStatus } from '../../config/types'
 import { CHECK_ICON, WARNING_ICON } from '../../config/globals'
 import TallyContext from '../../contexts/tallyContext'
+import { EncryptedBallot } from '../../electionguard/models/EncryptedBallot'
 
 const Header = styled.div`
   margin: 0 auto;
@@ -49,7 +50,17 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
     spoiledIds,
     encryptedBallots,
     recordAndTallyBallots,
+    setEncryptedBallots,
+    setCastIds,
+    setSpoiledIds,
   } = useContext(TallyContext)
+
+  const back = (to: string) => {
+    setEncryptedBallots((undefined as unknown) as EncryptedBallot[])
+    setCastIds((undefined as unknown) as string[])
+    setSpoiledIds((undefined as unknown) as string[])
+    props.history.push(to)
+  }
 
   const disable = (): boolean => {
     return (
@@ -133,7 +144,7 @@ const BallotRegistrationPage = (props: RouteComponentProps) => {
           </LinkButton>
         </p>
         <p>
-          <LinkButton disabled small to="/trustees" id="back">
+          <LinkButton small onPress={() => back('/trustees')} id="back">
             Back
           </LinkButton>
         </p>
