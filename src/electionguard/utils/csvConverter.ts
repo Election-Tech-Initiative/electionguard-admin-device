@@ -89,7 +89,7 @@ const getYesNoLines = (
       ...line,
       selectionId: 'no',
       selectionName: 'No',
-      party: '',
+      voteCount: tally.no,
     },
   ]
 }
