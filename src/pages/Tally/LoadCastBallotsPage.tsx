@@ -19,8 +19,9 @@ const LoadCastBallotsPage = (props: RouteComponentProps) => {
   const handleLoad = async () => {
     setIsWriting(true)
 
+    const { history } = props
+
     try {
-      const { history } = props
       const castBallotIds = await read<string[]>(
         storageDriveIndex,
         castBallotsFile
@@ -34,6 +35,11 @@ const LoadCastBallotsPage = (props: RouteComponentProps) => {
         'Failed to read cast ballots from the drive. They may not exist.',
         error
       )
+
+      // failure to load the file is a valid case as it may not exist
+      setCastIds([])
+      await eject(storageDriveIndex)
+      history.goBack()
     }
   }
 

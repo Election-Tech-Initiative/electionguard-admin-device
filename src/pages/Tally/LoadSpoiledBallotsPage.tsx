@@ -21,9 +21,9 @@ const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
   )
   const handleLoad = async () => {
     setIsWriting(true)
+    const { history } = props
 
     try {
-      const { history } = props
       const spoiledBallots = await read<string[]>(
         storageDriveIndex,
         spoiledBallotsFile
@@ -37,7 +37,11 @@ const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
         'Failed to read spoiled ballots from the drive. They may not exist.',
         error
       )
-      throw error
+
+      // failure to load the file is a valid case as it may not exist
+      setSpoiledIds([])
+      await eject(storageDriveIndex)
+      history.goBack()
     }
   }
 
