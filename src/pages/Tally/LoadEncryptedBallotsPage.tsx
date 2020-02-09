@@ -33,8 +33,9 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
   const handleLoad = async () => {
     setIsWriting(true)
 
+    const { history } = props
+
     try {
-      const { history } = props
       const now = new Date()
       const realMonth = now.getMonth() + 1
       const ballotFileName = `${DEFAULT_ENCRYPTED_BALLOTS_EXPORT_PREFIX}${now.getFullYear()}_${realMonth}_${now.getDate()}`
@@ -55,6 +56,11 @@ const LoadEncryptedBallotsPage = (props: RouteComponentProps) => {
         'Failed to read encrypted ballots from the drive. They may not exist.',
         error
       )
+
+      // failure to load the file is a valid case as it may not exist
+      setEncryptedBallots([])
+      await eject(storageDriveIndex)
+      history.goBack()
     }
   }
 
