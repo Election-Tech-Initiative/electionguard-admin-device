@@ -11,6 +11,7 @@ export async function fetchJSON<T>(
   })
 
   if (!response.ok) {
+    // eslint-disable-next-line no-console
     console.error(response)
     throw new Error('fetch response is not ok')
   }

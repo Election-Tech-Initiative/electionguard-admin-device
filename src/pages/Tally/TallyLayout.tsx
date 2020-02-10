@@ -23,6 +23,7 @@ import RemoveCardScreen from './RemoveCardScreen'
 import trusteeReducer from '../../reducers/trusteeReducer'
 import UsbContext from '../../contexts/usbContext'
 import { defaultExportPathNoDelimeter } from '../../components/UsbManager'
+import distinct from '../../utils/collections'
 
 const TallyLayout = () => {
   const { electionGuardConfig, electionMap, setTally } = useContext(
@@ -114,15 +115,46 @@ const TallyLayout = () => {
 
   const recordAndTallyBallots = async () => {
     try {
+      // de-dupe the lists
+      const uniqueBallots = distinct(encryptedBallots, i => i.id)
+      const uniquecastIds = distinct(castIds, i => i)
+      const uniquespoiledIds = distinct(spoiledIds, i => i)
+
+      // eslint-disable-next-line no-console
+      console.log(
+        `recordAndTallyBallots: loaded: ${encryptedBallots.length} unique: ${uniqueBallots.length}`
+      )
+
+      // verify cast & spoiled lists are unique
+      if (uniquecastIds.filter(i => uniquespoiledIds.includes(i)).length > 0) {
+        throw Error('at least one cast ballotId is also spoiled!')
+      }
+
+      // explicitly spoil any ballots not included in the cast list
+      const uniqueIds = [...uniquecastIds, ...uniquespoiledIds]
+      const unspecifiedBallots = uniqueBallots.filter(
+        i => !uniqueIds.includes(i.id)
+      )
+
+      if (unspecifiedBallots.length > 0) {
+        uniquespoiledIds.push(...unspecifiedBallots.map(i => i.id))
+      }
+
+      // eslint-disable-next-line no-console
+      console.log(
+        `recordAndTallyBallots: encrypted: ${uniqueBallots.length} cast: ${uniquecastIds.length} spoiled: ${uniquespoiledIds.length}`
+      )
+
+      // record ballots
       const {
         registeredBallotsFileName,
         spoiledBallotTrackers,
         castedBallotTrackers,
       } = await electionGuardApi.recordBallots(
         electionGuardConfig,
-        encryptedBallots,
-        castIds,
-        spoiledIds,
+        uniqueBallots,
+        uniquecastIds,
+        uniquespoiledIds,
         exportPath
       )
 
