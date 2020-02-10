@@ -25,7 +25,6 @@ import UsbContext from '../../contexts/usbContext'
 import { defaultExportPathNoDelimeter } from '../../components/UsbManager'
 import distinct from '../../utils/collections'
 import { getZeroTally } from '../../utils/election'
-import distinct from '../../utils/collections'
 
 const TallyLayout = () => {
   const { election, electionGuardConfig, electionMap, setTally } = useContext(
