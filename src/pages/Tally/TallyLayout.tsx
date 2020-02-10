@@ -24,9 +24,10 @@ import trusteeReducer from '../../reducers/trusteeReducer'
 import UsbContext from '../../contexts/usbContext'
 import { defaultExportPathNoDelimeter } from '../../components/UsbManager'
 import distinct from '../../utils/collections'
+import { getZeroTally } from '../../utils/election'
 
 const TallyLayout = () => {
-  const { electionGuardConfig, electionMap, setTally } = useContext(
+  const { election, electionGuardConfig, electionMap, setTally } = useContext(
     AdminContext
   )
   const { numberOfTrustees, threshold } = electionGuardConfig
@@ -113,6 +114,12 @@ const TallyLayout = () => {
     return normalizedObject
   }
 
+  const handleZeroTally = () => {
+    setCastTrackers([])
+    setSpoiledTrackers([])
+    setTally(getZeroTally(election))
+  }
+
   const recordAndTallyBallots = async () => {
     try {
       // de-dupe the lists
@@ -162,13 +169,8 @@ const TallyLayout = () => {
         throw Error('registeredBallotsFileName is undefined')
       }
 
-      // if we have no ballots, explicitly
-      // bypass running the tally
-      // TODO: Execute API with zero count
       if (uniqueBallots.length === 0) {
-        setCastTrackers([])
-        setSpoiledTrackers([])
-        setTally([])
+        handleZeroTally()
         return
       }
 

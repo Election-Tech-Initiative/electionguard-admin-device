@@ -132,7 +132,7 @@ const renderCandidateTally = (
             : {tally.candidates[index]}
           </Selection>
         ))}
-        {contest.allowWriteIns ? (
+        {contest.allowWriteIns && tally.writeIns.length > 0 ? (
           <Selection>Write Ins: {tally.writeIns[0].tally}</Selection>
         ) : (
           <></>
