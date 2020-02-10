@@ -31,7 +31,7 @@ let adminDriveMounted = false
 let storageDriveMounted = false
 let storageDriveConnected = true
 
-export const mockUsbApi = () => {
+export const mockUsbApi = (zeroTally: boolean) => {
   fetchMock.get('/usb', () => {
     drives[0].mountpoints = adminDriveMounted ? adminDriveMountpoints : []
     drives[1].mountpoints = storageDriveMounted ? storageDriveMountpoints : []
@@ -110,16 +110,25 @@ export const mockUsbApi = () => {
   fetchMock.post(`/usb/${drives[1].id}/file?path=${stateFile}`, postSuccess)
 
   fetchMock.get(`/usb/${drives[1].id}/file?path=${spoiledBallotsFile}`, () => {
+    if (zeroTally) {
+      return JSON.stringify([])
+    }
     return JSON.stringify(spoiledBallots)
   })
 
   fetchMock.get(`/usb/${drives[1].id}/file?path=${castBallotsFile}`, () => {
+    if (zeroTally) {
+      return JSON.stringify([])
+    }
     return JSON.stringify(castBallots)
   })
 
   fetchMock.get(
     `/usb/${drives[1].id}/file?path=${encryptedBallotsFile}`,
     () => {
+      if (zeroTally) {
+        return JSON.stringify([])
+      }
       return JSON.stringify(encryptedBallots)
     }
   )
