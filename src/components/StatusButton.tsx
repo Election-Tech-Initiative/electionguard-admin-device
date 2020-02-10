@@ -14,6 +14,7 @@ interface Props {
   statusLabel?: string
   actionLabel?: string
   disabled?: boolean
+  enabled?: boolean
 }
 
 interface CssProps {
@@ -70,7 +71,15 @@ export const StatusButtonGrid = styled.div`
 `
 
 const StatusButton = (props: Props) => {
-  const { status, onPress, icon, statusLabel, actionLabel, disabled } = props
+  const {
+    status,
+    onPress,
+    icon,
+    statusLabel,
+    actionLabel,
+    disabled,
+    enabled,
+  } = props
   return (
     <Container>
       {icon ? <Icon status={status}>{icon}</Icon> : <></>}
@@ -79,9 +88,12 @@ const StatusButton = (props: Props) => {
       </Status>
       <ButtonContainer>
         <Button
+          style={{ minWidth: '4.3rem' }}
           small
           onPress={onPress}
-          disabled={status === CompletionStatus.Complete || disabled}
+          disabled={
+            (status === CompletionStatus.Complete && !enabled) || disabled
+          }
         >
           {actionLabel || 'Complete'}
         </Button>
