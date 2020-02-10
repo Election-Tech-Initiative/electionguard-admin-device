@@ -11,7 +11,7 @@ import UsbContext from '../../contexts/usbContext'
 import { storageDriveIndex, castBallotsFile } from '../../components/UsbManager'
 
 const LoadCastBallotsPage = (props: RouteComponentProps) => {
-  const { setCastIds } = useContext(TallyContext)
+  const { castIds, setCastIds } = useContext(TallyContext)
   const [isWriting, setIsWriting] = useState(false)
   const { storageDriveMounted, connect, disconnect, read, eject } = useContext(
     UsbContext
@@ -22,11 +22,15 @@ const LoadCastBallotsPage = (props: RouteComponentProps) => {
     const { history } = props
 
     try {
-      const castBallotIds = await read<string[]>(
+      const newCastIds = await read<string[]>(
         storageDriveIndex,
         castBallotsFile
       )
-      setCastIds(castBallotIds)
+      if (castIds === undefined) {
+        setCastIds(newCastIds)
+      } else {
+        setCastIds([...castIds, ...newCastIds])
+      }
       await eject(storageDriveIndex)
       history.goBack()
     } catch (error) {

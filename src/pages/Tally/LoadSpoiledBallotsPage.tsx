@@ -14,7 +14,7 @@ import {
 } from '../../components/UsbManager'
 
 const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
-  const { setSpoiledIds } = useContext(TallyContext)
+  const { spoiledIds, setSpoiledIds } = useContext(TallyContext)
   const [isWriting, setIsWriting] = useState(false)
   const { storageDriveMounted, connect, disconnect, read, eject } = useContext(
     UsbContext
@@ -24,11 +24,15 @@ const LoadSpoiledBallotsPage = (props: RouteComponentProps) => {
     const { history } = props
 
     try {
-      const spoiledBallots = await read<string[]>(
+      const newSpoiledIds = await read<string[]>(
         storageDriveIndex,
         spoiledBallotsFile
       )
-      setSpoiledIds(spoiledBallots)
+      if (spoiledIds === undefined) {
+        setSpoiledIds(newSpoiledIds)
+      } else {
+        setSpoiledIds([...spoiledIds, ...newSpoiledIds])
+      }
       await eject(storageDriveIndex)
       history.goBack()
     } catch (error) {

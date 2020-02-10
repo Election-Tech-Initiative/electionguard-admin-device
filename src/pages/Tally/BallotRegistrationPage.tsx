@@ -24,6 +24,7 @@ const BallotListButton = (
   list?: string[]
 ) => {
   const warning = list === undefined || list.length <= 0
+  const exists = list !== undefined
   let status = CompletionStatus.Error
   if (list !== undefined) {
     status = CompletionStatus.Warning
@@ -37,7 +38,8 @@ const BallotListButton = (
       onPress={() => onPress()}
       icon={warning ? WARNING_ICON : CHECK_ICON}
       statusLabel={label}
-      actionLabel="Upload"
+      actionLabel={exists ? 'Add' : 'Upload'}
+      enabled
       status={status}
     />
   )
