@@ -162,6 +162,16 @@ const TallyLayout = () => {
         throw Error('registeredBallotsFileName is undefined')
       }
 
+      // if we have no ballots, explicitly
+      // bypass running the tally
+      // TODO: Execute API with zero count
+      if (uniqueBallots.length === 0) {
+        setCastTrackers([])
+        setSpoiledTrackers([])
+        setTally([])
+        return
+      }
+
       const announcedTrusteeKeys = normalizeTrustees(trustees, trusteeKey => {
         const didLoadTrusteeKey = !!trusteeKey.data
         return didLoadTrusteeKey
