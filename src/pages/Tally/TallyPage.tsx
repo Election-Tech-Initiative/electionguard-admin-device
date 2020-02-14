@@ -243,7 +243,7 @@ const TallyPage = () => {
     UsbContext
   )
 
-  const { castTrackers } = useContext(TallyContext)
+  const { castTrackers, spoiledTrackers } = useContext(TallyContext)
 
   const tallyDisplayRef = useRef(null) // eslint-disable-line
 
@@ -268,7 +268,7 @@ const TallyPage = () => {
       throw new Error('failed to write tallied ballots')
     }
 
-    const trackers = exportTrackerCsv(castTrackers)
+    const trackers = exportTrackerCsv(castTrackers, spoiledTrackers)
     result = await write(adminDriveIndex, trackersFile, trackers)
     if (!result.success) {
       throw new Error('failed to write trackers')
