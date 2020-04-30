@@ -2,6 +2,7 @@ import { CsvAsJson } from './CsvAsJson'
 
 export interface BallotStatus {
   trackingId: string
+  status: number
   approximateCastTime: string
   location: string
 }

@@ -8,6 +8,7 @@ import { BallotStatus, BallotStatusesFile } from '../models/BallotStatus'
 import { ElectionResult, ElectionResultsFile } from '../models/ElectionResult'
 import { Tally, YesNoVoteTally, CandidateVoteTally } from '../models'
 import { Json2CsvOptions } from '../models/CsvAsJson'
+import BallotCountStatus from '../models/BallotCountStatus'
 
 const approximateCastTime = process.env.REACT_APP_POLLING_DATE || '01/01/2020'
 const location = process.env.REACT_APP_POLLING_LOCATION || 'Location'
@@ -19,10 +20,22 @@ const defaultCsvOptions: Json2CsvOptions = {
   header: false,
 }
 
-export const exportTrackerCsv = (trackers: string[]): BallotStatusesFile => {
-  const statuses: BallotStatus[] = trackers.map(
+export const exportTrackerCsv = (
+  castTrackers: string[],
+  spoiledTrackers: string[]
+): BallotStatusesFile => {
+  const castStatuses: BallotStatus[] = castTrackers.map(
     (tracker: string): BallotStatus => ({
       trackingId: tracker,
+      status: BallotCountStatus.Counted,
+      approximateCastTime,
+      location,
+    })
+  )
+  const spoiledStatuses: BallotStatus[] = spoiledTrackers.map(
+    (tracker: string): BallotStatus => ({
+      trackingId: tracker,
+      status: BallotCountStatus.Spoiled,
       approximateCastTime,
       location,
     })
@@ -30,9 +43,9 @@ export const exportTrackerCsv = (trackers: string[]): BallotStatusesFile => {
   return {
     options: {
       ...defaultCsvOptions,
-      fields: ['trackingId', 'approximateCastTime', 'location'],
+      fields: ['trackingId', 'approximateCastTime', 'location', 'status'],
     },
-    data: statuses,
+    data: [...castStatuses, ...spoiledStatuses],
   }
 }
 
